@@ -1,0 +1,10 @@
+{
+    "configurations": [
+        {
+            "name": "C#: KPICatalog [Default Configuration]",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/KPICatalog/KPICatalog.csproj"
+        }
+    ]
+}
