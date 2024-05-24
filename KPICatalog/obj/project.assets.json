@@ -433,9 +433,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/deeweade/Projects/KPICatalog/KPICatalog/KPICatalog.csproj",
-      "projectName": "KPICatalog",
-      "projectPath": "/Users/deeweade/Projects/KPICatalog/KPICatalog/KPICatalog.csproj",
+      "projectUniqueName": "/Users/deeweade/Projects/KPICatalog/KPICatalog/KPICatalog.API.csproj",
+      "projectName": "KPICatalog.API",
+      "projectPath": "/Users/deeweade/Projects/KPICatalog/KPICatalog/KPICatalog.API.csproj",
       "packagesPath": "/Users/deeweade/.nuget/packages/",
       "outputPath": "/Users/deeweade/Projects/KPICatalog/KPICatalog/obj/",
       "projectStyle": "PackageReference",

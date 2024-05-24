@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "gjKq3I5QITncQGSUKi/K7LmiQhQ1AvL2K6KaeFyjULxjVmkJyL4JcrFavtBlU65hz2YXqbm0K1oqG2wJfNv8SA==",
+  "dgSpecHash": "w0AJwjnfadbB+/M4Bph/TWpvOImzvVD6mI/P/A0BRvyb+2ImjW1QOao4idXb7G+AQKpjCBGpUfzM7BwKHG7G+w==",
   "success": true,
-  "projectFilePath": "/Users/deeweade/Projects/KPICatalog/KPICatalog/KPICatalog.csproj",
+  "projectFilePath": "/Users/deeweade/Projects/KPICatalog/KPICatalog/KPICatalog.API.csproj",
   "expectedPackageFiles": [
     "/Users/deeweade/.nuget/packages/microsoft.extensions.apidescription.server/6.0.5/microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
     "/Users/deeweade/.nuget/packages/microsoft.openapi/1.2.3/microsoft.openapi.1.2.3.nupkg.sha512",
