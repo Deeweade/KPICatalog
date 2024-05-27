@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KPICatalog;
 
-[Authorize]
-[Route("api/[controller]")]
 [ApiController]
-public class TestController : Controller
+[Route("api/[controller]")]
+public class TestController : ControllerBase
 {
     [HttpGet]
+    [Authorize(Policy = "RequireAuthenticatedUser")]
     public string Index()
     {
         return "Hello world!";
