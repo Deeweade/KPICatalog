@@ -2,27 +2,25 @@
 using KPICatalog.Application;
 using System.Text.Json;
 
-namespace KPICatalog.API;
+namespace KPICatalog.API.Middlewares;
 
-internal sealed class ExceptionHandlingMiddleware : IMiddleware
+public class ExceptionHandlingMiddleware
 {
-    private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+    private readonly RequestDelegate _next;
 
-    public ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddleware> logger)
+    public ExceptionHandlingMiddleware(RequestDelegate next)
     {
-        _logger = logger;
+        _next = next;
     }
-
-    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+    public async Task InvokeAsync(HttpContext context)
     {
         try
         {
-            await next(context);
+            await _next(context);
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            _logger.LogError(e, e.Message);
-            await HandleExceptionAsync(context, e);
+            await HandleExceptionAsync(context, ex);
         }
     }
 

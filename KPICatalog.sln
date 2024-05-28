@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KPICatalog.API", "KPICatalog\KPICatalog.API.csproj", "{1BB7559A-D292-4CC2-ACAD-F49974360763}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KPICatalog.API", "KPICatalog.API\KPICatalog.API.csproj", "{1BB7559A-D292-4CC2-ACAD-F49974360763}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KPICatalog.Domain", "KPICatalog.Domain\KPICatalog.Domain.csproj", "{FF9E00CB-988C-4F26-9DE9-CA4CDADE1494}"
 EndProject

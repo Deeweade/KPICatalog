@@ -1,37 +1,44 @@
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.EntityFrameworkCore;
+using KPICatalog.Domain.Interfaces.Repositories;
 using KPICatalog.Infrastructure.Data.Contexts;
 using KPICatalog.Application.Services;
+using KPICatalog.Infrastructure;
 using KPICatalog.Application;
 using KPICatalog.API;
 using System.Text.Json.Serialization;
-using KPICatalog.Domain;
-using KPICatalog.Domain.Interfaces.Repositories;
-using KPICatalog.Infrastructure;
-
-var builder = WebApplication.CreateBuilder(args);
+using System.Security.Claims;
+using KPICatalog.API.Middlewares;
 
 #region EnvironmentConfiguring
 
-builder.Configuration
-    .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "Settings"))
+var settingsPath = Path.Combine(Directory.GetCurrentDirectory(), "Settings");
+
+var config = new ConfigurationBuilder()
+    .SetBasePath(settingsPath)
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     //.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
-    .AddEnvironmentVariables();
+    .Build();
 
 string machineName = Environment.MachineName.ToLower();
 
-var machineNames = builder.Configuration.GetSection("EnvironmentMachines").Get<Dictionary<string, string>>();
+var machineNames = config.GetSection("EnvironmentMachines").Get<Dictionary<string, string>>();
 
 string environment = machineNames.FirstOrDefault(x => x.Value.ToLower() == machineName).Key ?? "Test";
 
-builder.Host.UseEnvironment(environment);
-
-// Перезагружаем конфигурацию для нового окружения
-builder.Configuration
-    .AddJsonFile($"appsettings.{environment}.json", optional: true);
-
 #endregion
+
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    EnvironmentName = environment,
+    ContentRootPath = settingsPath
+});
+
+builder.Configuration
+    .SetBasePath(settingsPath)
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{environment}.json", optional: true)
+    .AddEnvironmentVariables();
 
 #region AuthenticationConfiguring
 builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme).AddNegotiate();
@@ -47,6 +54,7 @@ builder.Services.AddAuthorization(options =>
 #endregion
 
 #region ControllersConfiguring
+
 builder.Services.AddControllers(options =>
 {
     options.SuppressAsyncSuffixInActionNames = false;
@@ -54,9 +62,6 @@ builder.Services.AddControllers(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
 });
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 #endregion
 
@@ -82,8 +87,6 @@ else if (builder.Environment.IsProduction())
 
 #endregion
 
-builder.Services.AddTransient<ExceptionHandlingMiddleware>();
-
 #region DependenciesInjection
 
 //services
@@ -95,18 +98,39 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 #endregion
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 if (app.Environment.IsEnvironment("Development_opetrov2"))
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseMiddleware<DevAuthMiddleware>();
 }
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsProduction())
+{
+    app.UseDeveloperExceptionPage();
+}
+else
+{
+    app.UseHttpsRedirection();
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
 
+app.UseStaticFiles();
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+});
 
 app.MapControllers();
 

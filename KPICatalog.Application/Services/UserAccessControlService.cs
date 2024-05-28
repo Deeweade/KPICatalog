@@ -18,7 +18,7 @@ public class UserAccessControlService : IUserAccessControlService
 
         var control = await _unitOfWork.UserAccessControlRepository.GetByLogin(login);
 
-        if (control is null) throw new NotFoundException(login);
+        if (control is null) throw new NotFoundException($"User with login '{login}' was not found!");
 
         return control.IsAccessGranted;
     }
