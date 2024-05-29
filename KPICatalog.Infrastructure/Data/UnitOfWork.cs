@@ -1,6 +1,7 @@
 ﻿using KPICatalog.Infrastructure.Data.Repositories;
 using KPICatalog.Domain.Interfaces.Repositories;
 using KPICatalog.Infrastructure.Data.Contexts;
+using AutoMapper;
 
 namespace KPICatalog.Infrastructure;
 
@@ -8,12 +9,12 @@ public class UnitOfWork : IUnitOfWork
 {
     private readonly KPICatalogDbContext _context;
 
-    public UnitOfWork(KPICatalogDbContext context)
+    public UnitOfWork(KPICatalogDbContext context, IMapper mapper)
     {
         _context = context;
 
-        UserAccessControlRepository = new UserAccessControlRepository(_context);
-        BonusSchemeRepository = new BonusSchemeRepository(_context);
+        UserAccessControlRepository = new UserAccessControlRepository(_context, mapper);
+        BonusSchemeRepository = new BonusSchemeRepository(_context, mapper);
     }
 
     public IUserAccessControlRepository UserAccessControlRepository { get; set; }

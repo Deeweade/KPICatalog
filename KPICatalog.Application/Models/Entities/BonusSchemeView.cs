@@ -1,6 +1,6 @@
 ﻿namespace KPICatalog.Application.Models.Entities;
 
-public class BonusSchemeDto : HistoryEntityDto
+public class BonusSchemeView : HistoryEntityView
 {
     public string? Title { get; set; }
     public string? CostCenter { get; set; }

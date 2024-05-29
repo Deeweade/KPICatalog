@@ -1,10 +1,12 @@
-﻿using KPICatalog.Domain.Models.Entities;
-using KPICatalog.Domain.Models.Filters;
+﻿using KPICatalog.Domain.Dtos.Entities;
+using KPICatalog.Domain.Dtos.Filters;
 
 namespace KPICatalog.Domain.Interfaces.Repositories;
 
 public interface IBonusSchemeRepository
 {
-    Task<BonusScheme?> GetById(int schemeId);
-    Task<IEnumerable<BonusScheme>> GetByFilter(BonusSchemesFilter filter);
+    Task<BonusSchemeDto?> GetById(int schemeId);
+    Task<IEnumerable<BonusSchemeDto>> GetByFilter(BonusSchemeFilterDto filter);
+    Task<BonusSchemeDto?> Create(BonusSchemeDto bonusSchemeDto);
+    Task<BonusSchemeDto> Update(BonusSchemeDto schemeDto);
 }

@@ -5,6 +5,8 @@ namespace KPICatalog.Application.Interfaces.Services;
 
 public interface IBonusSchemeService
 {
-    Task<BonusSchemeDto?> GetById(int schemeId);
-    Task<IEnumerable<BonusSchemeDto>> GetByFilter(BonusSchemeFilterDto filterDto);
+    Task<BonusSchemeView?> GetById(int schemeId);
+    Task<IEnumerable<BonusSchemeView>> GetByFilter(BonusSchemeFilterView filterDto);
+    Task<BonusSchemeView> Create(BonusSchemeView schemeDto);
+    Task<BonusSchemeView> Update(BonusSchemeView schemeDto);
 }

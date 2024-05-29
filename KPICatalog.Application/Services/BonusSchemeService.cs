@@ -2,10 +2,11 @@
 using KPICatalog.Domain.Interfaces.Repositories;
 using KPICatalog.Application.Models.Entities;
 using KPICatalog.Application.Models.Filters;
-using KPICatalog.Domain.Models.Filters;
+using KPICatalog.Domain.Dtos.Entities;
+using KPICatalog.Domain.Dtos.Filters;
 using AutoMapper;
 
-namespace KPICatalog.Application;
+namespace KPICatalog.Application.Services;
 
 public class BonusSchemeService : IBonusSchemeService
 {
@@ -18,7 +19,7 @@ public class BonusSchemeService : IBonusSchemeService
         _mapper = mapper;
     }
 
-    public async Task<BonusSchemeDto?> GetById(int schemeId)
+    public async Task<BonusSchemeView?> GetById(int schemeId)
     {
         if (schemeId <= 0) throw new ArgumentOutOfRangeException(nameof(schemeId));
 
@@ -26,20 +27,42 @@ public class BonusSchemeService : IBonusSchemeService
 
         if (scheme is null) return null;
 
-        return _mapper.Map<BonusSchemeDto>(scheme);
+        return _mapper.Map<BonusSchemeView>(scheme);
     }
 
-    public async Task<IEnumerable<BonusSchemeDto>> GetByFilter(BonusSchemeFilterDto filterDto)
+    public async Task<IEnumerable<BonusSchemeView>> GetByFilter(BonusSchemeFilterView filterView)
     {
-        if (filterDto is null) throw new ArgumentNullException(nameof(filterDto));
+        if (filterView is null) throw new ArgumentNullException(nameof(filterView));
 
-        var filter = _mapper.Map<BonusSchemesFilter>(filterDto);
+        var filterDto = _mapper.Map<BonusSchemeFilterDto>(filterView);
 
-        var schemes = (await _unitOfWork.BonusSchemeRepository.GetByFilter(filter))
+        var schemes = (await _unitOfWork.BonusSchemeRepository.GetByFilter(filterDto))
             .GroupBy(x => x.CostCenter)
             .Select(x => x.FirstOrDefault())
             .ToList();
 
-        return _mapper.Map<IEnumerable<BonusSchemeDto>>(schemes);
+        return _mapper.Map<IEnumerable<BonusSchemeView>>(schemes);
+    }
+
+    public async Task<BonusSchemeView?> Create(BonusSchemeView schemeView)
+    {
+        if (schemeView is null) throw new ArgumentNullException(nameof(schemeView));
+
+        var schemeDto = _mapper.Map<BonusSchemeDto>(schemeView);
+
+        var scheme = await _unitOfWork.BonusSchemeRepository.Create(schemeDto);
+
+        return _mapper.Map<BonusSchemeView>(scheme);
+    }
+
+    public async Task<BonusSchemeView> Update(BonusSchemeView schemeView)
+    {
+        if (schemeView is null) throw new ArgumentNullException(nameof(schemeView));
+
+        var schemeDto = _mapper.Map<BonusSchemeDto>(schemeView);
+
+        var scheme = await _unitOfWork.BonusSchemeRepository.Update(schemeDto);
+
+        return _mapper.Map<BonusSchemeView>(scheme);
     }
 }

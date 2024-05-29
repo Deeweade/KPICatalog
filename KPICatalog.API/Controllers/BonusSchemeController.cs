@@ -3,6 +3,7 @@ using KPICatalog.Application.Models.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
+using KPICatalog.Application.Models.Entities;
 
 namespace KPICatalog.API.Controllers;
 
@@ -12,20 +13,16 @@ namespace KPICatalog.API.Controllers;
 public class BonusSchemeController : ControllerBase
 {
     private readonly IBonusSchemeService _service;
-    private readonly IMapper _mapper;
 
-    public BonusSchemeController(IBonusSchemeService service, IMapper mapper)
+    public BonusSchemeController(IBonusSchemeService service)
     {
         _service = service;
-        _mapper = mapper;
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(string id)
+    public async Task<IActionResult> Get(int id)
     {
-        if (!int.TryParse(id, out var schemeId)) throw new ArgumentNullException(nameof(id));
-
-        var scheme = await _service.GetById(schemeId);
+        var scheme = await _service.GetById(id);
 
         return Ok(scheme);
     }
@@ -35,10 +32,30 @@ public class BonusSchemeController : ControllerBase
     {
         if (filter is null) filter = new BonusSchemeFilterView();
 
-        var filterDto = _mapper.Map<BonusSchemeFilterDto>(filter);
-
-        var schemes = await _service.GetByFilter(filterDto);
+        var schemes = await _service.GetByFilter(filter);
 
         return Ok(schemes);
+    }
+
+    [HttpPost("create")]
+    public async Task<IActionResult> Post(BonusSchemeView schemeView)
+    {
+        if (schemeView is null) throw new ArgumentNullException(nameof(schemeView));
+
+        var scheme = await _service.Create(schemeView);
+
+        return CreatedAtAction(nameof(Get), new { id = scheme.Id}, scheme);
+    }
+
+    [HttpPost("update/{id}")]
+    public async Task<IActionResult> Put(int id, [FromBody] BonusSchemeView schemeView)
+    {
+        if (schemeView is null) throw new ArgumentNullException(nameof(schemeView));
+
+        if (id != schemeView.Id) return BadRequest();
+
+        var scheme = await _service.Update(schemeView);
+
+        return Ok(scheme);
     }
 }

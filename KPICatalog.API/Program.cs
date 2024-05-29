@@ -4,10 +4,11 @@ using KPICatalog.Infrastructure.Data.Contexts;
 using KPICatalog.Application.Services;
 using KPICatalog.API.Middlewares;
 using KPICatalog.Infrastructure;
-using KPICatalog.Application;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using KPICatalog.Application.Models.Mappings;
+using KPICatalog.Infrastructure.Models.Mappings;
 
 #region EnvironmentConfiguring
 
@@ -95,6 +96,8 @@ builder.Services.AddScoped<IBonusSchemeService, BonusSchemeService>();
 //data
 //builder.Services.AddScoped<IUserAccessControlRepository, UserAccessControlRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddAutoMapper(typeof(InfrastructureMappingProfile), typeof(ApplicationMappingProfile));
 
 #endregion
 
