@@ -1,5 +1,6 @@
-﻿using KPICatalog.Infrastructure.Data.Contexts;
-using KPICatalog.Domain;
+﻿using KPICatalog.Domain.Interfaces.Repositories;
+using KPICatalog.Infrastructure.Data.Contexts;
+using KPICatalog.Domain.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace KPICatalog.Infrastructure.Data.Repositories;

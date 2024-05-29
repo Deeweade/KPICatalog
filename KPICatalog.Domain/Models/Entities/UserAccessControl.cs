@@ -1,4 +1,4 @@
-﻿namespace KPICatalog.Domain;
+﻿namespace KPICatalog.Domain.Models.Entities;
 
 public class UserAccessControl : BaseEntity
 {

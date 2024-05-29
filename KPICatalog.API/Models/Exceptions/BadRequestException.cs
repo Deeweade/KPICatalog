@@ -1,4 +1,4 @@
-﻿namespace KPICatalog.API;
+﻿namespace KPICatalog.API.Models.Exceptions;
 
 public abstract class BadRequestException : Exception
 {

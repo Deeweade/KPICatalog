@@ -1,7 +1,6 @@
 ﻿using KPICatalog.Infrastructure.Data.Repositories;
 using KPICatalog.Domain.Interfaces.Repositories;
 using KPICatalog.Infrastructure.Data.Contexts;
-using KPICatalog.Domain;
 
 namespace KPICatalog.Infrastructure;
 
@@ -14,9 +13,11 @@ public class UnitOfWork : IUnitOfWork
         _context = context;
 
         UserAccessControlRepository = new UserAccessControlRepository(_context);
+        BonusSchemeRepository = new BonusSchemeRepository(_context);
     }
 
     public IUserAccessControlRepository UserAccessControlRepository { get; set; }
+    public IBonusSchemeRepository BonusSchemeRepository { get; set; }
 
     public async Task<int> SaveChangesAsync()
     {

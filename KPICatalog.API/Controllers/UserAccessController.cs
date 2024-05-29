@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using KPICatalog.Application.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using KPICatalog.Application;
 
-namespace KPICatalog.API;
+namespace KPICatalog.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

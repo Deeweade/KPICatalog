@@ -1,14 +1,13 @@
-using Microsoft.AspNetCore.Authentication.Negotiate;
-using Microsoft.EntityFrameworkCore;
+using KPICatalog.Application.Interfaces.Services;
 using KPICatalog.Domain.Interfaces.Repositories;
 using KPICatalog.Infrastructure.Data.Contexts;
 using KPICatalog.Application.Services;
+using KPICatalog.API.Middlewares;
 using KPICatalog.Infrastructure;
 using KPICatalog.Application;
-using KPICatalog.API;
+using Microsoft.AspNetCore.Authentication.Negotiate;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
-using System.Security.Claims;
-using KPICatalog.API.Middlewares;
 
 #region EnvironmentConfiguring
 
@@ -91,6 +90,7 @@ else if (builder.Environment.IsProduction())
 
 //services
 builder.Services.AddScoped<IUserAccessControlService, UserAccessControlService>();
+builder.Services.AddScoped<IBonusSchemeService, BonusSchemeService>();
 
 //data
 //builder.Services.AddScoped<IUserAccessControlRepository, UserAccessControlRepository>();
@@ -102,6 +102,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+#region ApplicationSettingUp
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
@@ -133,5 +135,7 @@ app.UseSwaggerUI(c =>
 });
 
 app.MapControllers();
+
+#endregion
 
 app.Run();

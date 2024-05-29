@@ -1,5 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using KPICatalog.API.Models.Exceptions;
 using KPICatalog.Application;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
 namespace KPICatalog.API.Middlewares;

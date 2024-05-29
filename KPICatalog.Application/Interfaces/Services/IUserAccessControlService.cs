@@ -1,4 +1,4 @@
-﻿namespace KPICatalog.Application;
+﻿namespace KPICatalog.Application.Interfaces.Services;
 
 public interface IUserAccessControlService
 {

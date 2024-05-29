@@ -1,4 +1,5 @@
-﻿using KPICatalog.Domain.Interfaces.Repositories;
+﻿using KPICatalog.Application.Interfaces.Services;
+using KPICatalog.Domain.Interfaces.Repositories;
 
 namespace KPICatalog.Application.Services;
 

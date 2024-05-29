@@ -1,4 +1,6 @@
-﻿namespace KPICatalog.Domain;
+﻿using KPICatalog.Domain.Models.Entities;
+
+namespace KPICatalog.Domain.Interfaces.Repositories;
 
 public interface IUserAccessControlRepository
 {

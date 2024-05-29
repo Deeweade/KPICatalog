@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using KPICatalog.Domain;
+﻿using KPICatalog.Domain.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace KPICatalog.Infrastructure.Data.Contexts;
 
@@ -12,6 +12,8 @@ public class KPICatalogDbContext : DbContext
     }
 
     public DbSet<UserAccessControl> UserAccessControls { get; set; }
+    public DbSet<BonusScheme> BonusSchemes { get; set; }
+    public DbSet<BonusSchemeObjectLink> BonusSchemeObjectLinks { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
