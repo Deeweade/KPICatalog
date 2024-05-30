@@ -20,6 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <DotNetCliToolReference Include="dotnet-ef" Version="8.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\KPICatalog.Application\KPICatalog.Application.csproj" />
     <ProjectReference Include="..\KPICatalog.Infrastructure\KPICatalog.Infrastructure.csproj" />
   </ItemGroup>
