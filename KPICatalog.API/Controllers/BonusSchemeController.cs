@@ -1,9 +1,8 @@
 ﻿using KPICatalog.Application.Interfaces.Services;
 using KPICatalog.Application.Models.Filters;
+using KPICatalog.Application.Models.Views;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using AutoMapper;
-using KPICatalog.Application.Models.Entities;
 
 namespace KPICatalog.API.Controllers;
 
@@ -25,6 +24,14 @@ public class BonusSchemeController : ControllerBase
         var scheme = await _service.GetById(id);
 
         return Ok(scheme);
+    }
+
+    [HttpGet("costCenters")]
+    public async Task<IActionResult> GetCostCenters()
+    {
+        var centers = await _service.GetCostCenters();
+
+        return Ok(centers);
     }
 
     [HttpPost("getFiltered")]

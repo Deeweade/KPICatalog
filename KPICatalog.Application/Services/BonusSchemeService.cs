@@ -1,7 +1,7 @@
 ﻿using KPICatalog.Application.Interfaces.Services;
 using KPICatalog.Domain.Interfaces.Repositories;
-using KPICatalog.Application.Models.Entities;
 using KPICatalog.Application.Models.Filters;
+using KPICatalog.Application.Models.Views;
 using KPICatalog.Domain.Dtos.Entities;
 using KPICatalog.Domain.Dtos.Filters;
 using AutoMapper;
@@ -28,6 +28,11 @@ public class BonusSchemeService : IBonusSchemeService
         if (scheme is null) return null;
 
         return _mapper.Map<BonusSchemeView>(scheme);
+    }
+    
+    public async Task<IEnumerable<string>> GetCostCenters()
+    {
+        return await _unitOfWork.BonusSchemeRepository.GetCostCenters();
     }
 
     public async Task<IEnumerable<BonusSchemeView>> GetByFilter(BonusSchemeFilterView filterView)

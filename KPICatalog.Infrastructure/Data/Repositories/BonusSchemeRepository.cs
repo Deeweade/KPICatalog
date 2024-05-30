@@ -30,6 +30,15 @@ public class BonusSchemeRepository : IBonusSchemeRepository
             .FirstOrDefaultAsync(x => x.Id == schemeId);
     }
 
+    public async Task<IEnumerable<string>> GetCostCenters()
+    {
+        return await _context.BonusSchemes
+            .AsNoTracking()
+            .Select(x => x.CostCenter)
+            .Distinct()
+            .ToListAsync();
+    }
+
     public async Task<IEnumerable<BonusSchemeDto>> GetByFilter(BonusSchemeFilterDto filter)
     {
         if (filter is null) throw new ArgumentNullException(nameof(filter));
