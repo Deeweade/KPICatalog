@@ -141,4 +141,14 @@ app.MapControllers();
 
 #endregion
 
+#region RunMigrations
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<KPICatalogDbContext>();
+    dbContext.Database.Migrate();
+}
+
+#endregion
+
 app.Run();
