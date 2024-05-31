@@ -104,6 +104,9 @@ builder.Services.AddAutoMapper(typeof(InfrastructureMappingProfile), typeof(Appl
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
 var app = builder.Build();
 
 #region ApplicationSettingUp
@@ -143,10 +146,20 @@ app.MapControllers();
 
 #region RunMigrations
 
+// Запуск миграций при старте приложения с логированием
 using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<KPICatalogDbContext>();
-    dbContext.Database.Migrate();
+    var services = scope.ServiceProvider;
+    try
+    {
+        var dbContext = services.GetRequiredService<KPICatalogDbContext>();
+        dbContext.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while migrating the database.");
+    }
 }
 
 #endregion
