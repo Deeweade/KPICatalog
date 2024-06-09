@@ -8,7 +8,7 @@ public class KPICatalogDbContext : DbContext
     public KPICatalogDbContext(DbContextOptions<KPICatalogDbContext> options)
         : base(options)
     {
-        Database.EnsureCreated();
+        //Database.EnsureCreated();
     }
 
     public DbSet<UserAccessControl> UserAccessControls { get; set; }

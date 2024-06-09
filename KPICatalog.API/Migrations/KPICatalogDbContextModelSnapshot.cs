@@ -73,14 +73,32 @@ namespace KPICatalog.API.Migrations
                     b.Property<int?>("LinkedObjectId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("LinkedObjectType")
+                    b.Property<int?>("LinkedObjectTypeId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BonusSchemeId");
 
+                    b.HasIndex("LinkedObjectTypeId");
+
                     b.ToTable("BonusSchemeObjectLinks");
+                });
+
+            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.LinkedObjectType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LinkedObjectType");
                 });
 
             modelBuilder.Entity("KPICatalog.Domain.Models.Entities.UserAccessControl", b =>
@@ -108,10 +126,21 @@ namespace KPICatalog.API.Migrations
                         .WithMany("BonusSchemeObjectLinks")
                         .HasForeignKey("BonusSchemeId");
 
+                    b.HasOne("KPICatalog.Domain.Models.Entities.LinkedObjectType", "LinkedObjectType")
+                        .WithMany("BonusSchemeObjectLinks")
+                        .HasForeignKey("LinkedObjectTypeId");
+
                     b.Navigation("BonusScheme");
+
+                    b.Navigation("LinkedObjectType");
                 });
 
             modelBuilder.Entity("KPICatalog.Domain.Models.Entities.BonusScheme", b =>
+                {
+                    b.Navigation("BonusSchemeObjectLinks");
+                });
+
+            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.LinkedObjectType", b =>
                 {
                     b.Navigation("BonusSchemeObjectLinks");
                 });
