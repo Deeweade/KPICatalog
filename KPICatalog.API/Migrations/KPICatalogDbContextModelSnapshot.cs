@@ -34,19 +34,19 @@ namespace KPICatalog.API.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("DateEnd")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DateStart")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("ExternalId")
                         .HasColumnType("integer");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDefaulBonusScheme")
-                        .HasColumnType("boolean");
+                        .HasColumnType("bit");
 
                     b.Property<int?>("PlanningCycleId")
                         .HasColumnType("integer");
@@ -110,7 +110,7 @@ namespace KPICatalog.API.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("IsAccessGranted")
-                        .HasColumnType("boolean");
+                        .HasColumnType("bit");
 
                     b.Property<string>("Login")
                         .HasColumnType("text");

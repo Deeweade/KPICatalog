@@ -20,12 +20,12 @@ namespace KPICatalog.API.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(type: "text", nullable: true),
                     CostCenter = table.Column<string>(type: "text", nullable: true),
-                    IsDefaulBonusScheme = table.Column<bool>(type: "boolean", nullable: false),
+                    IsDefaulBonusScheme = table.Column<bool>(type: "bit", nullable: false),
                     ExternalId = table.Column<int>(type: "integer", nullable: true),
                     PlanningCycleId = table.Column<int>(type: "integer", nullable: true),
                     DateStart = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DateEnd = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
+                    DateEnd = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -52,7 +52,7 @@ namespace KPICatalog.API.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Login = table.Column<string>(type: "text", nullable: true),
-                    IsAccessGranted = table.Column<bool>(type: "boolean", nullable: false)
+                    IsAccessGranted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
