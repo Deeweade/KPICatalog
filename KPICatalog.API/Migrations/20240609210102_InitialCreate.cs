@@ -23,7 +23,7 @@ namespace KPICatalog.API.Migrations
                     IsDefaulBonusScheme = table.Column<bool>(type: "boolean", nullable: false),
                     ExternalId = table.Column<int>(type: "integer", nullable: true),
                     PlanningCycleId = table.Column<int>(type: "integer", nullable: true),
-                    DateStart = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    DateStart = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateEnd = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
