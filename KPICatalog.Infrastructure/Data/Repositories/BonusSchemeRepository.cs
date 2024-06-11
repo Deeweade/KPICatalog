@@ -30,6 +30,15 @@ public class BonusSchemeRepository : IBonusSchemeRepository
             .FirstOrDefaultAsync(x => x.Id == schemeId);
     }
 
+    public async Task<IEnumerable<string>> GetCostCenters()
+    {
+        return await _context.BonusSchemes
+            .AsNoTracking()
+            .Select(x => x.CostCenter)
+            .Distinct()
+            .ToListAsync();
+    }
+
     public async Task<IEnumerable<BonusSchemeDto>> GetByFilter(BonusSchemeFilterDto filter)
     {
         if (filter is null) throw new ArgumentNullException(nameof(filter));
@@ -38,12 +47,14 @@ public class BonusSchemeRepository : IBonusSchemeRepository
             .AsNoTracking()
             .ProjectTo<BonusSchemeDto>(_mapper.ConfigurationProvider);
 
-        if (filter.IncludeActiveOnly is not null)
+        if (filter.IncludeActiveOnly is not null && (bool)filter.IncludeActiveOnly)
         {
             query = query.Where(x => x.IsActive);
         }
 
-        return await query.ToListAsync();
+        var res = await query.ToListAsync();
+
+        return res;
     }
 
     public async Task<BonusSchemeDto?> Create(BonusSchemeDto bonusSchemeDto)

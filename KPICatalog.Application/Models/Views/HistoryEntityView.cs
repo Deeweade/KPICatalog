@@ -1,4 +1,4 @@
-namespace KPICatalog.Application.Models.Entities;
+namespace KPICatalog.Application.Models.Views;
 
 public abstract class HistoryEntityView : BaseEntityView
 {
