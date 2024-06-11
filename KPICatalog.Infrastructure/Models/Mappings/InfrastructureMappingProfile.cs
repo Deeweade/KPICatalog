@@ -8,9 +8,16 @@ public class InfrastructureMappingProfile : Profile
 {
     public InfrastructureMappingProfile()
     {
-        CreateBonusSchemeMappings();
+        CreateEmployeeMappings();
         CreateBonusSchemeObjectLinkMappings();
+        CreateBonusSchemeMappings();
         CreateUserAccessControlMappings();
+    }
+
+    private void CreateEmployeeMappings()
+    {
+        CreateMap<Employee, EmployeeDto>();
+        CreateMap<EmployeeDto, Employee>();
     }
 
     private void CreateBonusSchemeObjectLinkMappings()

@@ -1,0 +1,33 @@
+﻿using KPICatalog.Domain.Interfaces.Repositories;
+using KPICatalog.Infrastructure.Data.Contexts;
+using KPICatalog.Domain.Dtos.Entities;
+using Microsoft.EntityFrameworkCore;
+using AutoMapper.QueryableExtensions;
+using AutoMapper;
+
+namespace KPICatalog.Infrastructure.Data.Repositories;
+
+public class EmployeeRepository : IEmlpoyeeRepository
+{
+    private readonly KPICatalogDbContext _context;
+    private readonly IMapper _mapper;
+
+    public EmployeeRepository(KPICatalogDbContext context, IMapper mapper)
+    {
+        _context = context;
+        _mapper = mapper;
+    }
+
+    public async Task<IEnumerable<EmployeeDto>> GetByIds(List<int> ids)
+    {
+        if (ids is null) throw new ArgumentNullException(nameof(ids));
+
+        ids = ids.Distinct().ToList();
+
+        return await _context.Employees
+            .AsNoTracking()
+            .ProjectTo<EmployeeDto>(_mapper.ConfigurationProvider)
+            .Where(x => ids.Any(id => id == x.Id))
+            .ToListAsync();
+    }
+}

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.AccessControl;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using KPICatalog.Domain.Dtos.Entities;
 using KPICatalog.Domain.Dtos.Filters;
@@ -31,6 +32,16 @@ public class BonusSchemeObjectLinkRepository : IBonusSchemeObjectLinkRepository
         if (filter.LinkedObjectsIds != null && filter.LinkedObjectsIds.Any())
         {
             query = query.Where(x => filter.LinkedObjectsIds.Any(id => id == x.LinkedObjectId));
+        }
+
+        if (filter.BonusSchemeId is not null)
+        {
+            query = query.Where(x => x.BonusSchemeId.HasValue && x.BonusSchemeId == filter.BonusSchemeId);
+        }
+
+        if (filter.LinkedObjectTypeId is not null)
+        {
+            query = query.Where(x => x.LinkedObjectTypeId.HasValue && x.LinkedObjectTypeId == filter.LinkedObjectTypeId);    
         }
 
         return await query.ToListAsync();

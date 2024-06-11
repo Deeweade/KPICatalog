@@ -10,8 +10,15 @@ public class ApplicationMappingProfile : Profile
 {
     public ApplicationMappingProfile()
     {
+        CreateEmployeeMappings();
         CreateBonusSchemeMappings();
         CreateBonusSchemeObjectLinkMappings();
+    }
+
+    private void CreateEmployeeMappings()
+    {
+        CreateMap<EmployeeView, EmployeeDto>();
+        CreateMap<EmployeeDto, EmployeeView>();
     }
 
     private void CreateBonusSchemeObjectLinkMappings()
