@@ -92,9 +92,9 @@ else if (builder.Environment.IsProduction())
 //services
 builder.Services.AddScoped<IUserAccessControlService, UserAccessControlService>();
 builder.Services.AddScoped<IBonusSchemeService, BonusSchemeService>();
+builder.Services.AddScoped<IBonusSchemeObjectLinkService, BonusSchemeObjectLinkService>();
 
 //data
-//builder.Services.AddScoped<IUserAccessControlRepository, UserAccessControlRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddAutoMapper(typeof(InfrastructureMappingProfile), typeof(ApplicationMappingProfile));

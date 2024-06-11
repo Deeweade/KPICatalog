@@ -19,10 +19,6 @@ public class ApplicationMappingProfile : Profile
         //entities
         CreateMap<BonusSchemeObjectLinkView, BonusSchemeObjectLinkDto>();
         CreateMap<BonusSchemeObjectLinkDto, BonusSchemeObjectLinkView>();
-
-        //collections
-        CreateMap<IEnumerable<BonusSchemeObjectLinkView>, IEnumerable<BonusSchemeObjectLinkDto>>();
-        CreateMap<IEnumerable<BonusSchemeObjectLinkDto>, IEnumerable<BonusSchemeObjectLinkView>>();
     }
 
     private void CreateBonusSchemeMappings()
@@ -34,9 +30,5 @@ public class ApplicationMappingProfile : Profile
         //entities
         CreateMap<BonusSchemeView, BonusSchemeDto>();
         CreateMap<BonusSchemeDto, BonusSchemeView>();
-
-        //collections
-        CreateMap<IEnumerable<BonusSchemeView>, IEnumerable<BonusSchemeDto>>();
-        CreateMap<IEnumerable<BonusSchemeDto>, IEnumerable<BonusSchemeView>>();
     }
 }

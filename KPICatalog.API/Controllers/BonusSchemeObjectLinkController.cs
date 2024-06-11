@@ -17,7 +17,7 @@ public class BonusSchemeObjectLinkController : ControllerBase
         _service = service;
     }
 
-    [HttpPost]
+    [HttpPost("create")]
     public async Task<IActionResult> PostMany(BonusSchemeObjectLinkView linkView)
     {
         var links = await _service.CreateMany(linkView);

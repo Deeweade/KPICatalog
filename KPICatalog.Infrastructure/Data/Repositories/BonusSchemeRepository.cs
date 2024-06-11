@@ -47,12 +47,14 @@ public class BonusSchemeRepository : IBonusSchemeRepository
             .AsNoTracking()
             .ProjectTo<BonusSchemeDto>(_mapper.ConfigurationProvider);
 
-        if (filter.IncludeActiveOnly is not null)
+        if (filter.IncludeActiveOnly is not null && (bool)filter.IncludeActiveOnly)
         {
             query = query.Where(x => x.IsActive);
         }
 
-        return await query.ToListAsync();
+        var res = await query.ToListAsync();
+
+        return res;
     }
 
     public async Task<BonusSchemeDto?> Create(BonusSchemeDto bonusSchemeDto)

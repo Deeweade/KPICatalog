@@ -18,10 +18,6 @@ public class InfrastructureMappingProfile : Profile
         //entities
         CreateMap<BonusSchemeObjectLink, BonusSchemeObjectLinkDto>();
         CreateMap<BonusSchemeObjectLinkDto, BonusSchemeObjectLink>();
-
-        //collections
-        CreateMap<IEnumerable<BonusSchemeObjectLink>, IEnumerable<BonusSchemeObjectLinkDto>>();
-        CreateMap<IEnumerable<BonusSchemeObjectLinkDto>, IEnumerable<BonusSchemeObjectLink>>();
     }
 
     private void CreateUserAccessControlMappings()
@@ -36,9 +32,5 @@ public class InfrastructureMappingProfile : Profile
         //entities
         CreateMap<BonusScheme, BonusSchemeDto>();
         CreateMap<BonusSchemeDto, BonusScheme>();
-
-        //collections
-        CreateMap<IEnumerable<BonusScheme>, IEnumerable<BonusSchemeDto>>();
-        CreateMap<IEnumerable<BonusSchemeDto>, IEnumerable<BonusScheme>>();
     }
 }

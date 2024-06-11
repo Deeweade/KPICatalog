@@ -46,7 +46,9 @@ public class BonusSchemeService : IBonusSchemeService
             .Select(x => x.FirstOrDefault())
             .ToList();
 
-        return _mapper.Map<IEnumerable<BonusSchemeView>>(schemes);
+        var result = _mapper.Map<IEnumerable<BonusSchemeView>>(schemes);
+
+        return result;
     }
 
     public async Task<BonusSchemeView?> Create(BonusSchemeView schemeView)
