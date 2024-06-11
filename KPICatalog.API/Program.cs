@@ -1,14 +1,14 @@
 using KPICatalog.Application.Interfaces.Services;
 using KPICatalog.Domain.Interfaces.Repositories;
+using KPICatalog.Infrastructure.Models.Mappings;
 using KPICatalog.Infrastructure.Data.Contexts;
+using KPICatalog.Application.Models.Mappings;
 using KPICatalog.Application.Services;
 using KPICatalog.API.Middlewares;
 using KPICatalog.Infrastructure;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
-using KPICatalog.Application.Models.Mappings;
-using KPICatalog.Infrastructure.Models.Mappings;
 
 #region EnvironmentConfiguring
 
@@ -92,9 +92,9 @@ else if (builder.Environment.IsProduction())
 //services
 builder.Services.AddScoped<IUserAccessControlService, UserAccessControlService>();
 builder.Services.AddScoped<IBonusSchemeService, BonusSchemeService>();
+builder.Services.AddScoped<IBonusSchemeObjectLinkService, BonusSchemeObjectLinkService>();
 
 //data
-//builder.Services.AddScoped<IUserAccessControlRepository, UserAccessControlRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddAutoMapper(typeof(InfrastructureMappingProfile), typeof(ApplicationMappingProfile));
@@ -138,6 +138,19 @@ app.UseSwaggerUI(c =>
 });
 
 app.MapControllers();
+
+#endregion
+
+#region RunMigrations
+
+// Запуск миграций при старте приложения с логированием
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var dbContext = services.GetRequiredService<KPICatalogDbContext>();
+    dbContext.Database.Migrate();
+}
 
 #endregion
 

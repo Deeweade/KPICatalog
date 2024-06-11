@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace KPICatalog.API.Migrations
 {
     [DbContext(typeof(KPICatalogDbContext))]
-    [Migration("20240529144934_InitialCreate")]
+    [Migration("20240610182039_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -37,19 +37,19 @@ namespace KPICatalog.API.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("DateEnd")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DateStart")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("ExternalId")
                         .HasColumnType("integer");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDefaulBonusScheme")
-                        .HasColumnType("boolean");
+                        .HasColumnType("bit");
 
                     b.Property<int?>("PlanningCycleId")
                         .HasColumnType("integer");
@@ -76,14 +76,32 @@ namespace KPICatalog.API.Migrations
                     b.Property<int?>("LinkedObjectId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("LinkedObjectType")
+                    b.Property<int?>("LinkedObjectTypeId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BonusSchemeId");
 
+                    b.HasIndex("LinkedObjectTypeId");
+
                     b.ToTable("BonusSchemeObjectLinks");
+                });
+
+            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.LinkedObjectType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LinkedObjectType");
                 });
 
             modelBuilder.Entity("KPICatalog.Domain.Models.Entities.UserAccessControl", b =>
@@ -95,7 +113,7 @@ namespace KPICatalog.API.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("IsAccessGranted")
-                        .HasColumnType("boolean");
+                        .HasColumnType("bit");
 
                     b.Property<string>("Login")
                         .HasColumnType("text");
@@ -111,10 +129,21 @@ namespace KPICatalog.API.Migrations
                         .WithMany("BonusSchemeObjectLinks")
                         .HasForeignKey("BonusSchemeId");
 
+                    b.HasOne("KPICatalog.Domain.Models.Entities.LinkedObjectType", "LinkedObjectType")
+                        .WithMany("BonusSchemeObjectLinks")
+                        .HasForeignKey("LinkedObjectTypeId");
+
                     b.Navigation("BonusScheme");
+
+                    b.Navigation("LinkedObjectType");
                 });
 
             modelBuilder.Entity("KPICatalog.Domain.Models.Entities.BonusScheme", b =>
+                {
+                    b.Navigation("BonusSchemeObjectLinks");
+                });
+
+            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.LinkedObjectType", b =>
                 {
                     b.Navigation("BonusSchemeObjectLinks");
                 });

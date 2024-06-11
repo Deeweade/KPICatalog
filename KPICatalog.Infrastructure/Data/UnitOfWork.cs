@@ -15,10 +15,14 @@ public class UnitOfWork : IUnitOfWork
 
         UserAccessControlRepository = new UserAccessControlRepository(_context, mapper);
         BonusSchemeRepository = new BonusSchemeRepository(_context, mapper);
+        BonusSchemeObjectLinkRepository = new BonusSchemeObjectLinkRepository(_context, mapper);
+        EmployeeRepository = new EmployeeRepository(_context, mapper);
     }
 
     public IUserAccessControlRepository UserAccessControlRepository { get; set; }
     public IBonusSchemeRepository BonusSchemeRepository { get; set; }
+    public IBonusSchemeObjectLinkRepository BonusSchemeObjectLinkRepository { get; set; }
+    public IEmlpoyeeRepository EmployeeRepository { get; set; }
 
     public async Task<int> SaveChangesAsync()
     {

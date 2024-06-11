@@ -1,9 +1,10 @@
 ﻿using KPICatalog.Application.Interfaces.Services;
 using KPICatalog.Domain.Interfaces.Repositories;
-using KPICatalog.Application.Models.Entities;
 using KPICatalog.Application.Models.Filters;
+using KPICatalog.Application.Models.Views;
 using KPICatalog.Domain.Dtos.Entities;
 using KPICatalog.Domain.Dtos.Filters;
+using KPICatalog.Domain.Models.Enums;
 using AutoMapper;
 
 namespace KPICatalog.Application.Services;
@@ -27,7 +28,27 @@ public class BonusSchemeService : IBonusSchemeService
 
         if (scheme is null) return null;
 
-        return _mapper.Map<BonusSchemeView>(scheme);
+        var result = _mapper.Map<BonusSchemeView>(scheme);
+
+        var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(
+            new BonusSchemeObjectLinkFilterDto
+            {
+                BonusSchemeId = schemeId,
+                LinkedObjectTypeId = (int)LinkedObjectTypes.Employee
+            });
+
+        var employeeIds = links.Select(x => (int)x.LinkedObjectId).ToList();
+
+        var employees = await _unitOfWork.EmployeeRepository.GetByIds(employeeIds);
+
+        result.Employees = _mapper.Map<IEnumerable<EmployeeView>>(employees);
+
+        return result;
+    }
+    
+    public async Task<IEnumerable<string>> GetCostCenters()
+    {
+        return await _unitOfWork.BonusSchemeRepository.GetCostCenters();
     }
 
     public async Task<IEnumerable<BonusSchemeView>> GetByFilter(BonusSchemeFilterView filterView)
@@ -41,7 +62,9 @@ public class BonusSchemeService : IBonusSchemeService
             .Select(x => x.FirstOrDefault())
             .ToList();
 
-        return _mapper.Map<IEnumerable<BonusSchemeView>>(schemes);
+        var views = _mapper.Map<IEnumerable<BonusSchemeView>>(schemes);
+
+        return views;
     }
 
     public async Task<BonusSchemeView?> Create(BonusSchemeView schemeView)
