@@ -69,7 +69,7 @@ builder.Services.AddControllers(options =>
 
 string connectionString = builder.Configuration.GetConnectionString("KPICatalog");
 
-if (builder.Environment.IsEnvironment("Development_opetrov2"))
+if (builder.Environment.IsEnvironment("Development_opetrov2") || builder.Environment.IsEnvironment("Development_lmaksimova"))
 {
     builder.Services.AddDbContext<KPICatalogDbContext>(options =>
         options.UseNpgsql(connectionString, b => b.MigrationsAssembly("KPICatalog.API")));
@@ -110,7 +110,7 @@ var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-if (app.Environment.IsEnvironment("Development_opetrov2"))
+if (app.Environment.IsEnvironment("Development_opetrov2") || app.Environment.IsEnvironment("Development_lmaksimova"))
 {
     app.UseMiddleware<DevAuthMiddleware>();
 }

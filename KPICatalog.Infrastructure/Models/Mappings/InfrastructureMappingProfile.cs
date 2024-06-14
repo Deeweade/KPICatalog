@@ -8,10 +8,24 @@ public class InfrastructureMappingProfile : Profile
 {
     public InfrastructureMappingProfile()
     {
+        CreateTypicalGoalInBonusSchemeMapping();
+        CreateTypicalGoalMappings();
         CreateEmployeeMappings();
         CreateBonusSchemeObjectLinkMappings();
         CreateBonusSchemeMappings();
         CreateUserAccessControlMappings();
+    }
+
+    private void CreateTypicalGoalInBonusSchemeMapping()
+    {
+        CreateMap<TypicalGoalInBonusScheme, TypicalGoalInBonusSchemeDto>();
+        CreateMap<TypicalGoalInBonusSchemeDto, TypicalGoalInBonusScheme>();
+    }
+
+    private void CreateTypicalGoalMappings()
+    {
+        CreateMap<TypicalGoal, TypicalGoalDto>();
+        CreateMap<TypicalGoalDto, TypicalGoal>();
     }
 
     private void CreateEmployeeMappings()

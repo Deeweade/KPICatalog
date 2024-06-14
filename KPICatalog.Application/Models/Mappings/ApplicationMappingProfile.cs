@@ -10,9 +10,23 @@ public class ApplicationMappingProfile : Profile
 {
     public ApplicationMappingProfile()
     {
+        CreateTypicalGoalInBonusSchemeMappings();
+        CreateTypicalGoalMappings();
         CreateEmployeeMappings();
         CreateBonusSchemeMappings();
         CreateBonusSchemeObjectLinkMappings();
+    }
+
+    private void CreateTypicalGoalInBonusSchemeMappings()
+    {
+        CreateMap<TypicalGoalInBonusSchemeView, TypicalGoalInBonusSchemeDto>();
+        CreateMap<TypicalGoalInBonusSchemeDto, TypicalGoalInBonusSchemeView>();
+    }
+
+    private void CreateTypicalGoalMappings()
+    {
+        CreateMap<TypicalGoalView, TypicalGoalDto>();
+        CreateMap<TypicalGoalDto, TypicalGoalView>();
     }
 
     private void CreateEmployeeMappings()

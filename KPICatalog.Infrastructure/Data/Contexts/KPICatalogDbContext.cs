@@ -15,6 +15,8 @@ public class KPICatalogDbContext : DbContext
     public DbSet<UserAccessControl> UserAccessControls { get; set; }
     public DbSet<BonusScheme> BonusSchemes { get; set; }
     public DbSet<BonusSchemeObjectLink> BonusSchemeObjectLinks { get; set; }
+    public DbSet<TypicalGoal> TypicalGoals { get; set; }
+    public DbSet<TypicalGoalInBonusScheme> TypicalGoalInBonusSchemes { get; set; }
 
     //views
     public DbSet<Employee> Employees { get; set; }
