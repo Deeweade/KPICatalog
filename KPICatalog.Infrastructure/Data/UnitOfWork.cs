@@ -17,12 +17,14 @@ public class UnitOfWork : IUnitOfWork
         BonusSchemeRepository = new BonusSchemeRepository(_context, mapper);
         BonusSchemeObjectLinkRepository = new BonusSchemeObjectLinkRepository(_context, mapper);
         EmployeeRepository = new EmployeeRepository(_context, mapper);
+        TypicalGoalRepository = new TypicalGoalRepository(_context, mapper);
     }
 
     public IUserAccessControlRepository UserAccessControlRepository { get; set; }
     public IBonusSchemeRepository BonusSchemeRepository { get; set; }
     public IBonusSchemeObjectLinkRepository BonusSchemeObjectLinkRepository { get; set; }
     public IEmlpoyeeRepository EmployeeRepository { get; set; }
+    public ITypicalGoalRepository TypicalGoalRepository { get; set; }
 
     public async Task<int> SaveChangesAsync()
     {
