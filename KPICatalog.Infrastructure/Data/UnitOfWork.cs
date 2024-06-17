@@ -7,16 +7,16 @@ namespace KPICatalog.Infrastructure;
 
 public class UnitOfWork : IUnitOfWork
 {
-    private readonly KPICatalogDbContext _context;
+    private readonly KPICatalogDbContext _kpiCatalogContext;
 
-    public UnitOfWork(KPICatalogDbContext context, IMapper mapper)
+    public UnitOfWork(KPICatalogDbContext kpiCatalogContext, IMapper mapper, PerfManagementDbContext perfManagementContext)
     {
-        _context = context;
+        _kpiCatalogContext = kpiCatalogContext;
 
-        UserAccessControlRepository = new UserAccessControlRepository(_context, mapper);
-        BonusSchemeRepository = new BonusSchemeRepository(_context, mapper);
-        BonusSchemeObjectLinkRepository = new BonusSchemeObjectLinkRepository(_context, mapper);
-        EmployeeRepository = new EmployeeRepository(_context, mapper);
+        UserAccessControlRepository = new UserAccessControlRepository(_kpiCatalogContext, mapper);
+        BonusSchemeRepository = new BonusSchemeRepository(_kpiCatalogContext, mapper);
+        BonusSchemeObjectLinkRepository = new BonusSchemeObjectLinkRepository(_kpiCatalogContext, mapper);
+        EmployeeRepository = new EmployeeRepository(perfManagementContext, mapper);
     }
 
     public IUserAccessControlRepository UserAccessControlRepository { get; set; }
@@ -26,6 +26,6 @@ public class UnitOfWork : IUnitOfWork
 
     public async Task<int> SaveChangesAsync()
     {
-        return await _context.SaveChangesAsync();
+        return await _kpiCatalogContext.SaveChangesAsync();
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace KPICatalog.Domain.Models.Entities;
+﻿namespace KPICatalog.Domain.Models.Entities.KPICatalog;
 
 public class BonusScheme : HistoryEntity
 {

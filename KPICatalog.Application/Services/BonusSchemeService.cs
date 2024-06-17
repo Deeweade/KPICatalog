@@ -78,7 +78,7 @@ public class BonusSchemeService : IBonusSchemeService
         return _mapper.Map<BonusSchemeView>(scheme);
     }
 
-    public async Task<BonusSchemeView> Update(BonusSchemeView schemeView)
+    public async Task<BonusSchemeView?> Update(BonusSchemeView schemeView)
     {
         if (schemeView is null) throw new ArgumentNullException(nameof(schemeView));
 

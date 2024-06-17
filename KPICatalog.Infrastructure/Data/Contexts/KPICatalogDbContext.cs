@@ -1,5 +1,4 @@
-﻿using KPICatalog.Domain.Models.Entities;
-using KPICatalog.Domain;
+﻿using KPICatalog.Domain.Models.Entities.KPICatalog;
 using Microsoft.EntityFrameworkCore;
 
 namespace KPICatalog.Infrastructure.Data.Contexts;
@@ -18,9 +17,6 @@ public class KPICatalogDbContext : DbContext
     public DbSet<TypicalGoal> TypicalGoals { get; set; }
     public DbSet<TypicalGoalInBonusScheme> TypicalGoalInBonusSchemes { get; set; }
 
-    //views
-    public DbSet<Employee> Employees { get; set; }
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
@@ -29,5 +25,6 @@ public class KPICatalogDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
     }
 }

@@ -1,12 +1,11 @@
-﻿using System.Security.AccessControl;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
+﻿using KPICatalog.Domain.Models.Entities.KPICatalog;
+using KPICatalog.Domain.Interfaces.Repositories;
+using KPICatalog.Infrastructure.Data.Contexts;
 using KPICatalog.Domain.Dtos.Entities;
 using KPICatalog.Domain.Dtos.Filters;
-using KPICatalog.Domain.Interfaces.Repositories;
-using KPICatalog.Domain.Models.Entities;
-using KPICatalog.Infrastructure.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper.QueryableExtensions;
+using AutoMapper;
 
 namespace KPICatalog.Infrastructure.Data.Repositories;
 

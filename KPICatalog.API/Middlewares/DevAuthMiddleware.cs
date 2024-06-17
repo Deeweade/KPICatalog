@@ -24,7 +24,7 @@ public class DevAuthMiddleware
                 new Claim(ClaimTypes.Role, "Admin")
             };
 
-            var identity = new ClaimsIdentity(claims, "Development_lmaksimova");
+            var identity = new ClaimsIdentity(claims, "Development");
             context.User = new ClaimsPrincipal(identity);
         }
         catch
