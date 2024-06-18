@@ -1,0 +1,76 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  DOTNET_VERSION: "8.0"
+
+workflow:
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "main"
+
+# Сборка для тестового окружения
+build_test:
+  stage: build
+  variables:
+    config: Debug
+    out_dir: #?
+  extends: .build
+
+# Сборка для продакшн окружения
+# build_prod:
+#   stage: build
+#   variables:
+#     config: Release
+#     out_dir: #?
+#   extends: .build
+
+.build
+  stage: build
+  image: mcr.microsoft.com/dotnet/sdk:$DOTNET_VERSION
+  script:
+    - dotnet restore
+    - dotnet build --configuration ${config}
+    - dotnet publish --configuration ${config} --output ${out_dir}
+  artifacts:
+    paths:
+      - ${out_dir}/
+  only:
+    - main
+      
+# Деплой на тестовый сервер
+deploy_test:
+  stage: deploy
+  extends: .deploy
+  dependencies:
+    - build_test
+  variables:
+    username: ${SP_TEST_USERNAME}
+    password: ${SP_TEST_PASSWORD}
+    env: test
+    host: http://srvap869.rccf.ru
+  when: manual
+
+# Деплой на продакшн сервер
+# deploy_prod:
+#   stage: deploy
+#   extends: .deploy
+#   dependencies:
+#     - build_test
+#   variables:
+#     username: ${SP_TEST_USERNAME}
+#     password: ${SP_TEST_PASSWORD}
+#     env: production
+#     host: http://intranet.rencredit.ru
+#   when: manual
+
+.deploy:
+  stage: deploy
+  script:
+    - echo "Deploying to ${env} server"
+    - powershell.exe -File deploy.ps1
+  environment:
+    name: ${env}
+    url: ${host}
+  only:
+    - main

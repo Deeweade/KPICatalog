@@ -1,4 +1,5 @@
-﻿using KPICatalog.Domain.Models.Entities;
+﻿using KPICatalog.Domain.Models.Entities.KPICatalog;
+using KPICatalog.Domain.Models.Entities.Goals;
 using KPICatalog.Domain.Dtos.Entities;
 using AutoMapper;
 

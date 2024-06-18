@@ -24,7 +24,7 @@ string machineName = Environment.MachineName.ToLower();
 
 var machineNames = config.GetSection("EnvironmentMachines").Get<Dictionary<string, string>>();
 
-string environment = machineNames.FirstOrDefault(x => x.Value.ToLower() == machineName).Key ?? "Test";
+string environment = machineNames.FirstOrDefault(x => x.Value.ToLower() == machineName).Key ?? "Development";
 
 #endregion
 
@@ -65,25 +65,17 @@ builder.Services.AddControllers(options =>
 
 #endregion
 
-#region ContextConfiguring
+#region ContextsConfiguring
 
-string connectionString = builder.Configuration.GetConnectionString("KPICatalog");
+string kpiCatalogConnectionString = builder.Configuration.GetConnectionString("KPICatalog");
 
-if (builder.Environment.IsEnvironment("Development_opetrov2") || builder.Environment.IsEnvironment("Development_lmaksimova"))
-{
-    builder.Services.AddDbContext<KPICatalogDbContext>(options =>
-        options.UseNpgsql(connectionString, b => b.MigrationsAssembly("KPICatalog.API")));
-}
-else if (builder.Environment.IsEnvironment("Test"))
-{
-    builder.Services.AddDbContext<KPICatalogDbContext>(options =>
-        options.UseSqlServer(connectionString, b => b.MigrationsAssembly("KPICatalog.API")));
-}
-else if (builder.Environment.IsProduction())
-{
-    builder.Services.AddDbContext<KPICatalogDbContext>(options =>
-        options.UseSqlServer(connectionString, b => b.MigrationsAssembly("KPICatalog.API")));
-}
+builder.Services.AddDbContext<KPICatalogDbContext>(options =>
+    options.UseSqlServer(kpiCatalogConnectionString, b => b.MigrationsAssembly("KPICatalog.API")));
+
+var perfManagementConnectionString = builder.Configuration.GetConnectionString("PerfManagement1");
+
+builder.Services.AddDbContext<PerfManagementDbContext>(options =>
+    options.UseSqlServer(perfManagementConnectionString));
 
 #endregion
 
@@ -111,7 +103,7 @@ var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-if (app.Environment.IsEnvironment("Development_opetrov2") || app.Environment.IsEnvironment("Development_lmaksimova"))
+if (app.Environment.IsDevelopment())
 {
     app.UseMiddleware<DevAuthMiddleware>();
 }

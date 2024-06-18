@@ -1,0 +1,47 @@
+# Системные файлы и папки
+**/.git
+**/.gitlab-ci.yml
+**/.gitignore
+**/.svn
+**/.hg
+**/.lock
+**/.DS_Store
+**/.npm
+**/.nvm
+
+# Директории сборки и временные файлы
+**/bin
+**/obj
+**/out
+
+# Конфигурационные файлы IDE
+.vscode/
+.vscode/*
+.vs/
+.vs/*
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Локальные конфигурационные файлы среды
+.env
+.env.local
+.env.*.local
+
+# Лог файлы
+*.log
+logs/
+
+# Пакеты и зависимости
+**/node_modules
+**/npm-debug.log
+
+# Docker Compose файлы
+docker-compose.yml
+docker-compose.override.yml
+
+# Дополнительные файлы, которые могут быть созданы в процессе разработки
+*.tmp
+*.temp

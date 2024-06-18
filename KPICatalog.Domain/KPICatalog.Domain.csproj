@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Models/Entities/Goals/" />
+    <Folder Include="Models/Entities/KPICatalog/" />
+  </ItemGroup>
+
 </Project>

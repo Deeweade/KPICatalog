@@ -9,10 +9,10 @@ namespace KPICatalog.Infrastructure.Data.Repositories;
 
 public class EmployeeRepository : IEmlpoyeeRepository
 {
-    private readonly KPICatalogDbContext _context;
+    private readonly PerfManagementDbContext _context;
     private readonly IMapper _mapper;
 
-    public EmployeeRepository(KPICatalogDbContext context, IMapper mapper)
+    public EmployeeRepository(PerfManagementDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;

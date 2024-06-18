@@ -1,0 +1,11 @@
+FROM mcr.microsoft.com/azure-sql-edge
+
+# Копируем SQL-скрипт и скрипт оболочки в контейнер
+COPY init-db.sql /init-db.sql
+COPY entrypoint.sh /entrypoint.sh
+
+# Даем права на выполнение скрипта
+RUN chmod +x /entrypoint.sh
+
+# Устанавливаем скрипт оболочки как точку входа
+ENTRYPOINT ["/entrypoint.sh"]
