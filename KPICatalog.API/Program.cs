@@ -85,6 +85,7 @@ builder.Services.AddDbContext<PerfManagementDbContext>(options =>
 builder.Services.AddScoped<IUserAccessControlService, UserAccessControlService>();
 builder.Services.AddScoped<IBonusSchemeService, BonusSchemeService>();
 builder.Services.AddScoped<IBonusSchemeObjectLinkService, BonusSchemeObjectLinkService>();
+builder.Services.AddScoped<ITypicalGoalService, TypicalGoalService>();
 
 //data
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

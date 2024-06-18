@@ -6,4 +6,5 @@ public interface IUnitOfWork
     IBonusSchemeRepository BonusSchemeRepository { get; set; }
     IBonusSchemeObjectLinkRepository BonusSchemeObjectLinkRepository { get; set; }
     IEmlpoyeeRepository EmployeeRepository { get; set; }
+    ITypicalGoalRepository TypicalGoalRepository { get; set; }
 }
