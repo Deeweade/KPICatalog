@@ -1,6 +1,3 @@
-ALTER LOGIN sa WITH PASSWORD = 'QWErty_12345678';
-GO
-
 IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'KPICatalog')
 BEGIN
     CREATE DATABASE KPICatalog;
