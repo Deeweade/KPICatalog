@@ -8,8 +8,8 @@ KPICatalog - каталог типовых целей и их связей с б
 
     -запускаем в терминале/командной строке скрипт, который создает контейнер с мультиархитектурным образом SQL Server: docker pull mcr.microsoft.com/azure-sql-edge
 
-    -запускаем контейнер с MS SQL Server: docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Пароль_с_цифрами_8_и_знакаМИ' -p 1433:1433 --name sqlserver -d mcr.microsoft.com/azure-sql-edge
+    -запускаем контейнер с MS SQL Server: docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=QWErty_12345678' -p 1433:1433 --name sqlserver -d mcr.microsoft.com/azure-sql-edge
 
     -для работы с БД можно использовать SSMS или Azure Data Studio (на Mac OS)
-    
+
     -после запуска контейнера запустить SQL скрипт из файла init-db.sql (таблицы в БД KPICatalog добавятся автоматически с помощью миграций при запуске проекта).
