@@ -1,11 +1,10 @@
 using KPICatalog.Domain.Interfaces.Repositories;
 using KPICatalog.Infrastructure.Data.Contexts;
-using KPICatalog.Domain.Models.Entities;
 using KPICatalog.Domain.Dtos.Entities;
-using KPICatalog.Domain.Dtos.Filters;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper.QueryableExtensions;
 using AutoMapper;
+using KPICatalog.Domain.Models.Entities.KPICatalog;
 
 namespace KPICatalog.Infrastructure;
 

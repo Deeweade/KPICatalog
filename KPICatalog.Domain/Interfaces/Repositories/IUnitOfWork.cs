@@ -2,9 +2,9 @@
 
 public interface IUnitOfWork
 {
-    IUserAccessControlRepository UserAccessControlRepository { get; set; }
-    IBonusSchemeRepository BonusSchemeRepository { get; set; }
-    IBonusSchemeObjectLinkRepository BonusSchemeObjectLinkRepository { get; set; }
-    IEmlpoyeeRepository EmployeeRepository { get; set; }
-    ITypicalGoalRepository TypicalGoalRepository { get; set; }
+    IUserAccessControlRepository UserAccessControlRepository { get; }
+    IBonusSchemeRepository BonusSchemeRepository { get; }
+    IBonusSchemeObjectLinkRepository BonusSchemeObjectLinkRepository { get; }
+    IEmlpoyeeRepository EmployeeRepository { get; }
+    ITypicalGoalRepository TypicalGoalRepository { get; }
 }
