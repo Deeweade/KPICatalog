@@ -65,4 +65,16 @@ public class BonusSchemeController : ControllerBase
 
         return Ok(scheme);
     }
+
+    [HttpPost("delete/{id}")]
+    public async Task<IActionResult> Delete(int id, DateTime dateEnd, int? newBonusSchemeId, BonusSchemeView schemeView)
+    {
+        if (schemeView is null) throw new ArgumentNullException(nameof(schemeView));
+
+        if (id != schemeView.Id) return BadRequest();
+
+        var scheme = await _service.Deactivate(id, dateEnd, newBonusSchemeId);
+
+        return Ok(scheme);
+    }
 }

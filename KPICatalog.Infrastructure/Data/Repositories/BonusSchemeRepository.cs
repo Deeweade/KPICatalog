@@ -6,6 +6,7 @@ using KPICatalog.Domain.Dtos.Filters;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper.QueryableExtensions;
 using AutoMapper;
+using KPICatalog.Infrastructure.Data.Repositories;
 
 namespace KPICatalog.Infrastructure;
 
@@ -70,20 +71,20 @@ public class BonusSchemeRepository : IBonusSchemeRepository
         return await GetById(scheme.Id);
     }
 
-    public async Task<BonusSchemeDto> Update(BonusSchemeDto bonusSchemeDto)
+    public async Task<BonusSchemeDto> Update(BonusSchemeDto schemeDto)
     {
-        if (bonusSchemeDto is null) throw new ArgumentNullException(nameof(bonusSchemeDto));
+        if (schemeDto is null) throw new ArgumentNullException(nameof(schemeDto));
 
-        var scheme = await _context.BonusSchemes.FirstOrDefaultAsync(x => x.Id == bonusSchemeDto.Id);
+        var scheme = await _context.BonusSchemes.FirstOrDefaultAsync(x => x.Id == schemeDto.Id);
 
-        scheme.Title = bonusSchemeDto.Title;
-        scheme.CostCenter = bonusSchemeDto.CostCenter;
-        scheme.ExternalId = bonusSchemeDto.ExternalId;
-        scheme.IsDefaulBonusScheme = bonusSchemeDto.IsDefaulBonusScheme;
-        scheme.PlanningCycleId = bonusSchemeDto.PlanningCycleId;
-        scheme.DateStart = bonusSchemeDto.DateStart;
-        scheme.DateEnd = bonusSchemeDto.DateEnd;
-        scheme.IsActive = bonusSchemeDto.IsActive;
+        scheme.Title = schemeDto.Title;
+        scheme.CostCenter = schemeDto.CostCenter;
+        scheme.ExternalId = schemeDto.ExternalId;
+        scheme.IsDefaulBonusScheme = schemeDto.IsDefaulBonusScheme;
+        scheme.PlanningCycleId = schemeDto.PlanningCycleId;
+        scheme.DateStart = schemeDto.DateStart;
+        scheme.DateEnd = schemeDto.DateEnd;
+        scheme.IsActive = schemeDto.IsActive;
 
         await _context.SaveChangesAsync();
 

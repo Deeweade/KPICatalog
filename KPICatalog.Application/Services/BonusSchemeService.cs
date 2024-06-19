@@ -13,11 +13,13 @@ public class BonusSchemeService : IBonusSchemeService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly IBonusSchemeObjectLinkService _service;
 
-    public BonusSchemeService(IUnitOfWork unitOfWork, IMapper mapper)
+    public BonusSchemeService(IUnitOfWork unitOfWork, IMapper mapper, IBonusSchemeObjectLinkService service)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _service = service;
     }
 
     public async Task<BonusSchemeView?> GetById(int schemeId)
@@ -85,6 +87,41 @@ public class BonusSchemeService : IBonusSchemeService
         var schemeDto = _mapper.Map<BonusSchemeDto>(schemeView);
 
         var scheme = await _unitOfWork.BonusSchemeRepository.Update(schemeDto);
+
+        return _mapper.Map<BonusSchemeView>(scheme);
+    }
+    public async Task<BonusSchemeView?> Deactivate(int bonusSchemeId, DateTime dateEnd, int? newBonusSchemeId)
+    {
+        var scheme = await _unitOfWork.BonusSchemeRepository.GetById(bonusSchemeId);
+
+        scheme.DateEnd = dateEnd;
+        scheme.IsActive = false;
+
+        await _unitOfWork.BonusSchemeRepository.Update(scheme);
+
+        if (newBonusSchemeId is not null)
+        {
+            var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(
+                new BonusSchemeObjectLinkFilterDto
+                {
+                    BonusSchemeId = bonusSchemeId
+                });
+
+            var typeIds = links.Select(x => x.LinkedObjectTypeId).Distinct().ToList();
+
+            foreach (var typeId in typeIds)
+            {
+                var linkView = new BonusSchemeObjectLinkView
+                {
+                    BonusSchemeId = newBonusSchemeId,
+                    LinkedObjectsIds = links.Where(x => x.LinkedObjectTypeId == typeId && x.BonusSchemeId == bonusSchemeId)
+                    .Select(x => (int)x.LinkedObjectId).Distinct().ToList(),
+                    LinkedObjectTypeId = typeIds.FirstOrDefault()
+                };
+
+                await _service.CreateMany(linkView);
+            }
+        }
 
         return _mapper.Map<BonusSchemeView>(scheme);
     }
