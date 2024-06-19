@@ -90,7 +90,7 @@ public class BonusSchemeService : IBonusSchemeService
 
         return _mapper.Map<BonusSchemeView>(scheme);
     }
-    public async Task<BonusSchemeView?> Deactivate(int bonusSchemeId, DateTime dateEnd, int? newBonusSchemeId)
+    public async Task<BonusSchemeView?> Deactivate(int bonusSchemeId, DateTime? dateEnd, int? newBonusSchemeId = null)
     {
         var scheme = await _unitOfWork.BonusSchemeRepository.GetById(bonusSchemeId);
 
@@ -116,7 +116,7 @@ public class BonusSchemeService : IBonusSchemeService
                     BonusSchemeId = newBonusSchemeId,
                     LinkedObjectsIds = links.Where(x => x.LinkedObjectTypeId == typeId && x.BonusSchemeId == bonusSchemeId)
                     .Select(x => (int)x.LinkedObjectId).Distinct().ToList(),
-                    LinkedObjectTypeId = typeIds.FirstOrDefault()
+                    LinkedObjectTypeId = typeId
                 };
 
                 await _service.CreateMany(linkView);

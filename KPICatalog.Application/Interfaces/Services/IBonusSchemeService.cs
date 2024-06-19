@@ -10,5 +10,5 @@ public interface IBonusSchemeService
     Task<IEnumerable<BonusSchemeView>> GetByFilter(BonusSchemeFilterView filterView);
     Task<BonusSchemeView?> Create(BonusSchemeView schemeView);
     Task<BonusSchemeView?> Update(BonusSchemeView schemeView);
-    Task<BonusSchemeView?> Deactivate(int bonusSchemeId, DateTime dateEnd, int? newBonusSchemeId);
+    Task<BonusSchemeView?> Deactivate(int bonusSchemeId, DateTime? dateEnd, int? newBonusSchemeId);
 }
