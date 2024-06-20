@@ -24,4 +24,14 @@ public class BonusSchemeObjectLinkController : ControllerBase
 
         return Ok(links);
     }
+
+    [HttpPost("delete")]
+    public async Task<IActionResult> Delete([FromQuery] List<int> employeeIds, BonusSchemeObjectLinkView linkView)
+    {
+        if (linkView is null) throw new ArgumentNullException(nameof(linkView));
+
+        var deleteEmployeeIds = await _service.DeleteEmployee(employeeIds, linkView);
+
+        return Ok(deleteEmployeeIds);
+    }
 }

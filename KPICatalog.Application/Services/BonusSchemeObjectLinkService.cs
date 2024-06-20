@@ -56,4 +56,26 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
 
         return _mapper.Map<IEnumerable<BonusSchemeObjectLinkView>>(links);
     }
+
+    public async Task<IEnumerable<BonusSchemeObjectLinkView>> DeleteEmployee(List<int> employeeIds, BonusSchemeObjectLinkView linkView)
+    {
+        if (linkView is null) throw new ArgumentNullException(nameof(linkView));
+
+        var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(
+            new BonusSchemeObjectLinkFilterDto
+            {
+                LinkedObjectsIds = employeeIds,
+                LinkedObjectTypeId = 1
+            });
+
+        if (links is not null && links.Any())
+        {
+            foreach(var link in links)
+            {
+                await _unitOfWork.BonusSchemeObjectLinkRepository.Delete(link);
+            }
+        }
+
+        return _mapper.Map<IEnumerable<BonusSchemeObjectLinkView>>(links);
+    }
 }
