@@ -29,6 +29,14 @@ public class TypicalGoalRepository : ITypicalGoalRepository
             .FirstOrDefaultAsync(x => x.Id == goalId);
     }
 
+    public async Task<IEnumerable<TypicalGoalDto?>> GetAll()
+    {
+        return await _context.TypicalGoals
+            .AsNoTracking()
+            .ProjectTo<TypicalGoalDto>(_mapper.ConfigurationProvider)
+            .ToListAsync();
+    }
+
     public async Task<TypicalGoalDto?> Create(TypicalGoalDto typicalGoalDto)
     {
         if (typicalGoalDto is null) throw new ArgumentNullException(nameof(typicalGoalDto));

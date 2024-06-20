@@ -25,6 +25,14 @@ public class TypicalGoalController : ControllerBase
 
         return Ok(goal);
     }
+    
+    [HttpGet("get")]
+    public async Task<IActionResult> GetGoals()
+    {
+        var goal = await _service.GetAll();
+
+        return Ok(goal);
+    }
 
     [HttpPost("create")]
     public async Task<IActionResult> Post(TypicalGoalView goalView)

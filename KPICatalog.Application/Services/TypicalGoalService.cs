@@ -34,6 +34,17 @@ public class TypicalGoalService : ITypicalGoalService
         return result;
     }
 
+    public async Task<IEnumerable<TypicalGoalView?>> GetAll()
+    {
+        var goal = await _unitOfWork.TypicalGoalRepository.GetAll();
+
+        if (goal is null) return null;
+
+        var result = _mapper.Map<IEnumerable<TypicalGoalView>>(goal);
+
+        return result;
+    }
+
     public async Task<TypicalGoalView?> Create(TypicalGoalView typicalGoalView)
     {
         if (typicalGoalView is null) throw new ArgumentNullException(nameof(typicalGoalView));
