@@ -26,10 +26,10 @@ public class BonusSchemeObjectLinkController : ControllerBase
     }
 
     [HttpPost("delete")]
-    public async Task<IActionResult> Delete([FromQuery] List<int> employeeIds)
+    public async Task<IActionResult> Delete([FromQuery] IEnumerable<int> ids, [FromQuery] int linkedObjectTypeId)
     {
-        var deleteEmployeeIds = await _service.DeleteEmployee(employeeIds);
+        var deletingIds = await _service.Delete(ids, linkedObjectTypeId);
 
-        return Ok(deleteEmployeeIds);
+        return Ok(deletingIds);
     }
 }
