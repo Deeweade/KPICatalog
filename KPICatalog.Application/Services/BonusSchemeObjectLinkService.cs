@@ -65,7 +65,7 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
             new BonusSchemeObjectLinkFilterDto
             {
                 LinkedObjectsIds = employeeIds,
-                LinkedObjectTypeId = 1
+                LinkedObjectTypeId = linkView.LinkedObjectTypeId
             });
 
         if (links is not null && links.Any())
