@@ -4,6 +4,10 @@ using KPICatalog.Application.Models.Views;
 using KPICatalog.Domain.Dtos.Entities;
 using KPICatalog.Domain.Dtos.Filters;
 using AutoMapper;
+using KPICatalog.Domain.Models.Entities.KPICatalog;
+using System.Security.Cryptography.X509Certificates;
+using KPICatalog.Infrastructure.Data.Contexts;
+using KPICatalog.Domain.Models.Enums;
 
 namespace KPICatalog.Application.Services;
 
@@ -11,11 +15,13 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly KPICatalogDbContext _context;
 
-    public BonusSchemeObjectLinkService(IUnitOfWork unitOfWork, IMapper mapper)
+    public BonusSchemeObjectLinkService(IUnitOfWork unitOfWork, IMapper mapper, KPICatalogDbContext context)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _context = context;
     }
 
     public async Task<IEnumerable<BonusSchemeObjectLinkView>> CreateMany(BonusSchemeObjectLinkView linkView)
@@ -57,25 +63,25 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
         return _mapper.Map<IEnumerable<BonusSchemeObjectLinkView>>(links);
     }
 
-    public async Task<IEnumerable<BonusSchemeObjectLinkView>> DeleteEmployee(List<int> employeeIds, BonusSchemeObjectLinkView linkView)
+    public async Task<IEnumerable<BonusSchemeObjectLinkView>> DeleteEmployee(List<int> employeeIds)
     {
-        if (linkView is null) throw new ArgumentNullException(nameof(linkView));
-
-        var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(
-            new BonusSchemeObjectLinkFilterDto
-            {
-                LinkedObjectsIds = employeeIds,
-                LinkedObjectTypeId = linkView.LinkedObjectTypeId
-            });
-
-        if (links is not null && links.Any())
+        if (employeeIds?.Any() == true)
         {
-            foreach(var link in links)
+            var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(
+                new BonusSchemeObjectLinkFilterDto
+                {
+                    LinkedObjectsIds = employeeIds,
+                    LinkedObjectTypeId = (int)LinkedObjectTypes.Employee
+                });
+
+            foreach(var link in links.DefaultIfEmpty())
             {
-                await _unitOfWork.BonusSchemeObjectLinkRepository.Delete(link);
+                await _unitOfWork.BonusSchemeObjectLinkRepository.Delete(link!);
             }
+
+            return _mapper.Map<IEnumerable<BonusSchemeObjectLinkView>>(links); 
         }
 
-        return _mapper.Map<IEnumerable<BonusSchemeObjectLinkView>>(links);
+        return new List<BonusSchemeObjectLinkView>(0);
     }
 }
