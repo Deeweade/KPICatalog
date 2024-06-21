@@ -19,5 +19,6 @@ public class TypicalGoalInBonusSchemeView : BaseEntityView
     public int? Fact { get; set; }
     public int? Evaluation { get; set; }
 
-    public virtual IEnumerable<BonusSchemeObjectLinkView> BonusSchemeObjectLinks { get; set; }
+    public IEnumerable<int> PeriodIds { get; set; }
+    public IEnumerable<BonusSchemeObjectLinkView> BonusSchemeObjectLinks { get; set; }
 }

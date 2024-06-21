@@ -16,4 +16,5 @@ public class TypicalGoalInBonusScheme : BaseEntity
     public int? Evaluation { get; set; }
 
     public virtual TypicalGoal? TypicalGoal { get; set; }
+    public virtual BonusSchemeLinkMethod? BonusSchemeLinkMethod { get; set; }
 }

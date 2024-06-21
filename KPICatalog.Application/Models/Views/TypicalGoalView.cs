@@ -7,10 +7,11 @@ public class TypicalGoalView : BaseEntityView
         TypicalGoalInBonusSchemes = new HashSet<TypicalGoalInBonusSchemeView>();
     }
     public string? Title { get; set; }
-    public int? GoalTypeId { get; set; }
+    public int? PlanningCycleId { get; set; }
     public int? WeightTypeId { get; set; }
     public int? ParentGoalId { get; set; }
     public string? ExternalId { get; set; }
 
-    public virtual IEnumerable<TypicalGoalInBonusSchemeView> TypicalGoalInBonusSchemes { get; set; }
+    public TypicalGoalInBonusSchemeView? TypicalGoalInBonusSchemeView { get; set; }
+    public ICollection<TypicalGoalInBonusSchemeView> TypicalGoalInBonusSchemes { get; set; }
 }

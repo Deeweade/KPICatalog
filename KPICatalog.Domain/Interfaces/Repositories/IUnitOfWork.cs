@@ -7,4 +7,6 @@ public interface IUnitOfWork
     IBonusSchemeObjectLinkRepository BonusSchemeObjectLinkRepository { get; }
     IEmlpoyeeRepository EmployeeRepository { get; }
     ITypicalGoalRepository TypicalGoalRepository { get; }
+
+    Task<int> SaveChangesAsync();
 }
