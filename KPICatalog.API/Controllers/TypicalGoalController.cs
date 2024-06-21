@@ -1,6 +1,5 @@
 using KPICatalog.Application.Interfaces.Services;
 using KPICatalog.Application.Models.Views;
-using KPICatalog.Domain.Interfaces.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

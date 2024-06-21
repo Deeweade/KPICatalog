@@ -59,7 +59,7 @@ public class TypicalGoalRepository : ITypicalGoalRepository
         var goal = await _context.TypicalGoals.FirstOrDefaultAsync(x => x.Id == typicalGoalDto.Id);
 
         goal.Title = typicalGoalDto.Title;
-        goal.GoalTypeId = typicalGoalDto.GoalTypeId;
+        goal.PlanningCycleId = typicalGoalDto.PlanningCycleId;
         goal.WeightTypeId = typicalGoalDto.WeightTypeId;
         goal.ParentGoalId = typicalGoalDto.ParentGoalId;
         goal.ExternalId = typicalGoalDto.ExternalId;
