@@ -13,5 +13,7 @@ public class BonusScheme : HistoryEntity
     public int? ExternalId { get; set; }
     public int? PlanningCycleId { get; set; }
 
+    public virtual PlanningCycle? PlanningCycle{ get; set; }
+
     public virtual ICollection<BonusSchemeObjectLink> BonusSchemeObjectLinks { get; set; }
 }
