@@ -5,5 +5,5 @@ namespace KPICatalog.Application.Interfaces.Services;
 public interface IBonusSchemeObjectLinkService
 {
     Task<IEnumerable<BonusSchemeObjectLinkView>> CreateMany(BonusSchemeObjectLinkView linkView);
-    Task<IEnumerable<BonusSchemeObjectLinkView>> Delete(IEnumerable<int> ids, int linkedObjectTypeId);
+    Task<IEnumerable<BonusSchemeObjectLinkView>> Delete(BonusSchemeObjectLinkView linkView);
 }

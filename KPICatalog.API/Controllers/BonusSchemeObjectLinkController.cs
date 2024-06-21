@@ -26,9 +26,9 @@ public class BonusSchemeObjectLinkController : ControllerBase
     }
 
     [HttpPost("delete")]
-    public async Task<IActionResult> Delete([FromQuery] IEnumerable<int> ids, [FromQuery] int linkedObjectTypeId)
+    public async Task<IActionResult> Delete(BonusSchemeObjectLinkView linkView)
     {
-        var deletingIds = await _service.Delete(ids, linkedObjectTypeId);
+        var deletingIds = await _service.Delete(linkView);
 
         return Ok(deletingIds);
     }

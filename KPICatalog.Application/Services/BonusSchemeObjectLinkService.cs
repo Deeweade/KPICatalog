@@ -15,13 +15,11 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    private readonly KPICatalogDbContext _context;
 
-    public BonusSchemeObjectLinkService(IUnitOfWork unitOfWork, IMapper mapper, KPICatalogDbContext context)
+    public BonusSchemeObjectLinkService(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-        _context = context;
     }
 
     public async Task<IEnumerable<BonusSchemeObjectLinkView>> CreateMany(BonusSchemeObjectLinkView linkView)
@@ -63,25 +61,20 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
         return _mapper.Map<IEnumerable<BonusSchemeObjectLinkView>>(links);
     }
 
-    public async Task<IEnumerable<BonusSchemeObjectLinkView>> Delete(IEnumerable<int> ids, int linkedObjectTypeId)
+    public async Task<IEnumerable<BonusSchemeObjectLinkView>> Delete(BonusSchemeObjectLinkView linkView)
     {
-        if (ids?.Any() == true)
-        {
-            var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(
-                new BonusSchemeObjectLinkFilterDto
-                {
-                    LinkedObjectsIds = ids.ToList(),
-                    LinkedObjectTypeId = linkedObjectTypeId
-                });
-
-            foreach(var link in links.DefaultIfEmpty())
+        var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(
+            new BonusSchemeObjectLinkFilterDto
             {
-                await _unitOfWork.BonusSchemeObjectLinkRepository.Delete(link!);
-            }
+                LinkedObjectsIds = linkView.LinkedObjectsIds,
+                LinkedObjectTypeId = linkView.LinkedObjectTypeId
+            });
 
-            return _mapper.Map<IEnumerable<BonusSchemeObjectLinkView>>(links); 
+        foreach(var link in links.DefaultIfEmpty())
+        {
+            await _unitOfWork.BonusSchemeObjectLinkRepository.Delete(link!);
         }
 
-        return new List<BonusSchemeObjectLinkView>(0);
+        return _mapper.Map<IEnumerable<BonusSchemeObjectLinkView>>(links);
     }
 }
