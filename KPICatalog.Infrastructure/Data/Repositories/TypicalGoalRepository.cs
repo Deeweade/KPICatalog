@@ -29,11 +29,13 @@ public class TypicalGoalRepository : ITypicalGoalRepository
             .FirstOrDefaultAsync(x => x.Id == goalId);
     }
 
-    public async Task<IEnumerable<TypicalGoalDto?>> GetAll()
+    public async Task<IEnumerable<TypicalGoalDto>> GetAll()
     {
         return await _context.TypicalGoals
             .AsNoTracking()
             .ProjectTo<TypicalGoalDto>(_mapper.ConfigurationProvider)
+            .OrderBy(x => x.GoalTypeId)
+            .ThenBy(x => x.ParentGoalId)
             .ToListAsync();
     }
 

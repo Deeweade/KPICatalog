@@ -27,7 +27,7 @@ public class TypicalGoalController : ControllerBase
     }
     
     [HttpGet("get")]
-    public async Task<IActionResult> GetGoals()
+    public async Task<IActionResult> GetAll()
     {
         var goal = await _service.GetAll();
 

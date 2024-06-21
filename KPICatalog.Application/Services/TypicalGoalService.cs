@@ -34,7 +34,7 @@ public class TypicalGoalService : ITypicalGoalService
         return result;
     }
 
-    public async Task<IEnumerable<TypicalGoalView?>> GetAll()
+    public async Task<IEnumerable<TypicalGoalView>> GetAll()
     {
         var goal = await _unitOfWork.TypicalGoalRepository.GetAll();
 
