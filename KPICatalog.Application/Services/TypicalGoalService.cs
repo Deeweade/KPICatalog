@@ -3,10 +3,7 @@ using KPICatalog.Domain.Interfaces.Repositories;
 using KPICatalog.Application.Models.Filters;
 using KPICatalog.Application.Models.Views;
 using KPICatalog.Domain.Dtos.Entities;
-using KPICatalog.Domain.Dtos.Filters;
-using KPICatalog.Domain.Models.Enums;
 using AutoMapper;
-using KPICatalog.Domain.Models.Entities;
 
 namespace KPICatalog.Application.Services;
 
@@ -43,6 +40,26 @@ public class TypicalGoalService : ITypicalGoalService
         var result = _mapper.Map<IEnumerable<TypicalGoalView>>(goal);
 
         return result;
+    }
+
+    public async Task<IEnumerable<BonusSchemeView>> GetCurrent(int goalId, int typicalGoalTypeId)
+    {
+        if (goalId <= 0) throw new ArgumentOutOfRangeException(nameof(goalId));
+
+        var goal = await _unitOfWork.TypicalGoalRepository.GetCurrentBS(goalId, typicalGoalTypeId);
+
+        if (goal is null) return null;
+
+        return _mapper.Map<IEnumerable<BonusSchemeView>>(goal);
+    }
+
+    public async Task<IEnumerable<TypicalGoalInBonusSchemeView>> GetGoalsInBS()
+    {
+        var goals = await _unitOfWork.TypicalGoalRepository.GetGoalsInBS();
+
+        if(goals is null) return null;
+
+        return _mapper.Map<IEnumerable<TypicalGoalInBonusSchemeView>>(goals);
     }
 
     public async Task<TypicalGoalView?> Create(TypicalGoalView typicalGoalView)

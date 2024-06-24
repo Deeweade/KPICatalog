@@ -33,6 +33,23 @@ public class TypicalGoalController : ControllerBase
         return Ok(goal);
     }
 
+    [HttpGet("getCurrent/{goalId}/{typicalGoalTypeId}")]
+    public async Task<IActionResult> GetCurrentBS(int goalId, int typicalGoalTypeId)
+    {
+        var getById = await _service.GetById(goalId);
+        var getCurrent = await _service.GetCurrent(goalId, typicalGoalTypeId);
+        var getGoalsInBS = await _service.GetGoalsInBS();
+
+        var result = new
+        {
+            GoalById = getById,
+            CurrentBS = getCurrent,
+            GoalsInBS = getGoalsInBS
+        };
+
+        return Ok(result);
+    }
+
     [HttpPost("create")]
     public async Task<IActionResult> Post(TypicalGoalView goalView)
     {
