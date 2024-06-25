@@ -4,6 +4,10 @@ using KPICatalog.Application.Models.Views;
 using KPICatalog.Domain.Dtos.Entities;
 using KPICatalog.Domain.Dtos.Filters;
 using AutoMapper;
+using KPICatalog.Domain.Models.Entities.KPICatalog;
+using System.Security.Cryptography.X509Certificates;
+using KPICatalog.Infrastructure.Data.Contexts;
+using KPICatalog.Domain.Models.Enums;
 
 namespace KPICatalog.Application.Services;
 
@@ -53,6 +57,23 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
 
         //Возвращаем созданные объекты
         links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter);
+
+        return _mapper.Map<IEnumerable<BonusSchemeObjectLinkView>>(links);
+    }
+
+    public async Task<IEnumerable<BonusSchemeObjectLinkView>> Delete(BonusSchemeObjectLinkView linkView)
+    {
+        var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(
+            new BonusSchemeObjectLinkFilterDto
+            {
+                LinkedObjectsIds = linkView.LinkedObjectsIds,
+                LinkedObjectTypeId = linkView.LinkedObjectTypeId
+            });
+
+        foreach(var link in links.DefaultIfEmpty())
+        {
+            await _unitOfWork.BonusSchemeObjectLinkRepository.Delete(link!);
+        }
 
         return _mapper.Map<IEnumerable<BonusSchemeObjectLinkView>>(links);
     }
