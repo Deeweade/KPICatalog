@@ -42,26 +42,6 @@ public class TypicalGoalService : ITypicalGoalService
         return result;
     }
 
-    public async Task<IEnumerable<BonusSchemeView>> GetCurrent(int goalId, int typicalGoalTypeId)
-    {
-        if (goalId <= 0) throw new ArgumentOutOfRangeException(nameof(goalId));
-
-        var goal = await _unitOfWork.TypicalGoalRepository.GetCurrentBS(goalId, typicalGoalTypeId);
-
-        if (goal is null) return null;
-
-        return _mapper.Map<IEnumerable<BonusSchemeView>>(goal);
-    }
-
-    public async Task<IEnumerable<TypicalGoalInBonusSchemeView>> GetGoalsInBS()
-    {
-        var goals = await _unitOfWork.TypicalGoalRepository.GetGoalsInBS();
-
-        if(goals is null) return null;
-
-        return _mapper.Map<IEnumerable<TypicalGoalInBonusSchemeView>>(goals);
-    }
-
     public async Task<TypicalGoalView?> Create(TypicalGoalView typicalGoalView)
     {
         if (typicalGoalView is null) throw new ArgumentNullException(nameof(typicalGoalView));

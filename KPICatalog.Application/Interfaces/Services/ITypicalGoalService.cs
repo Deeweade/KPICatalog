@@ -7,8 +7,6 @@ public interface ITypicalGoalService
 {
     Task<TypicalGoalView> GetById(int goalId);
     Task<IEnumerable<TypicalGoalView>> GetAll();
-    Task<IEnumerable<BonusSchemeView>> GetCurrent(int goalId, int typicalGoalTypeId);
-    Task<IEnumerable<TypicalGoalInBonusSchemeView>> GetGoalsInBS();
     Task<TypicalGoalView?> Create(TypicalGoalView typicalGoalView);
     Task<TypicalGoalView?> Update(TypicalGoalView typicalGoalView);
 }

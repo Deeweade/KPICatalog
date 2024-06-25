@@ -58,6 +58,35 @@ public class BonusSchemeRepository : IBonusSchemeRepository
         return res;
     }
 
+    public async Task<IEnumerable<BonusSchemeDto?>> GetBS(int goalId, int typicalGoalTypeId)
+    {
+        var typicalGoal = await _context.TypicalGoals.FindAsync(goalId);
+
+        var typicalGoals = await _context.TypicalGoalInBonusSchemes
+            .AsNoTracking()
+            .ProjectTo<TypicalGoalInBonusSchemeDto>(_mapper.ConfigurationProvider)
+            .Where(x => x.TypicalGoalId == goalId)
+            .Select(x => x.Id)
+            .ToListAsync();
+
+        // Получаем все BonusSchemeObjectLink, у которых LinkedObjectId входит в список typicalGoalIds и LinkedObjectTypeId равен типу связи БС-Типовая цель
+        var bonusSchemeLinks = await _context.BonusSchemeObjectLinks
+            .AsNoTracking()
+            .ProjectTo<BonusSchemeObjectLinkDto>(_mapper.ConfigurationProvider)
+            .Where(x => typicalGoals.Contains((int)x.LinkedObjectId!) && x.LinkedObjectTypeId == typicalGoalTypeId)
+            .Select(x => x.BonusSchemeId)
+            .ToListAsync();
+
+        // Получаем все BonusScheme, у которых Id входит в список bonusSchemeIds
+        var bonusSchemes = await _context.BonusSchemes
+            .AsNoTracking()
+            .ProjectTo<BonusSchemeDto>(_mapper.ConfigurationProvider)
+            .Where(x => bonusSchemeLinks.Contains(x.Id))
+            .ToListAsync();
+
+        return bonusSchemes;
+    }
+
     public async Task<BonusSchemeDto?> Create(BonusSchemeDto bonusSchemeDto)
     {
         if (bonusSchemeDto is null) throw new ArgumentNullException(nameof(bonusSchemeDto));

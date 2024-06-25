@@ -8,6 +8,7 @@ public interface IBonusSchemeRepository
     Task<BonusSchemeDto?> GetById(int schemeId);
     Task<IEnumerable<string>> GetCostCenters();
     Task<IEnumerable<BonusSchemeDto>> GetByFilter(BonusSchemeFilterDto filter);
+    Task<IEnumerable<BonusSchemeDto?>> GetBS(int goalId, int typicalGoalTypeId);
     Task<BonusSchemeDto?> Create(BonusSchemeDto bonusSchemeDto);
     Task<BonusSchemeDto> Update(BonusSchemeDto schemeDto);
 }

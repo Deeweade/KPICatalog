@@ -18,6 +18,16 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
         _mapper = mapper;
     }
 
+    public async Task<IEnumerable<TypicalGoalInBonusSchemeView?>> GetGoalsInBS()
+    {
+        var goals = await _unitOfWork.TypicalGoalInBonusSchemeRepository.GetGoalsInBS();
+
+        if(goals is null) return null;
+
+        return _mapper.Map<IEnumerable<TypicalGoalInBonusSchemeView>>(goals);
+    }
+
+
     public async Task BulkCreate(ICollection<int> bonusSchemesIds, ICollection<TypicalGoalView> typicalGoals)
     {
         if (bonusSchemesIds is null) throw new ArgumentNullException(nameof(bonusSchemesIds));

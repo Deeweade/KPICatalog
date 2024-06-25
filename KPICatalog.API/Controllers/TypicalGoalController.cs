@@ -10,17 +10,21 @@ namespace KPICatalog.API.Controllers;
 [Authorize(Policy = "RequireAuthenticatedUser")]
 public class TypicalGoalController : ControllerBase
 {
-    private readonly ITypicalGoalService _service;
+    private readonly ITypicalGoalService _serviceTG;
+    private readonly ITypicalGoalInBonusSchemeService _serviceTGBS;
+    private readonly IBonusSchemeService _serviceBS;
 
-    public TypicalGoalController(ITypicalGoalService service)
+    public TypicalGoalController(ITypicalGoalService serviceTG, ITypicalGoalInBonusSchemeService serviceTGBS, IBonusSchemeService serviceBS)
     {
-        _service = service;
+        _serviceTG = serviceTG;
+        _serviceTGBS = serviceTGBS;
+        _serviceBS = serviceBS;
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
     {
-        var goal = await _service.GetById(id);
+        var goal = await _serviceTG.GetById(id);
 
         return Ok(goal);
     }
@@ -28,26 +32,28 @@ public class TypicalGoalController : ControllerBase
     [HttpGet("get")]
     public async Task<IActionResult> GetAll()
     {
-        var goal = await _service.GetAll();
+        var goal = await _serviceTG.GetAll();
 
         return Ok(goal);
     }
 
     [HttpGet("getCurrent/{goalId}/{typicalGoalTypeId}")]
-    public async Task<IActionResult> GetCurrentBS(int goalId, int typicalGoalTypeId)
+    public async Task<IActionResult> GetCurrent(int goalId, int typicalGoalTypeId)
     {
-        var getById = await _service.GetById(goalId);
-        var getCurrent = await _service.GetCurrent(goalId, typicalGoalTypeId);
-        var getGoalsInBS = await _service.GetGoalsInBS();
+        var goal = await _serviceTG.GetById(goalId);
+        var currentBS = await _serviceBS.GetBS(goalId, typicalGoalTypeId);
+        var goalsInBS = await _serviceTGBS.GetGoalsInBS();
 
-        var result = new
+       return Ok(new TypicalGoalView
         {
-            GoalById = getById,
-            CurrentBS = getCurrent,
-            GoalsInBS = getGoalsInBS
-        };
-
-        return Ok(result);
+            Title = goal.Title,
+            PlanningCycleId = goal.PlanningCycleId,
+            WeightTypeId = goal.WeightTypeId,
+            ParentGoalId = goal.ParentGoalId,
+            ExternalId = goal.ExternalId,
+            BonusSchemeViews = currentBS,
+            TypicalGoalInBonusSchemes = goalsInBS
+        });
     }
 
     [HttpPost("create")]
@@ -55,7 +61,7 @@ public class TypicalGoalController : ControllerBase
     {
         if (goalView is null) throw new ArgumentNullException(nameof(goalView));
 
-        var goal = await _service.Create(goalView);
+        var goal = await _serviceTG.Create(goalView);
 
         return CreatedAtAction(nameof(Get), new { id = goal.Id}, goal);
     }
@@ -67,7 +73,7 @@ public class TypicalGoalController : ControllerBase
 
         if (id != goalView.Id) return BadRequest();
 
-        var goal = await _service.Update(goalView);
+        var goal = await _serviceTG.Update(goalView);
 
         return Ok(goal);
     }
