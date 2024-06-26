@@ -1,4 +1,5 @@
 ﻿using KPICatalog.Domain.Models.Entities.KPICatalog;
+using KPICatalog.Domain.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace KPICatalog.Infrastructure.Data.Contexts;
@@ -8,6 +9,18 @@ public class KPICatalogDbContext : DbContext
     public KPICatalogDbContext(DbContextOptions<KPICatalogDbContext> options)
         : base(options)
     {
+        //InitializeLinkedObjectTypes(); - 1 вариант с массивом
+
+        /* if (LinkedObjectTypes.Any())
+        {
+            var linkedObjectTypes = Enum.GetValues(typeof(LinkedObjectTypes))
+                                        .Cast<LinkedObjectTypes>()
+                                        .Select(e => new LinkedObjectType { Name = e.ToString() })
+                                        .ToList();
+
+            LinkedObjectTypes.AddRange(linkedObjectTypes);
+            SaveChanges();
+        } */ // - 2 вариант со словарем, но не уверена насчет корректности названий связей
     }
 
     //tables
@@ -31,4 +44,22 @@ public class KPICatalogDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
     }
+    /* public void InitializeLinkedObjectTypes()
+    {
+        var requiredNames = new[] { "BS-Employee", "BS-TypicalGoal" };
+        var existingNames = LinkedObjectTypes
+            .Where(x => requiredNames.Contains(x.Name))
+            .Select(x => x.Name)
+            .ToList();
+
+        foreach (var name in requiredNames.Except(existingNames))
+        {
+            LinkedObjectTypes.Add(new LinkedObjectType { Name = name });
+        }
+
+        if (ChangeTracker.HasChanges())
+        {
+            SaveChanges();
+        }
+    } */
 }

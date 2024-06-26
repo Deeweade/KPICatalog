@@ -86,6 +86,7 @@ builder.Services.AddScoped<IUserAccessControlService, UserAccessControlService>(
 builder.Services.AddScoped<IBonusSchemeService, BonusSchemeService>();
 builder.Services.AddScoped<IBonusSchemeObjectLinkService, BonusSchemeObjectLinkService>();
 builder.Services.AddScoped<ITypicalGoalService, TypicalGoalService>();
+builder.Services.AddScoped<ITypicalGoalInBonusSchemeService, TypicalGoalInBonusSchemeService>();
 
 //data
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

@@ -24,4 +24,12 @@ public class BonusSchemeObjectLinkController : ControllerBase
 
         return Ok(links);
     }
+
+    [HttpPost("delete")]
+    public async Task<IActionResult> Delete(BonusSchemeObjectLinkView linkView)
+    {
+        var deletingIds = await _service.Delete(linkView);
+
+        return Ok(deletingIds);
+    }
 }
