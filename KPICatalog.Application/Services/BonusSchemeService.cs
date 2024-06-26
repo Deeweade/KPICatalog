@@ -68,11 +68,11 @@ public class BonusSchemeService : IBonusSchemeService
 
         return views;
     }
-    public async Task<IEnumerable<BonusSchemeView?>> GetBS(int goalId, int typicalGoalTypeId)
+    public async Task<IEnumerable<BonusSchemeView?>> GetByTypicalGoalId(int goalId)
     {
         if (goalId <= 0) throw new ArgumentOutOfRangeException(nameof(goalId));
 
-        var goal = await _unitOfWork.BonusSchemeRepository.GetBS(goalId, typicalGoalTypeId);
+        var goal = await _unitOfWork.BonusSchemeRepository.GetByTypicalGoalId(goalId);
 
         if (goal is null) return null;
 

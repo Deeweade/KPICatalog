@@ -18,9 +18,9 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<TypicalGoalInBonusSchemeView?>> GetGoalsInBS()
+    public async Task<IEnumerable<TypicalGoalInBonusSchemeView?>> GetByTypicalGoalId(int id)
     {
-        var goals = await _unitOfWork.TypicalGoalInBonusSchemeRepository.GetGoalsInBS();
+        var goals = await _unitOfWork.TypicalGoalInBonusSchemeRepository.GetByTypicalGoalId(id);
 
         if(goals is null) return null;
 
