@@ -10,17 +10,34 @@ namespace KPICatalog.API.Controllers;
 [Authorize(Policy = "RequireAuthenticatedUser")]
 public class TypicalGoalController : ControllerBase
 {
-    private readonly ITypicalGoalService _service;
+    private readonly ITypicalGoalService _serviceTG;
+    private readonly ITypicalGoalInBonusSchemeService _serviceTGBS;
+    private readonly IBonusSchemeService _serviceBS;
 
-    public TypicalGoalController(ITypicalGoalService service)
+    public TypicalGoalController(ITypicalGoalService serviceTG, ITypicalGoalInBonusSchemeService serviceTGBS, IBonusSchemeService serviceBS)
     {
-        _service = service;
+        _serviceTG = serviceTG;
+        _serviceTGBS = serviceTGBS;
+        _serviceBS = serviceBS;
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
     {
-        var goal = await _service.GetById(id);
+        var goal = await _serviceTG.GetById(id);
+        var currentBS = await _serviceBS.GetByTypicalGoalId(id);
+        var goalsInBS = await _serviceTGBS.GetByTypicalGoalId(id);
+
+        goal.BonusSchemeViews = currentBS;
+        goal.TypicalGoalInBonusSchemes = goalsInBS;
+
+       return Ok(goal);
+    }
+    
+    [HttpGet("get")]
+    public async Task<IActionResult> GetAll()
+    {
+        var goal = await _serviceTG.GetAll();
 
         return Ok(goal);
     }
@@ -30,7 +47,7 @@ public class TypicalGoalController : ControllerBase
     {
         if (goalView is null) throw new ArgumentNullException(nameof(goalView));
 
-        var goal = await _service.Create(goalView);
+        var goal = await _serviceTG.Create(goalView);
 
         return CreatedAtAction(nameof(Get), new { id = goal.Id}, goal);
     }
@@ -42,7 +59,7 @@ public class TypicalGoalController : ControllerBase
 
         if (id != goalView.Id) return BadRequest();
 
-        var goal = await _service.Update(goalView);
+        var goal = await _serviceTG.Update(goalView);
 
         return Ok(goal);
     }

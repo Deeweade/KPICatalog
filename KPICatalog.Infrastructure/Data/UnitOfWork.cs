@@ -18,6 +18,7 @@ public class UnitOfWork : IUnitOfWork
         BonusSchemeObjectLinkRepository = new BonusSchemeObjectLinkRepository(_kpiCatalogContext, mapper);
         EmployeeRepository = new EmployeeRepository(perfManagementContext, mapper);
         TypicalGoalRepository = new TypicalGoalRepository(_kpiCatalogContext, mapper);
+        TypicalGoalInBonusSchemeRepository = new TypicalGoalInBonusSchemeRepository(_kpiCatalogContext, mapper);
     }
 
     public IUserAccessControlRepository UserAccessControlRepository { get; }
@@ -25,6 +26,7 @@ public class UnitOfWork : IUnitOfWork
     public IBonusSchemeObjectLinkRepository BonusSchemeObjectLinkRepository { get; }
     public IEmlpoyeeRepository EmployeeRepository { get; }
     public ITypicalGoalRepository TypicalGoalRepository { get; }
+    public ITypicalGoalInBonusSchemeRepository TypicalGoalInBonusSchemeRepository { get; }
 
     public async Task<int> SaveChangesAsync()
     {

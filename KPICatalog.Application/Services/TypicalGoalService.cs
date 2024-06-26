@@ -3,10 +3,7 @@ using KPICatalog.Domain.Interfaces.Repositories;
 using KPICatalog.Application.Models.Filters;
 using KPICatalog.Application.Models.Views;
 using KPICatalog.Domain.Dtos.Entities;
-using KPICatalog.Domain.Dtos.Filters;
-using KPICatalog.Domain.Models.Enums;
 using AutoMapper;
-using KPICatalog.Domain.Models.Entities;
 
 namespace KPICatalog.Application.Services;
 
@@ -30,6 +27,17 @@ public class TypicalGoalService : ITypicalGoalService
         if (goal is null) return null;
 
         var result = _mapper.Map<TypicalGoalView>(goal);
+
+        return result;
+    }
+
+    public async Task<IEnumerable<TypicalGoalView>> GetAll()
+    {
+        var goal = await _unitOfWork.TypicalGoalRepository.GetAll();
+
+        if (goal is null) return null;
+
+        var result = _mapper.Map<IEnumerable<TypicalGoalView>>(goal);
 
         return result;
     }
