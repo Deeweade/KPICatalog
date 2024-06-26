@@ -6,7 +6,7 @@ using KPICatalog.Domain.Dtos.Filters;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper.QueryableExtensions;
 using AutoMapper;
-using KPICatalog.Infrastructure.Data.Repositories;
+using KPICatalog.Domain.Models.Enums;
 
 namespace KPICatalog.Infrastructure;
 
@@ -58,11 +58,11 @@ public class BonusSchemeRepository : IBonusSchemeRepository
         return res;
     }
 
-    public async Task<IEnumerable<BonusSchemeDto?>> GetBS(int goalId, int typicalGoalTypeId)
+    public async Task<IEnumerable<BonusSchemeDto?>> GetByTypicalGoalId(int goalId)
     {
         var typicalGoal = await _context.TypicalGoals.FindAsync(goalId);
 
-        var typicalGoals = await _context.TypicalGoalInBonusSchemes
+        var typicalGoalIds = await _context.TypicalGoalInBonusSchemes
             .AsNoTracking()
             .ProjectTo<TypicalGoalInBonusSchemeDto>(_mapper.ConfigurationProvider)
             .Where(x => x.TypicalGoalId == goalId)
@@ -70,10 +70,10 @@ public class BonusSchemeRepository : IBonusSchemeRepository
             .ToListAsync();
 
         // Получаем все BonusSchemeObjectLink, у которых LinkedObjectId входит в список typicalGoalIds и LinkedObjectTypeId равен типу связи БС-Типовая цель
-        var bonusSchemeLinks = await _context.BonusSchemeObjectLinks
+        var bonusSchemeLinkIds = await _context.BonusSchemeObjectLinks
             .AsNoTracking()
             .ProjectTo<BonusSchemeObjectLinkDto>(_mapper.ConfigurationProvider)
-            .Where(x => typicalGoals.Contains((int)x.LinkedObjectId!) && x.LinkedObjectTypeId == typicalGoalTypeId)
+            .Where(x => typicalGoalIds.Contains((int)x.LinkedObjectId!) && x.LinkedObjectTypeId == (int)LinkedObjectTypes.TypicalGoal)
             .Select(x => x.BonusSchemeId)
             .ToListAsync();
 
@@ -81,7 +81,7 @@ public class BonusSchemeRepository : IBonusSchemeRepository
         var bonusSchemes = await _context.BonusSchemes
             .AsNoTracking()
             .ProjectTo<BonusSchemeDto>(_mapper.ConfigurationProvider)
-            .Where(x => bonusSchemeLinks.Contains(x.Id))
+            .Where(x => bonusSchemeLinkIds.Contains(x.Id))
             .ToListAsync();
 
         return bonusSchemes;

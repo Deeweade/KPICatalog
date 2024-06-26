@@ -4,5 +4,5 @@ namespace KPICatalog.Domain.Interfaces.Repositories;
 
 public interface ITypicalGoalInBonusSchemeRepository
 {
-    Task<IEnumerable<TypicalGoalInBonusSchemeDto?>> GetGoalsInBS();
+    Task<IEnumerable<TypicalGoalInBonusSchemeDto?>> GetByTypicalGoalId(int id);
 }

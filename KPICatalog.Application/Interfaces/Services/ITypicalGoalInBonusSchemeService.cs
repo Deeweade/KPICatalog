@@ -6,6 +6,6 @@ namespace KPICatalog.Application.Interfaces.Services;
 
 public interface ITypicalGoalInBonusSchemeService
 {
-    Task<IEnumerable<TypicalGoalInBonusSchemeView?>> GetGoalsInBS();
+    Task<IEnumerable<TypicalGoalInBonusSchemeView?>> GetByTypicalGoalId(int goalId);
     Task BulkCreate(ICollection<int> bonusSchemesIds, ICollection<TypicalGoalView> typicalGoals);
 }

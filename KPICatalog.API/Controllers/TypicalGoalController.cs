@@ -25,8 +25,13 @@ public class TypicalGoalController : ControllerBase
     public async Task<IActionResult> Get(int id)
     {
         var goal = await _serviceTG.GetById(id);
+        var currentBS = await _serviceBS.GetByTypicalGoalId(id);
+        var goalsInBS = await _serviceTGBS.GetByTypicalGoalId(id);
 
-        return Ok(goal);
+        goal.BonusSchemeViews = currentBS;
+        goal.TypicalGoalInBonusSchemes = goalsInBS;
+
+       return Ok(goal);
     }
     
     [HttpGet("get")]
@@ -35,25 +40,6 @@ public class TypicalGoalController : ControllerBase
         var goal = await _serviceTG.GetAll();
 
         return Ok(goal);
-    }
-
-    [HttpGet("getCurrent/{goalId}/{typicalGoalTypeId}")]
-    public async Task<IActionResult> GetCurrent(int goalId, int typicalGoalTypeId)
-    {
-        var goal = await _serviceTG.GetById(goalId);
-        var currentBS = await _serviceBS.GetBS(goalId, typicalGoalTypeId);
-        var goalsInBS = await _serviceTGBS.GetGoalsInBS();
-
-       return Ok(new TypicalGoalView
-        {
-            Title = goal.Title,
-            PlanningCycleId = goal.PlanningCycleId,
-            WeightTypeId = goal.WeightTypeId,
-            ParentGoalId = goal.ParentGoalId,
-            ExternalId = goal.ExternalId,
-            BonusSchemeViews = currentBS,
-            TypicalGoalInBonusSchemes = goalsInBS
-        });
     }
 
     [HttpPost("create")]
