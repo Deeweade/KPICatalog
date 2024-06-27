@@ -28,8 +28,6 @@ public class BonusSchemeService : IBonusSchemeService
 
         var scheme = await _unitOfWork.BonusSchemeRepository.GetById(schemeId);
 
-        if (scheme is null) return null;
-
         var result = _mapper.Map<BonusSchemeView>(scheme);
 
         var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(
@@ -73,8 +71,6 @@ public class BonusSchemeService : IBonusSchemeService
         if (goalId <= 0) throw new ArgumentOutOfRangeException(nameof(goalId));
 
         var goal = await _unitOfWork.BonusSchemeRepository.GetByTypicalGoalId(goalId);
-
-        if (goal is null) return null;
 
         return _mapper.Map<IEnumerable<BonusSchemeView>>(goal);
     }

@@ -46,6 +46,12 @@ public class BonusSchemeObjectLinkRepository : IBonusSchemeObjectLinkRepository
         return await query.ToListAsync();
     }
 
+    /// <summary>
+    /// Создает одну запись в БД для значения в BonusSchemeObjectLinkDto.LinkedObjectsId
+    /// </summary>
+    /// <param name="linkDto"Принимает сущность BonusSchemeObjectLinkDto></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
     public async Task<BonusSchemeObjectLinkDto> Create(BonusSchemeObjectLinkDto linkDto)
     {
         if (linkDto is null) throw new ArgumentNullException(nameof(linkDto));
@@ -60,6 +66,26 @@ public class BonusSchemeObjectLinkRepository : IBonusSchemeObjectLinkRepository
             .AsNoTracking()
             .ProjectTo<BonusSchemeObjectLinkDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(x => x.Id == link.Id);
+    }
+
+    /// <summary>
+    /// Создает записи в БД для каждого значения в BonusSchemeObjectLinkDto.LinkedObjectsIds
+    /// </summary>
+    /// <param name="linkDto"Принимает сущность BonusSchemeObjectLinkDto></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public async Task BulkCreate(BonusSchemeObjectLinkDto linkDto)
+    {
+        if (linkDto is null) throw new ArgumentNullException(nameof(linkDto));
+
+        foreach (var objectId in linkDto.LinkedObjectsIds)
+        {
+            var link = _mapper.Map<BonusSchemeObjectLink>(linkDto);
+
+            link.LinkedObjectId = objectId;
+
+            _context.BonusSchemeObjectLinks.Add(link);
+        }
     }
 
     public async Task Delete(BonusSchemeObjectLinkDto linkDto)
