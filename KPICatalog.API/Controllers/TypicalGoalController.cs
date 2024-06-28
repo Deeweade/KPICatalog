@@ -28,13 +28,13 @@ public class TypicalGoalController : ControllerBase
         var currentBS = await _serviceBS.GetByTypicalGoalId(id);
         var goalsInBS = await _serviceTGBS.GetByTypicalGoalId(id);
 
-        goal.BonusSchemeViews = currentBS;
+        goal.BonusScheme = currentBS;
         goal.TypicalGoalInBonusSchemes = goalsInBS;
 
        return Ok(goal);
     }
     
-    [HttpGet("get")]
+    [HttpGet("all")]
     public async Task<IActionResult> GetAll()
     {
         var goal = await _serviceTG.GetAll();

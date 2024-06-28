@@ -8,5 +8,6 @@ public interface IBonusSchemeObjectLinkRepository
 {
     Task<IEnumerable<BonusSchemeObjectLinkDto>> GetByFilter(BonusSchemeObjectLinkFilterDto filter);
     Task<BonusSchemeObjectLinkDto> Create(BonusSchemeObjectLinkDto link);
+    Task BulkCreate(BonusSchemeObjectLinkDto linkDto);
     Task Delete(BonusSchemeObjectLinkDto link);
 }

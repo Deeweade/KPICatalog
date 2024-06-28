@@ -4,6 +4,8 @@ using KPICatalog.Application.Models.Views;
 using AutoMapper;
 using KPICatalog.Domain.Dtos.Entities;
 using System.Globalization;
+using KPICatalog.Domain.Models.Entities.KPICatalog;
+using KPICatalog.Domain.Models.Enums;
 
 namespace KPICatalog.Application.Services;
 
@@ -33,82 +35,58 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
         if (bonusSchemesIds is null) throw new ArgumentNullException(nameof(bonusSchemesIds));
         if (typicalGoals is null) throw new ArgumentNullException(nameof(typicalGoals));
 
-        foreach (var typicalGoal in typicalGoals)
+        var goalsIds = await Create(typicalGoals.Where(x => x.TypicalGoalInBonusScheme.BonusSchemeLinkMethodId == (int)BonusSchemeObjectLinkMethods.ForAll));
+
+        foreach (var bonusSchemesId in bonusSchemesIds)
         {
-            var goalsInSchemeDtos = new List<TypicalGoalInBonusSchemeDto>();
+            var ids = await Create(typicalGoals.Where(x => x.TypicalGoalInBonusScheme.BonusSchemeLinkMethodId != (int)BonusSchemeObjectLinkMethods.ForAll));
 
-            foreach(var periodId in typicalGoal.TypicalGoalInBonusSchemeView.PeriodIds)
+            ids.AddRange(goalsIds);
+
+            var dto = new BonusSchemeObjectLinkDto
             {
-                typicalGoal.TypicalGoalInBonusSchemeView.PeriodId = periodId;
-
-                var goalInScheme = new TypicalGoalInBonusSchemeDto
-                {
-                    TypicalGoalId = typicalGoal.Id,
-                    ParentBSTypicalGoalId = typicalGoal.TypicalGoalInBonusSchemeView.ParentBSTypicalGoalId,
-                    PeriodId = typicalGoal.TypicalGoalInBonusSchemeView.PeriodId,
-                    Weight = typicalGoal.TypicalGoalInBonusSchemeView.Weight,
-                    Plan = typicalGoal.TypicalGoalInBonusSchemeView.Plan,
-                    TypeKeyResultID = typicalGoal.TypicalGoalInBonusSchemeView.TypeKeyResultID,
-                    EvaluationProvider = typicalGoal.TypicalGoalInBonusSchemeView.EvaluationProvider,
-                    BonusSchemeLinkMethodId = typicalGoal.TypicalGoalInBonusSchemeView.BonusSchemeLinkMethodId,
-                    EvaluationMethodId = typicalGoal.TypicalGoalInBonusSchemeView.EvaluationMethodId,
-                    RatingScaleId = typicalGoal.TypicalGoalInBonusSchemeView.RatingScaleId,
-                    Fact = typicalGoal.TypicalGoalInBonusSchemeView.Fact,
-                    Evaluation = typicalGoal.TypicalGoalInBonusSchemeView.Evaluation
-                };
-
-                goalsInSchemeDtos.Add(goalInScheme);
-
-                //await _unitOfWork.TypicalGoalInBonusSchemeRepository.Create(goalInScheme);
-                
-                foreach (var child in typicalGoals.Where(x => x.ParentGoalId == typicalGoal.Id).ToList())
-                {
-                    var childGoalsInSchemeDtos = Create(child);
-
-                    goalsInSchemeDtos.AddRange(childGoalsInSchemeDtos);
-                }
-            }
-
+                LinkedObjectsIds = ids,
+                LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal,
+                BonusSchemeId = bonusSchemesId
+            };
+            
+            await _unitOfWork.BonusSchemeObjectLinkRepository.BulkCreate(dto);
         }
+
+        await _unitOfWork.SaveChangesAsync();
     }
 
-    private List<TypicalGoalInBonusSchemeDto> Create(TypicalGoalView typicalGoal)
+    private async Task<List<int>> Create(IEnumerable<TypicalGoalView> typicalGoals)
     {
-        if (typicalGoal is null) throw new ArgumentNullException(nameof(typicalGoal));
-        if (typicalGoal.TypicalGoalInBonusSchemeView is null) throw new ArgumentNullException(nameof(typicalGoal.TypicalGoalInBonusSchemeView));
+        if (typicalGoals is null) throw new ArgumentNullException(nameof(typicalGoals));
 
-        var goalsInSchemeDtos = new List<TypicalGoalInBonusSchemeDto>();
+        var goalsInSchemeIds = new List<int>();
 
-        foreach(var periodId in typicalGoal.TypicalGoalInBonusSchemeView.PeriodIds)
+        foreach (var typicalGoal in typicalGoals)
         {
-            typicalGoal.TypicalGoalInBonusSchemeView.PeriodId = periodId;
+            var goalInScheme = _mapper.Map<TypicalGoalInBonusSchemeDto>(typicalGoal.TypicalGoalInBonusScheme);
 
-            var goalInScheme = new TypicalGoalInBonusSchemeDto
+            goalInScheme.TypicalGoalId = typicalGoal.Id;
+
+            foreach(var periodId in typicalGoal.TypicalGoalInBonusScheme.PeriodIds)
             {
-                TypicalGoalId = typicalGoal.Id,
-                ParentBSTypicalGoalId = typicalGoal.TypicalGoalInBonusSchemeView.ParentBSTypicalGoalId,
-                PeriodId = typicalGoal.TypicalGoalInBonusSchemeView.PeriodId,
-                Weight = typicalGoal.TypicalGoalInBonusSchemeView.Weight,
-                Plan = typicalGoal.TypicalGoalInBonusSchemeView.Plan,
-                TypeKeyResultID = typicalGoal.TypicalGoalInBonusSchemeView.TypeKeyResultID,
-                EvaluationProvider = typicalGoal.TypicalGoalInBonusSchemeView.EvaluationProvider,
-                BonusSchemeLinkMethodId = typicalGoal.TypicalGoalInBonusSchemeView.BonusSchemeLinkMethodId,
-                EvaluationMethodId = typicalGoal.TypicalGoalInBonusSchemeView.EvaluationMethodId,
-                RatingScaleId = typicalGoal.TypicalGoalInBonusSchemeView.RatingScaleId,
-                Fact = typicalGoal.TypicalGoalInBonusSchemeView.Fact,
-                Evaluation = typicalGoal.TypicalGoalInBonusSchemeView.Evaluation
-            };
+                goalInScheme.PeriodId = periodId;
 
-            goalsInSchemeDtos.Add(goalInScheme);
+                goalInScheme = await _unitOfWork.TypicalGoalInBonusSchemeRepository.Create(goalInScheme);
 
-            // foreach (var child in typicalGoals.Where(x => x.ParentGoalId == typicalGoal.Id).ToList())
-            // {
-            //     var childGoalsInSchemeDtos = Create(child);
+                goalsInSchemeIds.Add(goalInScheme.Id);
 
-            //     goalsInSchemeDtos.AddRange(childGoalsInSchemeDtos);
-            // }
+                foreach (var goal in typicalGoals.Where(x => x.ParentGoalId == typicalGoal.Id))
+                {
+                    goal.TypicalGoalInBonusScheme.ParentBSTypicalGoalId = goalInScheme.Id;
+                }
+
+                var children = await Create(typicalGoals.Where(x => x.ParentGoalId == typicalGoal.Id));
+
+                goalsInSchemeIds.AddRange(children);
+            }
         }
 
-        return goalsInSchemeDtos;
+        return goalsInSchemeIds;
     }
 }

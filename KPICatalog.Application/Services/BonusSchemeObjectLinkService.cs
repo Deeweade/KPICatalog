@@ -4,10 +4,6 @@ using KPICatalog.Application.Models.Views;
 using KPICatalog.Domain.Dtos.Entities;
 using KPICatalog.Domain.Dtos.Filters;
 using AutoMapper;
-using KPICatalog.Domain.Models.Entities.KPICatalog;
-using System.Security.Cryptography.X509Certificates;
-using KPICatalog.Infrastructure.Data.Contexts;
-using KPICatalog.Domain.Models.Enums;
 
 namespace KPICatalog.Application.Services;
 
@@ -43,17 +39,16 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
         }
 
         //Создаем новые связи
-        foreach (var objectId in linkView.LinkedObjectsIds)
+        var dto = new BonusSchemeObjectLinkDto
         {
-            var link = new BonusSchemeObjectLinkDto
-            {
-                BonusSchemeId = linkView.BonusSchemeId,
-                LinkedObjectId = objectId,
-                LinkedObjectTypeId = linkView.LinkedObjectTypeId
-            };
+            BonusSchemeId = linkView.BonusSchemeId,
+            LinkedObjectTypeId = linkView.LinkedObjectTypeId,
+            LinkedObjectsIds = linkView.LinkedObjectsIds
+        };
 
-            await _unitOfWork.BonusSchemeObjectLinkRepository.Create(link);
-        }
+        await _unitOfWork.BonusSchemeObjectLinkRepository.BulkCreate(dto);
+
+        await _unitOfWork.SaveChangesAsync();
 
         //Возвращаем созданные объекты
         links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter);
