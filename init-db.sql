@@ -1,9 +1,3 @@
-IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'KPICatalog')
-BEGIN
-    CREATE DATABASE KPICatalog;
-END
-GO
-
 IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'PerfManagement1')
 BEGIN
     CREATE DATABASE PerfManagement1;
@@ -55,8 +49,6 @@ IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Employee')
         [Id] ASC
     )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
     ) ON [PRIMARY]
-
-    GO
 
     END
 GO

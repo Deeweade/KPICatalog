@@ -2,17 +2,14 @@ version: '3.4'
 
 services:
   sqlserver:
-      build:
-        context: .
-        dockerfile: Dockerfile.sqlserver
-      environment:
-        - ACCEPT_EULA=Y
-        - SA_PASSWORD=QWErty_12345678
-      ports:
-        - 1433:1433
-      volumes:
-        - sqlvolume:/var/opt/mssql
-      container_name: sqlserver
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=QWErty_12345678
+    ports:
+      - 1433:1433
+    volumes:
+      - sqlvolume:/var/opt/mssql
 
   kpicatalog:
     image: kpicatalog_api

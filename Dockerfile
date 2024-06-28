@@ -32,4 +32,10 @@ RUN dotnet publish "KPICatalog.API.csproj" -c Debug -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "KPICatalog.API.dll"]
+COPY wait-for-it.sh /wait-for-it.sh
+COPY entrypoint.sh /entrypoint.sh
+COPY init-db.sql /init-db.sql
+RUN chmod +x /wait-for-it.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT [ "/bin/bash", "/entrypoint.sh" ]
+#ENTRYPOINT ["dotnet", "KPICatalog.API.dll"]

@@ -41,6 +41,7 @@ builder.Configuration
     .AddEnvironmentVariables();
 
 #region AuthenticationConfiguring
+
 builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme).AddNegotiate();
 
 builder.Services.AddAuthorization(options =>
@@ -60,7 +61,8 @@ builder.Services.AddControllers(options =>
     options.SuppressAsyncSuffixInActionNames = false;
 }).AddJsonOptions(options =>
 {
-    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 });
 
 #endregion
@@ -137,7 +139,7 @@ app.MapControllers();
 
 #region RunMigrations
 
-// Запуск миграций при старте приложения с логированием
+// Запуск миграций при старте приложения
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
