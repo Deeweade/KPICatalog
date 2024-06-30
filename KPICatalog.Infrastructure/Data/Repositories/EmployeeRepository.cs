@@ -7,7 +7,7 @@ using AutoMapper;
 
 namespace KPICatalog.Infrastructure.Data.Repositories;
 
-public class EmployeeRepository : IEmlpoyeeRepository
+public class EmployeeRepository : IEmployeeRepository
 {
     private readonly PerfManagementDbContext _context;
     private readonly IMapper _mapper;

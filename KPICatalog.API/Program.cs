@@ -139,7 +139,7 @@ app.MapControllers();
 
 #region RunMigrations
 
-// Запуск миграций при старте приложения
+//Запуск миграций при старте приложения
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;

@@ -11,6 +11,7 @@ public class PerfManagementDbContext : DbContext
     }
 
     public DbSet<Employee> Employees { get; set; }
+    public DbSet<Period> Periods { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -22,5 +23,6 @@ public class PerfManagementDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Ignore<Employee>();
+        modelBuilder.Ignore<Period>();
     }
 }

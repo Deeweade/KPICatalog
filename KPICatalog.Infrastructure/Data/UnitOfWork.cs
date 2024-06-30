@@ -24,7 +24,7 @@ public class UnitOfWork : IUnitOfWork
     public IUserAccessControlRepository UserAccessControlRepository { get; }
     public IBonusSchemeRepository BonusSchemeRepository { get; }
     public IBonusSchemeObjectLinkRepository BonusSchemeObjectLinkRepository { get; }
-    public IEmlpoyeeRepository EmployeeRepository { get; }
+    public IEmployeeRepository EmployeeRepository { get; }
     public ITypicalGoalRepository TypicalGoalRepository { get; }
     public ITypicalGoalInBonusSchemeRepository TypicalGoalInBonusSchemeRepository { get; }
 
