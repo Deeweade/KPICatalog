@@ -6,4 +6,5 @@ public interface ITypicalGoalInBonusSchemeRepository
 {
     Task<IEnumerable<TypicalGoalInBonusSchemeDto>> GetByTypicalGoalId(int id);
     Task<TypicalGoalInBonusSchemeDto> Create(TypicalGoalInBonusSchemeDto goal);
+    Task<IEnumerable<int>> BulkCreate(List<TypicalGoalInBonusSchemeDto> goalsInScheme);
 }

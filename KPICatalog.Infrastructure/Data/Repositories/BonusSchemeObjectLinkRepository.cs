@@ -86,6 +86,8 @@ public class BonusSchemeObjectLinkRepository : IBonusSchemeObjectLinkRepository
 
             _context.BonusSchemeObjectLinks.Add(link);
         }
+
+        await _context.SaveChangesAsync();
     }
 
     public async Task Delete(BonusSchemeObjectLinkDto linkDto)

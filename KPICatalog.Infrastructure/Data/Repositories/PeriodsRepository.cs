@@ -7,27 +7,22 @@ using AutoMapper;
 
 namespace KPICatalog.Infrastructure.Data.Repositories;
 
-public class EmployeeRepository : IEmployeeRepository
+public class PeriodsRepository : IPeriodsRepository
 {
     private readonly PerfManagementDbContext _context;
     private readonly IMapper _mapper;
 
-    public EmployeeRepository(PerfManagementDbContext context, IMapper mapper)
+    public PeriodsRepository(PerfManagementDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<EmployeeDto>> GetByIds(List<int> ids)
+    public async Task<IEnumerable<PeriodDto>> GetAll()
     {
-        if (ids is null) throw new ArgumentNullException(nameof(ids));
-
-        ids = ids.Distinct().ToList();
-
-        return await _context.Employees
+        return await _context.Periods
             .AsNoTracking()
-            .ProjectTo<EmployeeDto>(_mapper.ConfigurationProvider)
-            .Where(x => ids.Any(id => id == x.Id))
+            .ProjectTo<PeriodDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
     }
 }

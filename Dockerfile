@@ -38,4 +38,3 @@ COPY init-db.sql /init-db.sql
 RUN chmod +x /wait-for-it.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT [ "/bin/bash", "/entrypoint.sh" ]
-#ENTRYPOINT ["dotnet", "KPICatalog.API.dll"]

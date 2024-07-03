@@ -1,5 +1,8 @@
-﻿namespace KPICatalog.Domain.Models.Entities.Goals;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
+namespace KPICatalog.Domain.Models.Entities.Goals;
+
+[Table("Employee")]
 public class Employee : BaseEntity
 {
     public string? TabNumber { get; set; }

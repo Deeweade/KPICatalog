@@ -2,7 +2,7 @@
 
 namespace KPICatalog.Domain.Interfaces.Repositories;
 
-public interface IEmlpoyeeRepository
+public interface IEmployeeRepository
 {
     Task<IEnumerable<EmployeeDto>> GetByIds(List<int> ids);
 }
