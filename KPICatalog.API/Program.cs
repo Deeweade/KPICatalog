@@ -24,7 +24,7 @@ string machineName = Environment.MachineName.ToLower();
 
 var machineNames = config.GetSection("EnvironmentMachines").Get<Dictionary<string, string>>();
 
-string environment = machineNames.FirstOrDefault(x => x.Value.ToLower() == machineName).Key ?? "Test";
+string environment = machineNames.FirstOrDefault(x => x.Value.ToLower() == machineName).Key ?? "Development";
 
 #endregion
 
@@ -41,6 +41,7 @@ builder.Configuration
     .AddEnvironmentVariables();
 
 #region AuthenticationConfiguring
+
 builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme).AddNegotiate();
 
 builder.Services.AddAuthorization(options =>
@@ -60,30 +61,23 @@ builder.Services.AddControllers(options =>
     options.SuppressAsyncSuffixInActionNames = false;
 }).AddJsonOptions(options =>
 {
-    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 });
 
 #endregion
 
-#region ContextConfiguring
+#region ContextsConfiguring
 
-string connectionString = builder.Configuration.GetConnectionString("KPICatalog");
+string kpiCatalogConnectionString = builder.Configuration.GetConnectionString("KPICatalog");
 
-if (builder.Environment.IsEnvironment("Development_opetrov2"))
-{
-    builder.Services.AddDbContext<KPICatalogDbContext>(options =>
-        options.UseNpgsql(connectionString, b => b.MigrationsAssembly("KPICatalog.API")));
-}
-else if (builder.Environment.IsEnvironment("Test"))
-{
-    builder.Services.AddDbContext<KPICatalogDbContext>(options =>
-        options.UseSqlServer(connectionString, b => b.MigrationsAssembly("KPICatalog.API")));
-}
-else if (builder.Environment.IsProduction())
-{
-    builder.Services.AddDbContext<KPICatalogDbContext>(options =>
-        options.UseSqlServer(connectionString, b => b.MigrationsAssembly("KPICatalog.API")));
-}
+builder.Services.AddDbContext<KPICatalogDbContext>(options =>
+    options.UseSqlServer(kpiCatalogConnectionString, b => b.MigrationsAssembly("KPICatalog.API")));
+
+var perfManagementConnectionString = builder.Configuration.GetConnectionString("PerfManagement1");
+
+builder.Services.AddDbContext<PerfManagementDbContext>(options =>
+    options.UseSqlServer(perfManagementConnectionString));
 
 #endregion
 
@@ -93,6 +87,8 @@ else if (builder.Environment.IsProduction())
 builder.Services.AddScoped<IUserAccessControlService, UserAccessControlService>();
 builder.Services.AddScoped<IBonusSchemeService, BonusSchemeService>();
 builder.Services.AddScoped<IBonusSchemeObjectLinkService, BonusSchemeObjectLinkService>();
+builder.Services.AddScoped<ITypicalGoalService, TypicalGoalService>();
+builder.Services.AddScoped<ITypicalGoalInBonusSchemeService, TypicalGoalInBonusSchemeService>();
 
 //data
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -110,7 +106,7 @@ var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-if (app.Environment.IsEnvironment("Development_opetrov2"))
+if (app.Environment.IsDevelopment())
 {
     app.UseMiddleware<DevAuthMiddleware>();
 }
@@ -143,7 +139,7 @@ app.MapControllers();
 
 #region RunMigrations
 
-// Запуск миграций при старте приложения с логированием
+//Запуск миграций при старте приложения
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;

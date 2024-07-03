@@ -3,8 +3,8 @@ using System;
 using KPICatalog.Infrastructure.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -18,20 +18,20 @@ namespace KPICatalog.API.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.6")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.BonusScheme", b =>
+            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.KPICatalog.BonusScheme", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CostCenter")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DateEnd")
                         .HasColumnType("datetime2");
@@ -40,7 +40,7 @@ namespace KPICatalog.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("ExternalId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -49,32 +49,50 @@ namespace KPICatalog.API.Migrations
                         .HasColumnType("bit");
 
                     b.Property<int?>("PlanningCycleId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PlanningCycleId");
 
                     b.ToTable("BonusSchemes");
                 });
 
-            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.BonusSchemeObjectLink", b =>
+            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.KPICatalog.BonusSchemeLinkMethod", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BonusSchemeLinkMethod");
+                });
+
+            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.KPICatalog.BonusSchemeObjectLink", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("BonusSchemeId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<int?>("LinkedObjectId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<int?>("LinkedObjectTypeId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -85,48 +103,174 @@ namespace KPICatalog.API.Migrations
                     b.ToTable("BonusSchemeObjectLinks");
                 });
 
-            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.LinkedObjectType", b =>
+            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.KPICatalog.LinkedObjectType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("LinkedObjectType");
+                    b.ToTable("LinkedObjectTypes");
                 });
 
-            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.UserAccessControl", b =>
+            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.KPICatalog.PlanningCycle", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PlanningCycles");
+                });
+
+            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.KPICatalog.TypicalGoal", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ExternalId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ParentGoalId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PlanningCycleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("WeightTypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlanningCycleId");
+
+                    b.HasIndex("WeightTypeId");
+
+                    b.ToTable("TypicalGoals");
+                });
+
+            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.KPICatalog.TypicalGoalInBonusScheme", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("BonusSchemeLinkMethodId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Evaluation")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EvaluationMethodId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EvaluationProvider")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Fact")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ParentBSTypicalGoalId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PeriodId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Plan")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RatingScaleId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TypeKeyResultID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TypicalGoalId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Weight")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BonusSchemeLinkMethodId");
+
+                    b.HasIndex("TypicalGoalId");
+
+                    b.ToTable("TypicalGoalInBonusSchemes");
+                });
+
+            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.KPICatalog.UserAccessControl", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("IsAccessGranted")
                         .HasColumnType("bit");
 
                     b.Property<string>("Login")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("UserAccessControls");
                 });
 
-            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.BonusSchemeObjectLink", b =>
+            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.KPICatalog.WeightType", b =>
                 {
-                    b.HasOne("KPICatalog.Domain.Models.Entities.BonusScheme", "BonusScheme")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WeightTypes");
+                });
+
+            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.KPICatalog.BonusScheme", b =>
+                {
+                    b.HasOne("KPICatalog.Domain.Models.Entities.KPICatalog.PlanningCycle", "PlanningCycle")
+                        .WithMany("BonusSchemes")
+                        .HasForeignKey("PlanningCycleId");
+
+                    b.Navigation("PlanningCycle");
+                });
+
+            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.KPICatalog.BonusSchemeObjectLink", b =>
+                {
+                    b.HasOne("KPICatalog.Domain.Models.Entities.KPICatalog.BonusScheme", "BonusScheme")
                         .WithMany("BonusSchemeObjectLinks")
                         .HasForeignKey("BonusSchemeId");
 
-                    b.HasOne("KPICatalog.Domain.Models.Entities.LinkedObjectType", "LinkedObjectType")
+                    b.HasOne("KPICatalog.Domain.Models.Entities.KPICatalog.LinkedObjectType", "LinkedObjectType")
                         .WithMany("BonusSchemeObjectLinks")
                         .HasForeignKey("LinkedObjectTypeId");
 
@@ -135,14 +279,66 @@ namespace KPICatalog.API.Migrations
                     b.Navigation("LinkedObjectType");
                 });
 
-            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.BonusScheme", b =>
+            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.KPICatalog.TypicalGoal", b =>
+                {
+                    b.HasOne("KPICatalog.Domain.Models.Entities.KPICatalog.PlanningCycle", "PlanningCycle")
+                        .WithMany("TypicalGoals")
+                        .HasForeignKey("PlanningCycleId");
+
+                    b.HasOne("KPICatalog.Domain.Models.Entities.KPICatalog.WeightType", "WeightType")
+                        .WithMany("TypicalGoals")
+                        .HasForeignKey("WeightTypeId");
+
+                    b.Navigation("PlanningCycle");
+
+                    b.Navigation("WeightType");
+                });
+
+            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.KPICatalog.TypicalGoalInBonusScheme", b =>
+                {
+                    b.HasOne("KPICatalog.Domain.Models.Entities.KPICatalog.BonusSchemeLinkMethod", "BonusSchemeLinkMethod")
+                        .WithMany("TypicalGoalInBonusSchemes")
+                        .HasForeignKey("BonusSchemeLinkMethodId");
+
+                    b.HasOne("KPICatalog.Domain.Models.Entities.KPICatalog.TypicalGoal", "TypicalGoal")
+                        .WithMany("TypicalGoalInBonusSchemes")
+                        .HasForeignKey("TypicalGoalId");
+
+                    b.Navigation("BonusSchemeLinkMethod");
+
+                    b.Navigation("TypicalGoal");
+                });
+
+            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.KPICatalog.BonusScheme", b =>
                 {
                     b.Navigation("BonusSchemeObjectLinks");
                 });
 
-            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.LinkedObjectType", b =>
+            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.KPICatalog.BonusSchemeLinkMethod", b =>
+                {
+                    b.Navigation("TypicalGoalInBonusSchemes");
+                });
+
+            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.KPICatalog.LinkedObjectType", b =>
                 {
                     b.Navigation("BonusSchemeObjectLinks");
+                });
+
+            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.KPICatalog.PlanningCycle", b =>
+                {
+                    b.Navigation("BonusSchemes");
+
+                    b.Navigation("TypicalGoals");
+                });
+
+            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.KPICatalog.TypicalGoal", b =>
+                {
+                    b.Navigation("TypicalGoalInBonusSchemes");
+                });
+
+            modelBuilder.Entity("KPICatalog.Domain.Models.Entities.KPICatalog.WeightType", b =>
+                {
+                    b.Navigation("TypicalGoals");
                 });
 #pragma warning restore 612, 618
         }

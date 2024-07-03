@@ -1,12 +1,11 @@
-﻿using System.Security.AccessControl;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
+﻿using KPICatalog.Domain.Models.Entities.KPICatalog;
+using KPICatalog.Domain.Interfaces.Repositories;
+using KPICatalog.Infrastructure.Data.Contexts;
 using KPICatalog.Domain.Dtos.Entities;
 using KPICatalog.Domain.Dtos.Filters;
-using KPICatalog.Domain.Interfaces.Repositories;
-using KPICatalog.Domain.Models.Entities;
-using KPICatalog.Infrastructure.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper.QueryableExtensions;
+using AutoMapper;
 
 namespace KPICatalog.Infrastructure.Data.Repositories;
 
@@ -47,6 +46,12 @@ public class BonusSchemeObjectLinkRepository : IBonusSchemeObjectLinkRepository
         return await query.ToListAsync();
     }
 
+    /// <summary>
+    /// Создает одну запись в БД для значения в BonusSchemeObjectLinkDto.LinkedObjectsId
+    /// </summary>
+    /// <param name="linkDto"Принимает сущность BonusSchemeObjectLinkDto></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
     public async Task<BonusSchemeObjectLinkDto> Create(BonusSchemeObjectLinkDto linkDto)
     {
         if (linkDto is null) throw new ArgumentNullException(nameof(linkDto));
@@ -61,6 +66,28 @@ public class BonusSchemeObjectLinkRepository : IBonusSchemeObjectLinkRepository
             .AsNoTracking()
             .ProjectTo<BonusSchemeObjectLinkDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(x => x.Id == link.Id);
+    }
+
+    /// <summary>
+    /// Создает записи в БД для каждого значения в BonusSchemeObjectLinkDto.LinkedObjectsIds
+    /// </summary>
+    /// <param name="linkDto"Принимает сущность BonusSchemeObjectLinkDto></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public async Task BulkCreate(BonusSchemeObjectLinkDto linkDto)
+    {
+        if (linkDto is null) throw new ArgumentNullException(nameof(linkDto));
+
+        foreach (var objectId in linkDto.LinkedObjectsIds)
+        {
+            var link = _mapper.Map<BonusSchemeObjectLink>(linkDto);
+
+            link.LinkedObjectId = objectId;
+
+            _context.BonusSchemeObjectLinks.Add(link);
+        }
+
+        await _context.SaveChangesAsync();
     }
 
     public async Task Delete(BonusSchemeObjectLinkDto linkDto)

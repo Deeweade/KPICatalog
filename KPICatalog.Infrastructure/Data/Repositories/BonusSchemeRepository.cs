@@ -1,11 +1,12 @@
-﻿using KPICatalog.Domain.Interfaces.Repositories;
+﻿using KPICatalog.Domain.Models.Entities.KPICatalog;
+using KPICatalog.Domain.Interfaces.Repositories;
 using KPICatalog.Infrastructure.Data.Contexts;
-using KPICatalog.Domain.Models.Entities;
 using KPICatalog.Domain.Dtos.Entities;
 using KPICatalog.Domain.Dtos.Filters;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper.QueryableExtensions;
 using AutoMapper;
+using KPICatalog.Domain.Models.Enums;
 
 namespace KPICatalog.Infrastructure;
 
@@ -57,6 +58,35 @@ public class BonusSchemeRepository : IBonusSchemeRepository
         return res;
     }
 
+    public async Task<IEnumerable<BonusSchemeDto?>> GetByTypicalGoalId(int goalId)
+    {
+        var typicalGoal = await _context.TypicalGoals.FindAsync(goalId);
+
+        var typicalGoalIds = await _context.TypicalGoalInBonusSchemes
+            .AsNoTracking()
+            .ProjectTo<TypicalGoalInBonusSchemeDto>(_mapper.ConfigurationProvider)
+            .Where(x => x.TypicalGoalId == goalId)
+            .Select(x => x.Id)
+            .ToListAsync();
+
+        // Получаем все BonusSchemeObjectLink, у которых LinkedObjectId входит в список typicalGoalIds и LinkedObjectTypeId равен типу связи БС-Типовая цель
+        var bonusSchemeLinkIds = await _context.BonusSchemeObjectLinks
+            .AsNoTracking()
+            .ProjectTo<BonusSchemeObjectLinkDto>(_mapper.ConfigurationProvider)
+            .Where(x => typicalGoalIds.Contains((int)x.LinkedObjectId!) && x.LinkedObjectTypeId == (int)LinkedObjectTypes.TypicalGoal)
+            .Select(x => x.BonusSchemeId)
+            .ToListAsync();
+
+        // Получаем все BonusScheme, у которых Id входит в список bonusSchemeIds
+        var bonusSchemes = await _context.BonusSchemes
+            .AsNoTracking()
+            .ProjectTo<BonusSchemeDto>(_mapper.ConfigurationProvider)
+            .Where(x => bonusSchemeLinkIds.Contains(x.Id))
+            .ToListAsync();
+
+        return bonusSchemes;
+    }
+
     public async Task<BonusSchemeDto?> Create(BonusSchemeDto bonusSchemeDto)
     {
         if (bonusSchemeDto is null) throw new ArgumentNullException(nameof(bonusSchemeDto));
@@ -70,20 +100,20 @@ public class BonusSchemeRepository : IBonusSchemeRepository
         return await GetById(scheme.Id);
     }
 
-    public async Task<BonusSchemeDto> Update(BonusSchemeDto bonusSchemeDto)
+    public async Task<BonusSchemeDto> Update(BonusSchemeDto schemeDto)
     {
-        if (bonusSchemeDto is null) throw new ArgumentNullException(nameof(bonusSchemeDto));
+        if (schemeDto is null) throw new ArgumentNullException(nameof(schemeDto));
 
-        var scheme = await _context.BonusSchemes.FirstOrDefaultAsync(x => x.Id == bonusSchemeDto.Id);
+        var scheme = await _context.BonusSchemes.FirstOrDefaultAsync(x => x.Id == schemeDto.Id);
 
-        scheme.Title = bonusSchemeDto.Title;
-        scheme.CostCenter = bonusSchemeDto.CostCenter;
-        scheme.ExternalId = bonusSchemeDto.ExternalId;
-        scheme.IsDefaulBonusScheme = bonusSchemeDto.IsDefaulBonusScheme;
-        scheme.PlanningCycleId = bonusSchemeDto.PlanningCycleId;
-        scheme.DateStart = bonusSchemeDto.DateStart;
-        scheme.DateEnd = bonusSchemeDto.DateEnd;
-        scheme.IsActive = bonusSchemeDto.IsActive;
+        scheme.Title = schemeDto.Title;
+        scheme.CostCenter = schemeDto.CostCenter;
+        scheme.ExternalId = schemeDto.ExternalId;
+        scheme.IsDefaulBonusScheme = schemeDto.IsDefaulBonusScheme;
+        scheme.PlanningCycleId = schemeDto.PlanningCycleId;
+        scheme.DateStart = schemeDto.DateStart;
+        scheme.DateEnd = schemeDto.DateEnd;
+        scheme.IsActive = schemeDto.IsActive;
 
         await _context.SaveChangesAsync();
 

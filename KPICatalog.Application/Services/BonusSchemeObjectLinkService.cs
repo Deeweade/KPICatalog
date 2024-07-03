@@ -39,20 +39,36 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
         }
 
         //Создаем новые связи
-        foreach (var objectId in linkView.LinkedObjectsIds)
+        var dto = new BonusSchemeObjectLinkDto
         {
-            var link = new BonusSchemeObjectLinkDto
-            {
-                BonusSchemeId = linkView.BonusSchemeId,
-                LinkedObjectId = objectId,
-                LinkedObjectTypeId = linkView.LinkedObjectTypeId
-            };
+            BonusSchemeId = linkView.BonusSchemeId,
+            LinkedObjectTypeId = linkView.LinkedObjectTypeId,
+            LinkedObjectsIds = linkView.LinkedObjectsIds
+        };
 
-            await _unitOfWork.BonusSchemeObjectLinkRepository.Create(link);
-        }
+        await _unitOfWork.BonusSchemeObjectLinkRepository.BulkCreate(dto);
+
+        await _unitOfWork.SaveChangesAsync();
 
         //Возвращаем созданные объекты
         links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter);
+
+        return _mapper.Map<IEnumerable<BonusSchemeObjectLinkView>>(links);
+    }
+
+    public async Task<IEnumerable<BonusSchemeObjectLinkView>> Delete(BonusSchemeObjectLinkView linkView)
+    {
+        var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(
+            new BonusSchemeObjectLinkFilterDto
+            {
+                LinkedObjectsIds = linkView.LinkedObjectsIds,
+                LinkedObjectTypeId = linkView.LinkedObjectTypeId
+            });
+
+        foreach(var link in links.DefaultIfEmpty())
+        {
+            await _unitOfWork.BonusSchemeObjectLinkRepository.Delete(link!);
+        }
 
         return _mapper.Map<IEnumerable<BonusSchemeObjectLinkView>>(links);
     }

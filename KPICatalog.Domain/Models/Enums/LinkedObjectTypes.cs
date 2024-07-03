@@ -2,5 +2,6 @@
 
 public enum LinkedObjectTypes
 {
-    Employee = 1
+    Employee = 1,
+    TypicalGoal = 2
 }

@@ -1,4 +1,4 @@
-﻿using KPICatalog.Infrastructure.Data.Repositories;
+using KPICatalog.Infrastructure.Data.Repositories;
 using KPICatalog.Domain.Interfaces.Repositories;
 using KPICatalog.Infrastructure.Data.Contexts;
 using AutoMapper;
@@ -7,25 +7,32 @@ namespace KPICatalog.Infrastructure;
 
 public class UnitOfWork : IUnitOfWork
 {
-    private readonly KPICatalogDbContext _context;
+    private readonly KPICatalogDbContext _kpiCatalogContext;
 
-    public UnitOfWork(KPICatalogDbContext context, IMapper mapper)
+    public UnitOfWork(KPICatalogDbContext kpiCatalogContext, IMapper mapper, PerfManagementDbContext perfManagementContext)
     {
-        _context = context;
+        _kpiCatalogContext = kpiCatalogContext;
 
-        UserAccessControlRepository = new UserAccessControlRepository(_context, mapper);
-        BonusSchemeRepository = new BonusSchemeRepository(_context, mapper);
-        BonusSchemeObjectLinkRepository = new BonusSchemeObjectLinkRepository(_context, mapper);
-        EmployeeRepository = new EmployeeRepository(_context, mapper);
+        UserAccessControlRepository = new UserAccessControlRepository(_kpiCatalogContext, mapper);
+        BonusSchemeRepository = new BonusSchemeRepository(_kpiCatalogContext, mapper);
+        BonusSchemeObjectLinkRepository = new BonusSchemeObjectLinkRepository(_kpiCatalogContext, mapper);
+        EmployeeRepository = new EmployeeRepository(perfManagementContext, mapper);
+        PeriodsRepository = new PeriodsRepository(perfManagementContext, mapper);
+        TypicalGoalRepository = new TypicalGoalRepository(_kpiCatalogContext, mapper);
+        TypicalGoalInBonusSchemeRepository = new TypicalGoalInBonusSchemeRepository(_kpiCatalogContext, mapper);
     }
 
-    public IUserAccessControlRepository UserAccessControlRepository { get; set; }
-    public IBonusSchemeRepository BonusSchemeRepository { get; set; }
-    public IBonusSchemeObjectLinkRepository BonusSchemeObjectLinkRepository { get; set; }
-    public IEmlpoyeeRepository EmployeeRepository { get; set; }
+    public IUserAccessControlRepository UserAccessControlRepository { get; }
+    public IBonusSchemeRepository BonusSchemeRepository { get; }
+    public IBonusSchemeObjectLinkRepository BonusSchemeObjectLinkRepository { get; }
+    public ITypicalGoalRepository TypicalGoalRepository { get; }
+    public ITypicalGoalInBonusSchemeRepository TypicalGoalInBonusSchemeRepository { get; }
+
+    public IEmployeeRepository EmployeeRepository { get; }
+    public IPeriodsRepository PeriodsRepository { get; }
 
     public async Task<int> SaveChangesAsync()
     {
-        return await _context.SaveChangesAsync();
+        return await _kpiCatalogContext.SaveChangesAsync();
     }
 }

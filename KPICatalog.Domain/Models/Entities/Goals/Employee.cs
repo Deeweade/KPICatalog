@@ -1,5 +1,8 @@
-﻿namespace KPICatalog.Domain.Models.Entities;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
+namespace KPICatalog.Domain.Models.Entities.Goals;
+
+[Table("Employee")]
 public class Employee : BaseEntity
 {
     public string? TabNumber { get; set; }
@@ -30,6 +33,18 @@ public class Employee : BaseEntity
     public int? BlockNum { get; set; }
     public string? PhotoUrl { get; set; }
     public string? BonusType { get; set; }
-    public string? FirstName { get; set; }
-    public string? LastName { get; set; }
+    public string? FirstName 
+    {
+        get
+        {
+            return Fio.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)[1];
+        }
+    }
+    public string? LastName
+    {
+        get
+        {
+            return Fio.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)[0];
+        }
+    }
 }

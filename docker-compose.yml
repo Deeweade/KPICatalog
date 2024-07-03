@@ -1,0 +1,28 @@
+version: '3.4'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=QWErty_12345678
+    ports:
+      - 1433:1433
+    volumes:
+      - sqlvolume:/var/opt/mssql
+
+  kpicatalog:
+    image: kpicatalog_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - sqlserver
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=KPICatalog;User=sa;Password=QWErty_12345678;MultipleActiveResultSets=True;TrustServerCertificate=True
+    ports:
+      - "5001:80"
+
+volumes:
+  sqlvolume:
