@@ -15,6 +15,13 @@ public class InfrastructureMappingProfile : Profile
         CreateBonusSchemeObjectLinkMappings();
         CreateBonusSchemeMappings();
         CreateUserAccessControlMappings();
+        CreatePeriodMappings();
+    }
+
+    private void CreatePeriodMappings()
+    {
+        CreateMap<Period, PeriodDto>();
+        CreateMap<PeriodDto, Period>();
     }
 
     private void CreateTypicalGoalInBonusSchemeMapping()

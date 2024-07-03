@@ -10,14 +10,13 @@ public class Period : BaseEntity
     public DateTime? DateEnd { get; set; }
     public int? NumberY { get; set; }
     public int? NumberQ { get; set; }
-    [Column("IsYear")]
-    private int IsYearInt { get; set; }
-    [NotMapped]
-    public bool IsYear
-    {
-        get
-        {
-            return IsYearInt == 1;
-        }
-    }
+    //[Column("IsYear")]
+    public int IsYear { get; set; }
+    // public bool IsYear
+    // {
+    //     get
+    //     {
+    //         return IsYearInt == 1;
+    //     }
+    // }
 }

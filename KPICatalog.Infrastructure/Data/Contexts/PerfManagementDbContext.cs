@@ -21,8 +21,5 @@ public class PerfManagementDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Ignore<Employee>();
-        modelBuilder.Ignore<Period>();
     }
 }

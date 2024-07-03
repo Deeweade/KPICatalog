@@ -7,5 +7,5 @@ public class PeriodDto : BaseEntityDto
     public DateTime? DateEnd { get; set; }
     public int? NumberY { get; set; }
     public int? NumberQ { get; set; }
-    public bool IsYear { get; set; }
+    public int IsYear { get; set; }
 }
