@@ -4,6 +4,7 @@ using KPICatalog.Application.Models.Views;
 using AutoMapper;
 using KPICatalog.Domain.Dtos.Entities;
 using KPICatalog.Domain.Models.Enums;
+using KPICatalog.Domain.Dtos.Filters;
 
 namespace KPICatalog.Application.Services;
 
@@ -103,5 +104,30 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
         }
 
         return goalsInSchemeIds;
+    }
+
+    public async Task<GoalsForEmployeesRequestView> SendIntoMyGoals(int bonusSchemeId)
+    {
+        if (bonusSchemeId <= 0) throw new ArgumentOutOfRangeException(nameof(bonusSchemeId));
+
+        var filter = new BonusSchemeObjectLinkFilterDto
+        {
+            BonusSchemeId = bonusSchemeId,
+            LinkedObjectTypeId = (int)LinkedObjectTypes.Employee
+        };
+
+        var employeesIds = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter);
+
+        filter.LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal;
+
+        var goalsIds = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter);
+
+        var goals = await _unitOfWork.TypicalGoalInBonusSchemeRepository.GetByIds(goalsIds.Select(x => x.LinkedObjectId).ToList());
+
+        return new GoalsForEmployeesRequestView
+        {
+            Goals = goals,
+            EmployeesIds = employeesIds
+        };
     }
 }

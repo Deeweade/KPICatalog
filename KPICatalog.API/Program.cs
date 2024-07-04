@@ -9,6 +9,7 @@ using KPICatalog.Infrastructure;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using KPICatalog.API.Utilities;
 
 #region EnvironmentConfiguring
 
@@ -17,7 +18,6 @@ var settingsPath = Path.Combine(Directory.GetCurrentDirectory(), "Settings");
 var config = new ConfigurationBuilder()
     .SetBasePath(settingsPath)
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-    //.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
     .Build();
 
 string machineName = Environment.MachineName.ToLower();
@@ -25,6 +25,7 @@ string machineName = Environment.MachineName.ToLower();
 var machineNames = config.GetSection("EnvironmentMachines").Get<Dictionary<string, string>>();
 
 string environment = machineNames.FirstOrDefault(x => x.Value.ToLower() == machineName).Key ?? "Development";
+
 
 #endregion
 
@@ -39,6 +40,10 @@ builder.Configuration
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddJsonFile($"appsettings.{environment}.json", optional: true)
     .AddEnvironmentVariables();
+
+// Регистрация ApiSettings в контейнере DI
+builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
+
 
 #region AuthenticationConfiguring
 
@@ -89,6 +94,8 @@ builder.Services.AddScoped<IBonusSchemeService, BonusSchemeService>();
 builder.Services.AddScoped<IBonusSchemeObjectLinkService, BonusSchemeObjectLinkService>();
 builder.Services.AddScoped<ITypicalGoalService, TypicalGoalService>();
 builder.Services.AddScoped<ITypicalGoalInBonusSchemeService, TypicalGoalInBonusSchemeService>();
+
+builder.Services.AddHttpClient<ApiClient>();
 
 //data
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

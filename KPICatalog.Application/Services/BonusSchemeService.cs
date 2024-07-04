@@ -119,7 +119,7 @@ public class BonusSchemeService : IBonusSchemeService
             {
                 var linkView = new BonusSchemeObjectLinkView
                 {
-                    BonusSchemeId = newBonusSchemeId,
+                    BonusSchemeId = (int)newBonusSchemeId,
                     LinkedObjectsIds = links.Where(x => x.LinkedObjectTypeId == typeId && x.BonusSchemeId == bonusSchemeId)
                     .Select(x => (int)x.LinkedObjectId).Distinct().ToList(),
                     LinkedObjectTypeId = typeId

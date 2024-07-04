@@ -35,12 +35,12 @@ public class BonusSchemeObjectLinkRepository : IBonusSchemeObjectLinkRepository
 
         if (filter.BonusSchemeId is not null)
         {
-            query = query.Where(x => x.BonusSchemeId.HasValue && x.BonusSchemeId == filter.BonusSchemeId);
+            query = query.Where(x => x.BonusSchemeId == filter.BonusSchemeId);
         }
 
         if (filter.LinkedObjectTypeId is not null)
         {
-            query = query.Where(x => x.LinkedObjectTypeId.HasValue && x.LinkedObjectTypeId == filter.LinkedObjectTypeId);    
+            query = query.Where(x => x.LinkedObjectTypeId == filter.LinkedObjectTypeId);    
         }
 
         return await query.ToListAsync();
