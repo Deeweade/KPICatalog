@@ -10,13 +10,5 @@ public class Period : BaseEntity
     public DateTime? DateEnd { get; set; }
     public int? NumberY { get; set; }
     public int? NumberQ { get; set; }
-    //[Column("IsYear")]
     public int IsYear { get; set; }
-    // public bool IsYear
-    // {
-    //     get
-    //     {
-    //         return IsYearInt == 1;
-    //     }
-    // }
 }
