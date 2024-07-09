@@ -19,7 +19,7 @@ public class TypicalGoalRepository : ITypicalGoalRepository
         _mapper = mapper;
     }
 
-    public async Task<TypicalGoalDto?> GetById(int goalId)
+    public async Task<TypicalGoalDto> GetById(int goalId)
     {
         if (goalId <= 0 ) throw new ArgumentOutOfRangeException(nameof(goalId));
 
@@ -29,7 +29,18 @@ public class TypicalGoalRepository : ITypicalGoalRepository
             .FirstOrDefaultAsync(x => x.Id == goalId);
     }
 
-    public async Task<IEnumerable<TypicalGoalDto?>> GetAll()
+    public async Task<List<TypicalGoalDto>> GetByIds(List<int> typicalGoalIds)
+    {
+        if (typicalGoalIds is null) throw new ArgumentNullException(nameof(typicalGoalIds));
+
+        return await _context.TypicalGoals
+            .AsNoTracking()
+            .ProjectTo<TypicalGoalDto>(_mapper.ConfigurationProvider)
+            .Where(x => typicalGoalIds.Contains(x.Id))
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<TypicalGoalDto>> GetAll()
     {
         return await _context.TypicalGoals
             .AsNoTracking()
@@ -39,7 +50,7 @@ public class TypicalGoalRepository : ITypicalGoalRepository
             .ToListAsync();
     }
 
-    public async Task<TypicalGoalDto?> Create(TypicalGoalDto typicalGoalDto)
+    public async Task<TypicalGoalDto> Create(TypicalGoalDto typicalGoalDto)
     {
         if (typicalGoalDto is null) throw new ArgumentNullException(nameof(typicalGoalDto));
 
@@ -68,5 +79,4 @@ public class TypicalGoalRepository : ITypicalGoalRepository
 
         return await GetById(goal.Id);
     }
-
 }

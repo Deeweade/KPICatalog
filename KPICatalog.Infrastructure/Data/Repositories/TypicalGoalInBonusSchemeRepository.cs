@@ -30,7 +30,7 @@ public class TypicalGoalInBonusSchemeRepository : ITypicalGoalInBonusSchemeRepos
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<TypicalGoalInBonusSchemeDto?>> GetByTypicalGoalId(int goalId)
+    public async Task<IEnumerable<TypicalGoalInBonusSchemeDto>> GetByTypicalGoalId(int goalId)
     {
         return await _context.TypicalGoalInBonusSchemes
             .AsNoTracking()

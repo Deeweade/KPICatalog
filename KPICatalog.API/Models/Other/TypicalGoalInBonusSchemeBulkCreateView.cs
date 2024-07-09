@@ -4,6 +4,6 @@ namespace KPICatalog.API.Models.Other;
 
 public class TypicalGoalInBonusSchemeBulkCreateView
 {
-    public ICollection<int>? BonusSchemesIds { get; set; }
-    public ICollection<TypicalGoalView>? TypicalGoals { get; set; }
+    public ICollection<int> BonusSchemesIds { get; set; }
+    public ICollection<TypicalGoalView> TypicalGoals { get; set; }
 }

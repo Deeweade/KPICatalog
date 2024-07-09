@@ -43,7 +43,7 @@ public class TypicalGoalInBonusSchemeController : ControllerBase
 
         var url = _apiSettings.MyGoalsUrl + "Goals/SyncWithTypicalGoals";
 
-        var response = _apiClient.PostAsync<GoalsForEmployeesRequestView, GoalsForEmployeesResponseView>(url, goals);
+        var response = await _apiClient.PostAsync<GoalsForEmployeesRequestView, GoalsForEmployeesResponseView>(url, goals);
 
         return Ok(response);
     }

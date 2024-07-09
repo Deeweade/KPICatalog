@@ -19,7 +19,7 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<TypicalGoalInBonusSchemeView?>> GetByTypicalGoalId(int id)
+    public async Task<IEnumerable<TypicalGoalInBonusSchemeView>> GetByTypicalGoalId(int id)
     {
         var goals = await _unitOfWork.TypicalGoalInBonusSchemeRepository.GetByTypicalGoalId(id);
 
@@ -116,17 +116,33 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
             LinkedObjectTypeId = (int)LinkedObjectTypes.Employee
         };
 
-        var employeesIds = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter);
+        var employeesIds = (await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter))
+            .Select(x => x.LinkedObjectId)
+            .ToList();
 
         filter.LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal;
 
         var goalsIds = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter);
 
-        var goals = await _unitOfWork.TypicalGoalInBonusSchemeRepository.GetByIds(goalsIds.Select(x => x.LinkedObjectId).ToList());
+        var goalsDtos = await _unitOfWork.TypicalGoalInBonusSchemeRepository.GetByIds(goalsIds.Select(x => x.LinkedObjectId).ToList());
+
+        var goalsViews = _mapper.Map<List<TypicalGoalInBonusSchemeView>>(goalsDtos);
+
+        var typicalGoalIds = goalsDtos.Select(x => x.TypicalGoalId).Distinct().ToList();
+
+        var typicalGoals = await _unitOfWork.TypicalGoalRepository.GetByIds(typicalGoalIds);
+
+        foreach (var view in goalsViews)
+        {
+            var typicalGoal = typicalGoals.FirstOrDefault(x => x.Id == view.TypicalGoalId);
+
+            view.Title = typicalGoal.Title;
+            view.PlanningCycleId = typicalGoal.PlanningCycleId;
+        }
 
         return new GoalsForEmployeesRequestView
         {
-            Goals = goals,
+            Goals = goalsViews,
             EmployeesIds = employeesIds
         };
     }

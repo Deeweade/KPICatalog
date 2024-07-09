@@ -4,6 +4,6 @@ namespace KPICatalog.Application.Models.Views;
 
 public class GoalsForEmployeesRequestView
 {
-    public IEnumerable<TypicalGoalInBonusSchemeDto> Goals { get; internal set; }
-    public IEnumerable<BonusSchemeObjectLinkDto> EmployeesIds { get; internal set; }
+    public IEnumerable<TypicalGoalInBonusSchemeView> Goals { get; internal set; }
+    public IEnumerable<int> EmployeesIds { get; internal set; }
 }
