@@ -59,7 +59,7 @@ public class BonusSchemeService : IBonusSchemeService
 
         var schemes = (await _unitOfWork.BonusSchemeRepository.GetByFilter(filterDto))
             .GroupBy(x => x.CostCenter)
-            .Select(x => x.FirstOrDefault())
+            .SelectMany(x => x)
             .ToList();
 
         var views = _mapper.Map<IEnumerable<BonusSchemeView>>(schemes);
@@ -105,14 +105,19 @@ public class BonusSchemeService : IBonusSchemeService
 
         await _unitOfWork.BonusSchemeRepository.Update(scheme);
 
+        var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(
+            new BonusSchemeObjectLinkFilterDto
+            {
+                BonusSchemeId = bonusSchemeId
+            });
+
+        foreach (var link in links)
+        {
+            await _unitOfWork.BonusSchemeObjectLinkRepository.Delete(link);
+        }
+
         if (newBonusSchemeId is not null)
         {
-            var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(
-                new BonusSchemeObjectLinkFilterDto
-                {
-                    BonusSchemeId = bonusSchemeId
-                });
-
             var typeIds = links.Select(x => x.LinkedObjectTypeId).Distinct().ToList();
 
             foreach (var typeId in typeIds)
@@ -121,7 +126,7 @@ public class BonusSchemeService : IBonusSchemeService
                 {
                     BonusSchemeId = newBonusSchemeId,
                     LinkedObjectsIds = links.Where(x => x.LinkedObjectTypeId == typeId && x.BonusSchemeId == bonusSchemeId)
-                    .Select(x => (int)x.LinkedObjectId).Distinct().ToList(),
+                    .Select(x => (int)x.LinkedObjectId!).Distinct().ToList(),
                     LinkedObjectTypeId = typeId
                 };
 
