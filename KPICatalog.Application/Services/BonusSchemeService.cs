@@ -105,13 +105,16 @@ public class BonusSchemeService : IBonusSchemeService
 
         await _unitOfWork.BonusSchemeRepository.Update(scheme);
 
-        //if (newBonusSchemeId is not null)
-        //{
         var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(
             new BonusSchemeObjectLinkFilterDto
             {
                 BonusSchemeId = bonusSchemeId
             });
+
+        foreach (var link in links)
+        {
+            await _unitOfWork.BonusSchemeObjectLinkRepository.Delete(link);
+        }
 
         if (newBonusSchemeId is not null)
         {
@@ -123,18 +126,12 @@ public class BonusSchemeService : IBonusSchemeService
                 {
                     BonusSchemeId = newBonusSchemeId,
                     LinkedObjectsIds = links.Where(x => x.LinkedObjectTypeId == typeId && x.BonusSchemeId == bonusSchemeId)
-                    .Select(x => (int)x.LinkedObjectId).Distinct().ToList(),
+                    .Select(x => (int)x.LinkedObjectId!).Distinct().ToList(),
                     LinkedObjectTypeId = typeId
                 };
 
                 await _service.CreateMany(linkView);
             }
-        }
-       //}
-
-        foreach (var link in links)
-        {
-            await _unitOfWork.BonusSchemeObjectLinkRepository.Delete(link);
         }
 
         return _mapper.Map<BonusSchemeView>(scheme);
