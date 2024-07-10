@@ -4,6 +4,7 @@ using KPICatalog.Infrastructure.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KPICatalog.API.Migrations
 {
     [DbContext(typeof(KPICatalogDbContext))]
-    partial class KPICatalogDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240710135222_DeletingNullableProperties")]
+    partial class DeletingNullableProperties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -178,7 +181,7 @@ namespace KPICatalog.API.Migrations
                     b.Property<int>("BonusSchemeLinkMethodId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Evaluation")
+                    b.Property<int>("Evaluation")
                         .HasColumnType("int");
 
                     b.Property<int>("EvaluationMethodId")
@@ -187,7 +190,7 @@ namespace KPICatalog.API.Migrations
                     b.Property<int>("EvaluationProvider")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Fact")
+                    b.Property<int>("Fact")
                         .HasColumnType("int");
 
                     b.Property<int>("ParentBSTypicalGoalId")

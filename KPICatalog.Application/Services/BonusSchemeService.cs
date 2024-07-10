@@ -22,7 +22,7 @@ public class BonusSchemeService : IBonusSchemeService
         _service = service;
     }
 
-    public async Task<BonusSchemeView?> GetById(int schemeId)
+    public async Task<BonusSchemeView> GetById(int schemeId)
     {
         if (schemeId <= 0) throw new ArgumentOutOfRangeException(nameof(schemeId));
 
@@ -66,7 +66,7 @@ public class BonusSchemeService : IBonusSchemeService
 
         return views;
     }
-    public async Task<IEnumerable<BonusSchemeView?>> GetByTypicalGoalId(int goalId)
+    public async Task<IEnumerable<BonusSchemeView>> GetByTypicalGoalId(int goalId)
     {
         if (goalId <= 0) throw new ArgumentOutOfRangeException(nameof(goalId));
 
@@ -75,7 +75,7 @@ public class BonusSchemeService : IBonusSchemeService
         return _mapper.Map<IEnumerable<BonusSchemeView>>(goal);
     }
 
-    public async Task<BonusSchemeView?> Create(BonusSchemeView schemeView)
+    public async Task<BonusSchemeView> Create(BonusSchemeView schemeView)
     {
         if (schemeView is null) throw new ArgumentNullException(nameof(schemeView));
 
@@ -86,7 +86,7 @@ public class BonusSchemeService : IBonusSchemeService
         return _mapper.Map<BonusSchemeView>(scheme);
     }
 
-    public async Task<BonusSchemeView?> Update(BonusSchemeView schemeView)
+    public async Task<BonusSchemeView> Update(BonusSchemeView schemeView)
     {
         if (schemeView is null) throw new ArgumentNullException(nameof(schemeView));
 
@@ -96,7 +96,7 @@ public class BonusSchemeService : IBonusSchemeService
 
         return _mapper.Map<BonusSchemeView>(scheme);
     }
-    public async Task<BonusSchemeView?> Deactivate(int bonusSchemeId, DateTime? dateEnd, int? newBonusSchemeId = null)
+    public async Task<BonusSchemeView> Deactivate(int bonusSchemeId, DateTime? dateEnd, int? newBonusSchemeId = null)
     {
         var scheme = await _unitOfWork.BonusSchemeRepository.GetById(bonusSchemeId);
 
@@ -124,13 +124,13 @@ public class BonusSchemeService : IBonusSchemeService
             {
                 var linkView = new BonusSchemeObjectLinkView
                 {
-                    BonusSchemeId = newBonusSchemeId,
+                    BonusSchemeId = (int)newBonusSchemeId,
                     LinkedObjectsIds = links.Where(x => x.LinkedObjectTypeId == typeId && x.BonusSchemeId == bonusSchemeId)
                     .Select(x => (int)x.LinkedObjectId!).Distinct().ToList(),
                     LinkedObjectTypeId = typeId
                 };
 
-                await _service.CreateMany(linkView);
+                await _service.BulkCreate(linkView);
             }
         }
 

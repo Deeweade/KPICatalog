@@ -21,7 +21,7 @@ public class BonusSchemeRepository : IBonusSchemeRepository
         _mapper = mapper;
     }
 
-    public async Task<BonusSchemeDto?> GetById(int schemeId)
+    public async Task<BonusSchemeDto> GetById(int schemeId)
     {
         if (schemeId <= 0) throw new ArgumentOutOfRangeException(nameof(schemeId));
 
@@ -58,7 +58,7 @@ public class BonusSchemeRepository : IBonusSchemeRepository
         return res;
     }
 
-    public async Task<IEnumerable<BonusSchemeDto?>> GetByTypicalGoalId(int goalId)
+    public async Task<IEnumerable<BonusSchemeDto>> GetByTypicalGoalId(int goalId)
     {
         var typicalGoal = await _context.TypicalGoals.FindAsync(goalId);
 
@@ -87,7 +87,7 @@ public class BonusSchemeRepository : IBonusSchemeRepository
         return bonusSchemes;
     }
 
-    public async Task<BonusSchemeDto?> Create(BonusSchemeDto bonusSchemeDto)
+    public async Task<BonusSchemeDto> Create(BonusSchemeDto bonusSchemeDto)
     {
         if (bonusSchemeDto is null) throw new ArgumentNullException(nameof(bonusSchemeDto));
 

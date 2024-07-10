@@ -2,5 +2,5 @@
 
 public class BonusSchemeObjectLinkFilterView
 {
-    public List<int>? LinkedObjectsIds { get; set; }
+    public List<int> LinkedObjectsIds { get; set; }
 }

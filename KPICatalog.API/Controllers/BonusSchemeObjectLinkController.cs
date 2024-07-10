@@ -17,10 +17,10 @@ public class BonusSchemeObjectLinkController : ControllerBase
         _service = service;
     }
 
-    [HttpPost("create")]
-    public async Task<IActionResult> PostMany(BonusSchemeObjectLinkView linkView)
+    [HttpPost("create/bulk")]
+    public async Task<IActionResult> BulkPost(BonusSchemeObjectLinkView linkView)
     {
-        var links = await _service.CreateMany(linkView);
+        var links = await _service.BulkCreate(linkView);
 
         return Ok(links);
     }

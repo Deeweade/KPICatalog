@@ -17,7 +17,7 @@ internal class UserAccessControlRepository : IUserAccessControlRepository
         _mapper = mapper;
     }
 
-    public async Task<UserAccessControlDto?> GetByLogin(string login)
+    public async Task<UserAccessControlDto> GetByLogin(string login)
     {
         if (string.IsNullOrEmpty(login) || string.IsNullOrWhiteSpace(login))
             throw new ArgumentNullException(nameof(login));

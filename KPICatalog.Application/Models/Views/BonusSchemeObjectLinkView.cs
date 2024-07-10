@@ -7,9 +7,9 @@ public class BonusSchemeObjectLinkView : BaseEntityView
         LinkedObjectsIds = new List<int>();
     }
 
-    public int? BonusSchemeId { get; set; }
-    public int? LinkedObjectId { get; set; }
-    public int? LinkedObjectTypeId { get; set; }
+    public int BonusSchemeId { get; set; }
+    public int LinkedObjectId { get; set; }
+    public int LinkedObjectTypeId { get; set; }
 
     public List<int> LinkedObjectsIds { get; set; }
 }

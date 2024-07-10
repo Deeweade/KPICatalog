@@ -19,7 +19,18 @@ public class TypicalGoalInBonusSchemeRepository : ITypicalGoalInBonusSchemeRepos
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<TypicalGoalInBonusSchemeDto?>> GetByTypicalGoalId(int goalId)
+    public async Task<IEnumerable<TypicalGoalInBonusSchemeDto>> GetByIds(List<int> goalsIds)
+    {
+        if (goalsIds is null) throw new ArgumentNullException(nameof(goalsIds));
+
+        return await _context.TypicalGoalInBonusSchemes
+            .AsNoTracking()
+            .ProjectTo<TypicalGoalInBonusSchemeDto>(_mapper.ConfigurationProvider)
+            .Where(x => goalsIds.Any(id => id == x.Id))
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<TypicalGoalInBonusSchemeDto>> GetByTypicalGoalId(int goalId)
     {
         return await _context.TypicalGoalInBonusSchemes
             .AsNoTracking()

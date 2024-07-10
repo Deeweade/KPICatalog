@@ -4,5 +4,5 @@ namespace KPICatalog.Domain.Interfaces.Repositories;
 
 public interface IUserAccessControlRepository
 {
-    Task<UserAccessControlDto?> GetByLogin(string login);
+    Task<UserAccessControlDto> GetByLogin(string login);
 }

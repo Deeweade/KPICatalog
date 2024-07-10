@@ -4,6 +4,7 @@ using KPICatalog.Application.Models.Views;
 using AutoMapper;
 using KPICatalog.Domain.Dtos.Entities;
 using KPICatalog.Domain.Models.Enums;
+using KPICatalog.Domain.Dtos.Filters;
 
 namespace KPICatalog.Application.Services;
 
@@ -18,7 +19,7 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<TypicalGoalInBonusSchemeView?>> GetByTypicalGoalId(int id)
+    public async Task<IEnumerable<TypicalGoalInBonusSchemeView>> GetByTypicalGoalId(int id)
     {
         var goals = await _unitOfWork.TypicalGoalInBonusSchemeRepository.GetByTypicalGoalId(id);
 
@@ -103,5 +104,48 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
         }
 
         return goalsInSchemeIds;
+    }
+
+    public async Task<GoalsForEmployeesRequestView> GetGoalsToSync(int bonusSchemeId)
+    {
+        if (bonusSchemeId <= 0) throw new ArgumentOutOfRangeException(nameof(bonusSchemeId));
+
+        var filter = new BonusSchemeObjectLinkFilterDto
+        {
+            BonusSchemeId = bonusSchemeId,
+            LinkedObjectTypeId = (int)LinkedObjectTypes.Employee
+        };
+
+        var employeesIds = (await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter))
+            .Select(x => x.LinkedObjectId)
+            .ToList();
+
+        filter.LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal;
+
+        var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter);
+
+        var goalsIds = links.Select(x => x.LinkedObjectId).ToList();
+
+        var goalsDtos = await _unitOfWork.TypicalGoalInBonusSchemeRepository.GetByIds(goalsIds);
+
+        var goalsViews = _mapper.Map<List<TypicalGoalInBonusSchemeView>>(goalsDtos);
+
+        var typicalGoalIds = goalsDtos.Select(x => x.TypicalGoalId).Distinct().ToList();
+
+        var typicalGoals = await _unitOfWork.TypicalGoalRepository.GetByIds(typicalGoalIds);
+
+        foreach (var view in goalsViews)
+        {
+            var typicalGoal = typicalGoals.FirstOrDefault(x => x.Id == view.TypicalGoalId);
+
+            view.Title = typicalGoal.Title;
+            view.PlanningCycleId = typicalGoal.PlanningCycleId;
+        }
+
+        return new GoalsForEmployeesRequestView
+        {
+            Goals = goalsViews,
+            EmployeesIds = employeesIds
+        };
     }
 }

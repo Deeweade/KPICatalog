@@ -18,7 +18,7 @@ public class TypicalGoalService : ITypicalGoalService
         _mapper = mapper;
     }
 
-    public async Task<TypicalGoalView?> GetById(int goalId)
+    public async Task<TypicalGoalView> GetById(int goalId)
     {
         if (goalId <= 0) throw new ArgumentOutOfRangeException(nameof(goalId));
 
@@ -42,7 +42,7 @@ public class TypicalGoalService : ITypicalGoalService
         return result;
     }
 
-    public async Task<TypicalGoalView?> Create(TypicalGoalView typicalGoalView)
+    public async Task<TypicalGoalView> Create(TypicalGoalView typicalGoalView)
     {
         if (typicalGoalView is null) throw new ArgumentNullException(nameof(typicalGoalView));
 
@@ -53,7 +53,7 @@ public class TypicalGoalService : ITypicalGoalService
         return _mapper.Map<TypicalGoalView>(goal);
     }
 
-    public async Task<TypicalGoalView?> Update(TypicalGoalView typicalGoalView)
+    public async Task<TypicalGoalView> Update(TypicalGoalView typicalGoalView)
     {
         if (typicalGoalView is null) throw new ArgumentNullException(nameof(typicalGoalView));
 
