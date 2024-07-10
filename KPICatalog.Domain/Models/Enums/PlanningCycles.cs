@@ -3,6 +3,8 @@
 public enum PlanningCycles
 {
     Year = 1,
-    Quarter = 2,
-    Month = 3
+    LOKR = 2,
+    KPI = 3,
+    Quarter = 4,
+    Month = 5
 }
