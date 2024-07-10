@@ -106,7 +106,7 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
         return goalsInSchemeIds;
     }
 
-    public async Task<GoalsForEmployeesRequestView> SendIntoMyGoals(int bonusSchemeId)
+    public async Task<GoalsForEmployeesRequestView> GetGoalsToSync(int bonusSchemeId)
     {
         if (bonusSchemeId <= 0) throw new ArgumentOutOfRangeException(nameof(bonusSchemeId));
 

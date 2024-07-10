@@ -39,7 +39,7 @@ public class TypicalGoalInBonusSchemeController : ControllerBase
     [HttpPost("sendIntoMyGoals/{bonusSchemeId}")]
     public async Task<IActionResult> SendIntoMyGoals(int bonusSchemeId)
     {
-        var goals = await _service.SendIntoMyGoals(bonusSchemeId);
+        var goals = await _service.GetGoalsToSync(bonusSchemeId);
 
         var url = _apiSettings.MyGoalsUrl + "Goals/SyncWithTypicalGoals";
 
