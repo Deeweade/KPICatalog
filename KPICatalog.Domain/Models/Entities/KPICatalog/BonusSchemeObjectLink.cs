@@ -6,6 +6,6 @@ public class BonusSchemeObjectLink : BaseEntity
     public int LinkedObjectId { get; set; }
     public int LinkedObjectTypeId { get; set; }
 
-    public virtual LinkedObjectType? LinkedObjectType { get; set; }
-    public virtual BonusScheme? BonusScheme { get; set; }
+    public virtual LinkedObjectType LinkedObjectType { get; set; }
+    public virtual BonusScheme BonusScheme { get; set; }
 }

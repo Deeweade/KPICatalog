@@ -7,7 +7,7 @@ public class LinkedObjectType : BaseEntity
         BonusSchemeObjectLinks = new HashSet<BonusSchemeObjectLink>();
     }
 
-    public string? Name { get; set; }
+    public string Name { get; set; }
 
     public virtual ICollection<BonusSchemeObjectLink> BonusSchemeObjectLinks { get; set; }
 }

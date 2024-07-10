@@ -26,7 +26,7 @@ public class TypicalGoalInBonusSchemeRepository : ITypicalGoalInBonusSchemeRepos
         return await _context.TypicalGoalInBonusSchemes
             .AsNoTracking()
             .ProjectTo<TypicalGoalInBonusSchemeDto>(_mapper.ConfigurationProvider)
-            .Where(x => goalsIds.Contains(x.Id))
+            .Where(x => goalsIds.Any(id => id == x.Id))
             .ToListAsync();
     }
 

@@ -12,8 +12,8 @@ public class TypicalGoalInBonusSchemeDto : BaseEntityDto
     public int BonusSchemeLinkMethodId { get; set; }
     public int EvaluationMethodId { get; set; }
     public int RatingScaleId { get; set; }
-    public int Fact { get; set; }
-    public int Evaluation { get; set; }
+    public int? Fact { get; set; }
+    public int? Evaluation { get; set; }
 
     public PeriodDto Period { get; set; }
 }

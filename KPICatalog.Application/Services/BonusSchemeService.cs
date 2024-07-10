@@ -125,7 +125,7 @@ public class BonusSchemeService : IBonusSchemeService
                     LinkedObjectTypeId = typeId
                 };
 
-                await _service.CreateMany(linkView);
+                await _service.BulkCreate(linkView);
             }
         }
 

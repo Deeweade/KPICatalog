@@ -122,9 +122,11 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
 
         filter.LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal;
 
-        var goalsIds = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter);
+        var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter);
 
-        var goalsDtos = await _unitOfWork.TypicalGoalInBonusSchemeRepository.GetByIds(goalsIds.Select(x => x.LinkedObjectId).ToList());
+        var goalsIds = links.Select(x => x.LinkedObjectId).ToList();
+
+        var goalsDtos = await _unitOfWork.TypicalGoalInBonusSchemeRepository.GetByIds(goalsIds);
 
         var goalsViews = _mapper.Map<List<TypicalGoalInBonusSchemeView>>(goalsDtos);
 
