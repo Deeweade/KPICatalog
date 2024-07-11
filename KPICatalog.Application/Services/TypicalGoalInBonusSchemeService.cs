@@ -28,6 +28,49 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
         return _mapper.Map<IEnumerable<TypicalGoalInBonusSchemeView>>(goals);
     }
 
+    public async Task<GoalsForEmployeesRequestView> GetGoalsToSync(int bonusSchemeId)
+    {
+        if (bonusSchemeId <= 0) throw new ArgumentOutOfRangeException(nameof(bonusSchemeId));
+
+        var filter = new BonusSchemeObjectLinkFilterDto
+        {
+            BonusSchemeId = bonusSchemeId,
+            LinkedObjectTypeId = (int)LinkedObjectTypes.Employee
+        };
+
+        var employeesIds = (await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter))
+            .Select(x => x.LinkedObjectId)
+            .ToList();
+
+        filter.LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal;
+
+        var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter);
+
+        var goalsIds = links.Select(x => x.LinkedObjectId).ToList();
+
+        var goalsDtos = await _unitOfWork.TypicalGoalInBonusSchemeRepository.GetByIds(goalsIds);
+
+        var goalsViews = _mapper.Map<List<TypicalGoalInBonusSchemeView>>(goalsDtos);
+
+        var typicalGoalIds = goalsDtos.Select(x => x.TypicalGoalId).Distinct().ToList();
+
+        var typicalGoals = await _unitOfWork.TypicalGoalRepository.GetByIds(typicalGoalIds);
+
+        foreach (var view in goalsViews)
+        {
+            var typicalGoal = typicalGoals.FirstOrDefault(x => x.Id == view.TypicalGoalId);
+
+            view.Title = typicalGoal.Title;
+            view.PlanningCycleId = typicalGoal.PlanningCycleId;
+        }
+
+        return new GoalsForEmployeesRequestView
+        {
+            Goals = goalsViews,
+            EmployeesIds = employeesIds
+        };
+    }
+
     public async Task BulkCreate(ICollection<int> bonusSchemesIds, ICollection<TypicalGoalView> typicalGoals)
     {
         if (bonusSchemesIds is null) throw new ArgumentNullException(nameof(bonusSchemesIds));
@@ -50,6 +93,38 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
             
             await _unitOfWork.BonusSchemeObjectLinkRepository.BulkCreate(dto);
         }
+    }
+
+    public async Task BulkUpdate(ICollection<int> entitiesIds, TypicalGoalInBonusSchemeView typicalGoalInBS)
+    {
+        if (entitiesIds is null) throw new ArgumentNullException(nameof(entitiesIds));
+        if (typicalGoalInBS is null) throw new ArgumentNullException(nameof(typicalGoalInBS));
+
+        var goals = await _unitOfWork.TypicalGoalInBonusSchemeRepository.GetByIds(entitiesIds.ToList());
+
+        var periodIds = goals.Select(x => x.PeriodId).Distinct().ToList();
+
+        //if (periodIds.Count() > 1) return;
+
+        foreach(var goal in goals)
+        {
+            if (goal.Fact.HasValue && goal.Evaluation.HasValue) return;
+
+            goal.Weight = typicalGoalInBS.Weight;
+            goal.Plan = typicalGoalInBS.Plan;
+            goal.TypeKeyResultId = typicalGoalInBS.TypeKeyResultId;
+            goal.EvaluationProvider = typicalGoalInBS.EvaluationProvider;
+            goal.EvaluationMethodId = typicalGoalInBS.EvaluationMethodId;
+            goal.RatingScaleId = typicalGoalInBS.RatingScaleId;
+
+            if (goal.BonusSchemeLinkMethodId != (int)BonusSchemeObjectLinkMethods.ForAll 
+                && typicalGoalInBS.BonusSchemeLinkMethodId != (int)BonusSchemeObjectLinkMethods.ForAll)
+            {
+                goal.BonusSchemeLinkMethodId = typicalGoalInBS.BonusSchemeLinkMethodId;
+            }
+        }
+
+        await _unitOfWork.TypicalGoalInBonusSchemeRepository.BulkUpdate(goals.ToList());
     }
 
     private async Task<List<int>> Create(List<TypicalGoalView> typicalGoals)
@@ -104,48 +179,5 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
         }
 
         return goalsInSchemeIds;
-    }
-
-    public async Task<GoalsForEmployeesRequestView> GetGoalsToSync(int bonusSchemeId)
-    {
-        if (bonusSchemeId <= 0) throw new ArgumentOutOfRangeException(nameof(bonusSchemeId));
-
-        var filter = new BonusSchemeObjectLinkFilterDto
-        {
-            BonusSchemeId = bonusSchemeId,
-            LinkedObjectTypeId = (int)LinkedObjectTypes.Employee
-        };
-
-        var employeesIds = (await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter))
-            .Select(x => x.LinkedObjectId)
-            .ToList();
-
-        filter.LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal;
-
-        var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter);
-
-        var goalsIds = links.Select(x => x.LinkedObjectId).ToList();
-
-        var goalsDtos = await _unitOfWork.TypicalGoalInBonusSchemeRepository.GetByIds(goalsIds);
-
-        var goalsViews = _mapper.Map<List<TypicalGoalInBonusSchemeView>>(goalsDtos);
-
-        var typicalGoalIds = goalsDtos.Select(x => x.TypicalGoalId).Distinct().ToList();
-
-        var typicalGoals = await _unitOfWork.TypicalGoalRepository.GetByIds(typicalGoalIds);
-
-        foreach (var view in goalsViews)
-        {
-            var typicalGoal = typicalGoals.FirstOrDefault(x => x.Id == view.TypicalGoalId);
-
-            view.Title = typicalGoal.Title;
-            view.PlanningCycleId = typicalGoal.PlanningCycleId;
-        }
-
-        return new GoalsForEmployeesRequestView
-        {
-            Goals = goalsViews,
-            EmployeesIds = employeesIds
-        };
     }
 }

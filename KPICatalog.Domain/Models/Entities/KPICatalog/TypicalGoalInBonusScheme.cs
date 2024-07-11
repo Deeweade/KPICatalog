@@ -7,7 +7,7 @@ public class TypicalGoalInBonusScheme : BaseEntity
     public int PeriodId { get; set; }
     public int Weight { get; set; }
     public int Plan { get; set; }
-    public int TypeKeyResultID { get; set; }
+    public int TypeKeyResultId { get; set; }
     public int EvaluationProvider { get; set; }
     public int BonusSchemeLinkMethodId { get; set; }
     public int EvaluationMethodId { get; set; }

@@ -67,4 +67,31 @@ public class TypicalGoalInBonusSchemeRepository : ITypicalGoalInBonusSchemeRepos
             .Select(x => x.Id)
             .ToList();
     }
+
+    public async Task BulkUpdate(List<TypicalGoalInBonusSchemeDto> goalsDtos)
+    {
+        if (goalsDtos is null) throw new ArgumentNullException(nameof(goalsDtos));
+
+        var ids = goalsDtos.Select(x => x.Id).ToList();
+
+        var goals = await _context.TypicalGoalInBonusSchemes
+            .Where(x => ids.Any(id => id == x.Id))
+            .ToListAsync();
+
+        foreach (var goal in goals)
+        {
+            var goalDto = goalsDtos.FirstOrDefault(x => x.Id == goal.Id);
+
+            goal.Weight = goalDto.Weight;
+            goal.Plan = goalDto.Plan;
+            goal.PeriodId = goalDto.PeriodId;
+            goal.TypeKeyResultId = goalDto.TypeKeyResultId;
+            goal.EvaluationProvider = goalDto.EvaluationProvider;
+            goal.EvaluationMethodId = goalDto.EvaluationMethodId;
+            goal.RatingScaleId = goalDto.RatingScaleId;
+            goal.BonusSchemeLinkMethodId = goalDto.BonusSchemeLinkMethodId;
+        }
+
+        await _context.SaveChangesAsync();
+    }
 }

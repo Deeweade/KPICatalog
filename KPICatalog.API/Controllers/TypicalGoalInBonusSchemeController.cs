@@ -26,12 +26,22 @@ public class TypicalGoalInBonusSchemeController : ControllerBase
         _apiSettings = apiSettings.Value;
     }
 
-    [HttpPost("bulk")]
+    [HttpPost("create/bulk")]
     public async Task<IActionResult> BulkCreate(TypicalGoalInBonusSchemeBulkCreateView view)
     {
         if (view is null) throw new ArgumentNullException(nameof(view));
 
         await _service.BulkCreate(view.BonusSchemesIds, view.TypicalGoals);
+
+        return Ok();
+    }
+
+    [HttpPost("update/bulk")]
+    public async Task<IActionResult> BulkUpdate(TypicalGoalInBonusSchemeBulkUpdateView view)
+    {
+        if (view is null) throw new ArgumentNullException(nameof(view));
+
+        await _service.BulkUpdate(view.EntitiesIds, view.TypicalGoalInBS);
 
         return Ok();
     }
