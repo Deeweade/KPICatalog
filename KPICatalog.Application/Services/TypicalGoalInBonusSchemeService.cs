@@ -104,7 +104,7 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
 
         var periodIds = goals.Select(x => x.PeriodId).Distinct().ToList();
 
-        //if (periodIds.Count() > 1) return;
+        if (periodIds.Count() > 1) throw new Exception("Forbidden to change the period for goals which periods aren't the same!");
 
         foreach(var goal in goals)
         {
