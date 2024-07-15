@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper.QueryableExtensions;
 using AutoMapper;
 
-namespace KPICatalog.Infrastructure;
+namespace KPICatalog.Infrastructure.Data.Repositories;
 
 public class TypicalGoalInBonusSchemeRepository : ITypicalGoalInBonusSchemeRepository
 {
@@ -19,7 +19,7 @@ public class TypicalGoalInBonusSchemeRepository : ITypicalGoalInBonusSchemeRepos
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<TypicalGoalInBonusSchemeDto>> GetByIds(List<int> goalsIds)
+    public async Task<List<TypicalGoalInBonusSchemeDto>> GetByIds(List<int> goalsIds)
     {
         if (goalsIds is null) throw new ArgumentNullException(nameof(goalsIds));
 
@@ -90,6 +90,8 @@ public class TypicalGoalInBonusSchemeRepository : ITypicalGoalInBonusSchemeRepos
             goal.EvaluationMethodId = goalDto.EvaluationMethodId;
             goal.RatingScaleId = goalDto.RatingScaleId;
             goal.BonusSchemeLinkMethodId = goalDto.BonusSchemeLinkMethodId;
+            goal.Fact = goalDto.Fact ?? goal.Fact;
+            goal.Evaluation = goalDto.Evaluation ?? goal.Evaluation;
         }
 
         await _context.SaveChangesAsync();

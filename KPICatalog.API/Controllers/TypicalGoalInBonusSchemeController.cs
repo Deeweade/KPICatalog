@@ -1,11 +1,12 @@
 ﻿using KPICatalog.Application.Interfaces.Services;
+using KPICatalog.Application.Models.Views;
+using KPICatalog.API.Models.Responses;
 using KPICatalog.API.Models.Other;
 using KPICatalog.API.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc;
-using KPICatalog.Application.Models.Views;
-using KPICatalog.API.Models.Responses;
+using AutoMapper;
 
 namespace KPICatalog.API.Controllers;
 
@@ -15,19 +16,21 @@ namespace KPICatalog.API.Controllers;
 public class TypicalGoalInBonusSchemeController : ControllerBase
 {
     private readonly ITypicalGoalInBonusSchemeService _service;
+    private readonly IMapper _mapper;
     private readonly ApiClient _apiClient;
     private readonly ApiSettings _apiSettings;
 
-    public TypicalGoalInBonusSchemeController(ITypicalGoalInBonusSchemeService service, ApiClient apiClient, 
-        IOptions<ApiSettings> apiSettings)
+    public TypicalGoalInBonusSchemeController(ITypicalGoalInBonusSchemeService service, ApiClient apiClient,
+        IOptions<ApiSettings> apiSettings, IMapper mapper)
     {
         _service = service;
         _apiClient = apiClient;
         _apiSettings = apiSettings.Value;
+        _mapper = mapper;
     }
 
     [HttpPost("create/bulk")]
-    public async Task<IActionResult> BulkCreate(TypicalGoalInBonusSchemeBulkCreateView view)
+    public async Task<IActionResult> BulkCreate(TypicalGoalsInBSBulkCreateView view)
     {
         if (view is null) throw new ArgumentNullException(nameof(view));
 
@@ -37,11 +40,23 @@ public class TypicalGoalInBonusSchemeController : ControllerBase
     }
 
     [HttpPost("update/bulk")]
-    public async Task<IActionResult> BulkUpdate(TypicalGoalInBonusSchemeBulkUpdateView view)
+    public async Task<IActionResult> BulkUpdate(TypicalGoalsInBSBulkUpdateView view)
     {
         if (view is null) throw new ArgumentNullException(nameof(view));
 
         await _service.BulkUpdate(view.EntitiesIds, view.TypicalGoalInBS);
+
+        return Ok();
+    }
+
+    [HttpPost("evaluate/bulk")]
+    public async Task<IActionResult> BulkEvaluate(List<BulkEvaluateView> evaluateView)
+    {
+        if (evaluateView is null) throw new ArgumentNullException(nameof(evaluateView));
+
+        var view = _mapper.Map<List<BulkEvaluateGoalsView>>(evaluateView);
+
+        await _service.BulkEvaluate(view);
 
         return Ok();
     }

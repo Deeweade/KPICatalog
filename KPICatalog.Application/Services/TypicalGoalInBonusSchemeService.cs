@@ -12,11 +12,14 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly IEvaluationCalculator _evaluationCalculator;
 
-    public TypicalGoalInBonusSchemeService(IUnitOfWork unitOfWork, IMapper mapper)
+    public TypicalGoalInBonusSchemeService(IUnitOfWork unitOfWork, IMapper mapper, 
+        IEvaluationCalculator evaluationCalculator)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _evaluationCalculator = evaluationCalculator;
     }
 
     public async Task<IEnumerable<TypicalGoalInBonusSchemeView>> GetByTypicalGoalId(int id)
@@ -179,5 +182,23 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
         }
 
         return goalsInSchemeIds;
+    }
+
+    public async Task BulkEvaluate(List<BulkEvaluateGoalsView> views)
+    {
+        ArgumentNullException.ThrowIfNull(nameof(views));
+
+        foreach (var view in views)
+        {
+            var goals = await _unitOfWork.TypicalGoalInBonusSchemeRepository.GetByIds(view.TypicalGoalsInBSIds.ToList());
+
+            foreach (var goal in goals)
+            {
+                goal.Fact = view.Fact;
+                goal.Evaluation = await _evaluationCalculator.Calculate(goal.Plan, view.Fact, (EvaluationMethods)goal.EvaluationMethodId, goal.RatingScaleId);
+            }
+
+            await _unitOfWork.TypicalGoalInBonusSchemeRepository.BulkUpdate(goals);
+        }
     }
 }
