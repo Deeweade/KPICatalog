@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using KPICatalog.API.Utilities;
+using KPICatalog.Infrastructure.Data.Repositories;
+using KPICatalog.API.Models.Mappings;
 
 #region EnvironmentConfiguring
 
@@ -94,13 +96,17 @@ builder.Services.AddScoped<IBonusSchemeService, BonusSchemeService>();
 builder.Services.AddScoped<IBonusSchemeObjectLinkService, BonusSchemeObjectLinkService>();
 builder.Services.AddScoped<ITypicalGoalService, TypicalGoalService>();
 builder.Services.AddScoped<ITypicalGoalInBonusSchemeService, TypicalGoalInBonusSchemeService>();
+builder.Services.AddScoped<IEvaluationCalculator, EvaluationCalculator>();
+
+//repositories
+builder.Services.AddScoped<IRatingScaleValuesRepository, RatingScaleValuesRepository>();
 
 builder.Services.AddHttpClient<ApiClient>();
 
 //data
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-builder.Services.AddAutoMapper(typeof(InfrastructureMappingProfile), typeof(ApplicationMappingProfile));
+builder.Services.AddAutoMapper(typeof(InfrastructureMappingProfile), typeof(ApplicationMappingProfile), typeof(APIMappings));
 
 #endregion
 

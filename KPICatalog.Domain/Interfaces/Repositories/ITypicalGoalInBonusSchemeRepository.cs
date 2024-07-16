@@ -15,7 +15,7 @@ public interface ITypicalGoalInBonusSchemeRepository
     /// </summary>
     /// <param name="goalsIds">Список Id типовых целей в БС</param>
     /// <returns>Возвращает коллекцию типовых целей в бонусной схеме</returns>
-    Task<IEnumerable<TypicalGoalInBonusSchemeDto>> GetByIds(List<int> goalsIds);
+    Task<List<TypicalGoalInBonusSchemeDto>> GetByIds(List<int> goalsIds);
     Task<TypicalGoalInBonusSchemeDto> Create(TypicalGoalInBonusSchemeDto goal);
     /// <summary>
     /// Множественное создание ТЦ в БС
@@ -23,4 +23,9 @@ public interface ITypicalGoalInBonusSchemeRepository
     /// <param name="goalsInScheme">Список типовых целей в БС<</param>
     /// <returns>Возвращает коллекцию Id созданных записей</returns>
     Task<IEnumerable<int>> BulkCreate(List<TypicalGoalInBonusSchemeDto> goalsInScheme);
+    /// <summary>
+    /// Множественное изменение ТЦ в БС
+    /// </summary>
+    /// <param name="goalsInScheme">Список типовых целей в БС<</param>
+    Task BulkUpdate(List<TypicalGoalInBonusSchemeDto> goals);
 }

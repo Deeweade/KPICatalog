@@ -16,6 +16,13 @@ public class InfrastructureMappingProfile : Profile
         CreateBonusSchemeMappings();
         CreateUserAccessControlMappings();
         CreatePeriodMappings();
+        CreateRatingScaleValueMappings();
+    }
+
+    private void CreateRatingScaleValueMappings()
+    {
+        CreateMap<RatingScaleValue, RatingScaleValueDto>();
+        CreateMap<RatingScaleValueDto, RatingScaleValue>();
     }
 
     private void CreatePeriodMappings()
