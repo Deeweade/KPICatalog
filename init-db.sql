@@ -66,6 +66,20 @@ IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Employee')
 
     GO
 
+    CREATE TABLE [dbo].[RatingScaleValue](
+	[Id] [int] NOT NULL,
+	[RatingScaleId] [int] NULL,
+	[MinimumValue] [decimal](18, 3) NULL,
+	[MaximumValue] [decimal](18, 3) NULL,
+	[RatingPercentage] [int] NULL,
+    CONSTRAINT [PK_RatingScaleValue] PRIMARY KEY CLUSTERED 
+    (
+        [Id] ASC
+    )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+    ) ON [PRIMARY]
+
+    GO
+
     INSERT INTO Employee (Id, TabNumber, Fio, PositionNum, Position, UnitNum, UnitParentNum, Unit, Gender, City, FuncManager, AdmManager, UnitManager, IsManager, State, IsStaffMember, HeadOffice, IsActive, Birthday, HireDate, AmountSubordinate, Login, SpId, Parent, Parents, Levels, BlockNum, PhotoUrl, BonusType)
     VALUES 
     (9725,'00118463', N'Петров Олег Владимирович', '20000229', N'Старший разработчик', '40005506', '40005505', N'Отдел развития внутренних сервисов', 1, N'Краснодар', NULL, NULL, NULL, 0, NULL, 1, NULL, 1, '1985-05-20', '2022-08-26 00:00:00.0000000', 0, 'opetrov2', 18, 2728, N'2,11995,7547,7854,2728', 5, 11995, NULL, N'Ежегодный'),
@@ -96,6 +110,16 @@ IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Employee')
     (N'2024, 3 квартал', '2024-07-01 00:00:00.0000000', '2024-09-30 00:00:00.0000000'),
     (N'2024, 4 квартал', '2024-10-01 00:00:00.0000000', '2024-12-31 00:00:00.0000000'),
     (N'2024 год', '2024-01-01 00:00:00.0000000', '2024-12-31 00:00:00.0000000')
+
+    GO
+
+    INSERT INTO RatingScaleValue (Id, RatingScaleId, MinimumValue, MaximumValue, RatingPercentage)
+    VALUES 
+    (1, 1, 0, 99, 0),
+    (2, 1, 99, 99,8, 50),
+    (3, 1, 99,8, 99,9, 100),
+    (4, 1, 99,9, 99,95, 105),
+    (5, 1, 99,95, 100, 110)
 
     END
 

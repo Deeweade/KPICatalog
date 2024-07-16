@@ -28,6 +28,22 @@ public class KPICatalogDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<TypicalGoalInBonusScheme>()
+            .Property(p => p.Plan)
+            .HasPrecision(18, 3);
+
+        modelBuilder.Entity<TypicalGoalInBonusScheme>()
+            .Property(p => p.Fact)
+            .HasPrecision(18, 3);
+
+        modelBuilder.Entity<TypicalGoalInBonusScheme>()
+            .Property(p => p.Evaluation)
+            .HasPrecision(18, 3);
+
+        modelBuilder.Entity<TypicalGoalInBonusScheme>()
+            .Property(p => p.Weight)
+            .HasPrecision(18, 3);
+
         base.OnModelCreating(modelBuilder);
     }
 }

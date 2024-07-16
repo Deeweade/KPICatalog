@@ -1,5 +1,8 @@
-﻿namespace KPICatalog.Domain.Models.Entities.Goals;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
+namespace KPICatalog.Domain.Models.Entities.Goals;
+
+[Table("RatingScaleValue")]
 public class RatingScaleValue : BaseEntity
 {
     public int? RatingScaleId { get; set; }
