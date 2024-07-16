@@ -29,6 +29,18 @@ public class TypicalGoalInBonusSchemeController : ControllerBase
         _mapper = mapper;
     }
 
+    [HttpPost("calculateEvaluation")]
+    public async Task<IActionResult> CalculateEvaluation(Models.Other.CalculateEvaluationView calculateEvaluationView)
+    {
+        if (calculateEvaluationView is null) throw new ArgumentNullException(nameof(calculateEvaluationView));
+
+        var view = _mapper.Map<Application.Models.Views.CalculateEvaluationView>(calculateEvaluationView);
+
+        var evaluation = await _service.CalculateEvaluation(view);
+
+        return Ok(evaluation);
+    }
+
     [HttpPost("create/bulk")]
     public async Task<IActionResult> BulkCreate(TypicalGoalsInBSBulkCreateView view)
     {

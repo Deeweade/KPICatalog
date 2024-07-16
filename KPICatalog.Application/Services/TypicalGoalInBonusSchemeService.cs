@@ -5,6 +5,7 @@ using AutoMapper;
 using KPICatalog.Domain.Dtos.Entities;
 using KPICatalog.Domain.Models.Enums;
 using KPICatalog.Domain.Dtos.Filters;
+using System.Collections;
 
 namespace KPICatalog.Application.Services;
 
@@ -200,5 +201,12 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
 
             await _unitOfWork.TypicalGoalInBonusSchemeRepository.BulkUpdate(goals);
         }
+    }
+
+    public async Task<decimal> CalculateEvaluation(CalculateEvaluationView view)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+
+        return await _evaluationCalculator.Calculate(view.Plan, view.Fact, (EvaluationMethods)view.EvaluationMethodId, view.RatingScaleId);
     }
 }

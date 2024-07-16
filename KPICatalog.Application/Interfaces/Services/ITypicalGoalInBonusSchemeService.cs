@@ -10,4 +10,5 @@ public interface ITypicalGoalInBonusSchemeService
     Task BulkCreate(ICollection<int> bonusSchemesIds, ICollection<TypicalGoalView> typicalGoals);
     Task BulkUpdate(ICollection<int> entitiesIds, TypicalGoalInBonusSchemeView typicalGoalInBS);
     Task BulkEvaluate(List<BulkEvaluateGoalsView> view);
+    Task<decimal> CalculateEvaluation(CalculateEvaluationView view);
 }
