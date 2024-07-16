@@ -111,7 +111,7 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
 
         foreach(var goal in goals)
         {
-            if (goal.Fact.HasValue && goal.Evaluation.HasValue) return;
+            if (goal.Fact.HasValue && goal.Evaluation.HasValue) continue;
 
             goal.Weight = typicalGoalInBS.Weight;
             goal.Plan = typicalGoalInBS.Plan;
@@ -119,6 +119,7 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
             goal.EvaluationProvider = typicalGoalInBS.EvaluationProvider;
             goal.EvaluationMethodId = typicalGoalInBS.EvaluationMethodId;
             goal.RatingScaleId = typicalGoalInBS.RatingScaleId;
+            goal.PeriodId = typicalGoalInBS.PeriodId;
 
             if (goal.BonusSchemeLinkMethodId != (int)BonusSchemeObjectLinkMethods.ForAll 
                 && typicalGoalInBS.BonusSchemeLinkMethodId != (int)BonusSchemeObjectLinkMethods.ForAll)
