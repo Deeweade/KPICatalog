@@ -28,4 +28,8 @@ public class TypicalGoalInBonusSchemeView : BaseEntityView
 
     public IEnumerable<int> PeriodIds { get; set; }
     public IEnumerable<BonusSchemeObjectLinkView> BonusSchemeObjectLinks { get; set; }
+
+    public EvaluationMethodView EvaluationMethod { get; set; }
+    public BonusSchemeLinkMethodView BonusSchemeLinkMethod { get; set; }
+    public TypicalGoalView TypicalGoal { get; set; }
 }

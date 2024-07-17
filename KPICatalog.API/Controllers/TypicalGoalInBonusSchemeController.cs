@@ -29,6 +29,18 @@ public class TypicalGoalInBonusSchemeController : ControllerBase
         _mapper = mapper;
     }
 
+    [HttpGet("byBonusSchemeId/{bonusSchemeId}")]
+    public async Task<IActionResult> GetByBonusSchemeId(int bonusSchemeId)
+    {
+        var goals = (await _service.GetByBonusSchemeId(bonusSchemeId, false)).Goals
+            .OrderBy(x => x.PlanningCycleId)
+            .ThenBy(x => x.ParentBSTypicalGoalId)
+            .ThenBy(x => x.PeriodId)
+            .ToList();
+
+        return Ok(goals);
+    }
+
     [HttpPost("create/bulk")]
     public async Task<IActionResult> BulkCreate(TypicalGoalsInBSBulkCreateView view)
     {
@@ -64,7 +76,7 @@ public class TypicalGoalInBonusSchemeController : ControllerBase
     [HttpPost("sendIntoMyGoals/{bonusSchemeId}")]
     public async Task<IActionResult> SendIntoMyGoals(int bonusSchemeId)
     {
-        var goals = await _service.GetGoalsToSync(bonusSchemeId);
+        var goals = await _service.GetByBonusSchemeId(bonusSchemeId, true);
 
         var url = _apiSettings.MyGoalsUrl + "Goals/SyncWithTypicalGoals";
 

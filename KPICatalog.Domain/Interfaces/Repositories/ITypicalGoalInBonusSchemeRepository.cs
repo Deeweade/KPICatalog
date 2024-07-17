@@ -9,7 +9,7 @@ public interface ITypicalGoalInBonusSchemeRepository
     /// </summary>
     /// <param name="typicalGoalId">Id типовой цели</param>
     /// <returns>Возвращает коллекцию типовых целей в бонусной схеме</returns>
-    Task<IEnumerable<TypicalGoalInBonusSchemeDto>> GetByTypicalGoalId(int typicalGoalId);
+    Task<List<TypicalGoalInBonusSchemeDto>> GetByTypicalGoalId(int typicalGoalId);
     /// <summary>
     /// Получение коллекции ТЦ в БС по списку Id
     /// </summary>

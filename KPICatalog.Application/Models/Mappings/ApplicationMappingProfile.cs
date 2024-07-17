@@ -15,12 +15,32 @@ public class ApplicationMappingProfile : Profile
         CreateEmployeeMappings();
         CreateBonusSchemeMappings();
         CreateBonusSchemeObjectLinkMappings();
+        CreateBonusShemeLinkMethodMappings();
+        CreateEvaluationMethodMappings();
+    }
+
+    private void CreateBonusShemeLinkMethodMappings()
+    {
+        CreateMap<BonusSchemeLinkMethodView, BonusSchemeLinkMethodDto>();
+        CreateMap<BonusSchemeLinkMethodDto, BonusSchemeLinkMethodView>();
+    }
+
+    private void CreateEvaluationMethodMappings()
+    {
+        CreateMap<EvaluationMethodView, EvaluationMethodDto>();
+        CreateMap<EvaluationMethodDto, EvaluationMethodView>();
     }
 
     private void CreateTypicalGoalInBonusSchemeMappings()
     {
-        CreateMap<TypicalGoalInBonusSchemeView, TypicalGoalInBonusSchemeDto>();
-        CreateMap<TypicalGoalInBonusSchemeDto, TypicalGoalInBonusSchemeView>();
+        CreateMap<TypicalGoalInBonusSchemeView, TypicalGoalInBonusSchemeDto>()
+            .ForMember(dest => dest.EvaluationMethod, opt => opt.MapFrom(src => src.EvaluationMethod))
+            .ForMember(dest => dest.BonusSchemeLinkMethod, opt => opt.MapFrom(src => src.BonusSchemeLinkMethod))
+            .ForMember(dest => dest.TypicalGoal, opt => opt.MapFrom(src => src.TypicalGoal));
+        CreateMap<TypicalGoalInBonusSchemeDto, TypicalGoalInBonusSchemeView>()
+            .ForMember(dest => dest.EvaluationMethod, opt => opt.MapFrom(src => src.EvaluationMethod))
+            .ForMember(dest => dest.BonusSchemeLinkMethod, opt => opt.MapFrom(src => src.BonusSchemeLinkMethod))
+            .ForMember(dest => dest.TypicalGoal, opt => opt.MapFrom(src => src.TypicalGoal));
     }
 
     private void CreateTypicalGoalMappings()

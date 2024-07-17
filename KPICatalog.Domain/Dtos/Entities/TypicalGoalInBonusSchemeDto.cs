@@ -16,4 +16,8 @@ public class TypicalGoalInBonusSchemeDto : BaseEntityDto
     public decimal? Evaluation { get; set; }
 
     public PeriodDto Period { get; set; }
+
+    public EvaluationMethodDto EvaluationMethod { get; set; }
+    public BonusSchemeLinkMethodDto BonusSchemeLinkMethod { get; set; }
+    public TypicalGoalDto TypicalGoal { get; set; }
 }

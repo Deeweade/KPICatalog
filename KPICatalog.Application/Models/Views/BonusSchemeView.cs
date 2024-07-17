@@ -17,4 +17,5 @@ public class BonusSchemeView : HistoryEntityView
 
     [Ignore]
     public IEnumerable<EmployeeView> Employees { get; set; }
+    public IEnumerable<TypicalGoalInBonusSchemeView> TypicalGoalInBonusSchemes { get; set; }
 }

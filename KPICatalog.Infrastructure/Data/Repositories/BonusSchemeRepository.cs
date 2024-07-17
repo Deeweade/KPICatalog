@@ -6,7 +6,6 @@ using KPICatalog.Domain.Dtos.Filters;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper.QueryableExtensions;
 using AutoMapper;
-using KPICatalog.Domain.Models.Enums;
 
 namespace KPICatalog.Infrastructure;
 
@@ -29,6 +28,17 @@ public class BonusSchemeRepository : IBonusSchemeRepository
             .AsNoTracking()
             .ProjectTo<BonusSchemeDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(x => x.Id == schemeId);
+    }
+
+    public async Task<List<BonusSchemeDto>> GetByIds(List<int> bonusSchemeIds)
+    {
+        ArgumentNullException.ThrowIfNull(nameof(bonusSchemeIds));
+
+        return await _context.BonusSchemes
+            .AsNoTracking()
+            .ProjectTo<BonusSchemeDto>(_mapper.ConfigurationProvider)
+            .Where(x => bonusSchemeIds.Contains(x.Id))
+            .ToListAsync();
     }
 
     public async Task<IEnumerable<string>> GetCostCenters()
@@ -56,35 +66,6 @@ public class BonusSchemeRepository : IBonusSchemeRepository
         var res = await query.ToListAsync();
 
         return res;
-    }
-
-    public async Task<IEnumerable<BonusSchemeDto>> GetByTypicalGoalId(int goalId)
-    {
-        var typicalGoal = await _context.TypicalGoals.FindAsync(goalId);
-
-        var typicalGoalIds = await _context.TypicalGoalInBonusSchemes
-            .AsNoTracking()
-            .ProjectTo<TypicalGoalInBonusSchemeDto>(_mapper.ConfigurationProvider)
-            .Where(x => x.TypicalGoalId == goalId)
-            .Select(x => x.Id)
-            .ToListAsync();
-
-        // Получаем все BonusSchemeObjectLink, у которых LinkedObjectId входит в список typicalGoalIds и LinkedObjectTypeId равен типу связи БС-Типовая цель
-        var bonusSchemeLinkIds = await _context.BonusSchemeObjectLinks
-            .AsNoTracking()
-            .ProjectTo<BonusSchemeObjectLinkDto>(_mapper.ConfigurationProvider)
-            .Where(x => typicalGoalIds.Contains((int)x.LinkedObjectId!) && x.LinkedObjectTypeId == (int)LinkedObjectTypes.TypicalGoal)
-            .Select(x => x.BonusSchemeId)
-            .ToListAsync();
-
-        // Получаем все BonusScheme, у которых Id входит в список bonusSchemeIds
-        var bonusSchemes = await _context.BonusSchemes
-            .AsNoTracking()
-            .ProjectTo<BonusSchemeDto>(_mapper.ConfigurationProvider)
-            .Where(x => bonusSchemeLinkIds.Contains(x.Id))
-            .ToListAsync();
-
-        return bonusSchemes;
     }
 
     public async Task<BonusSchemeDto> Create(BonusSchemeDto bonusSchemeDto)

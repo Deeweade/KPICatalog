@@ -37,7 +37,7 @@ public class BonusSchemeService : IBonusSchemeService
                 LinkedObjectTypeId = (int)LinkedObjectTypes.Employee
             });
 
-        var employeeIds = links.Select(x => (int)x.LinkedObjectId).ToList();
+        var employeeIds = links.Select(x => x.LinkedObjectId).ToList();
 
         var employees = await _unitOfWork.EmployeeRepository.GetByIds(employeeIds);
 
@@ -70,9 +70,36 @@ public class BonusSchemeService : IBonusSchemeService
     {
         if (goalId <= 0) throw new ArgumentOutOfRangeException(nameof(goalId));
 
-        var goal = await _unitOfWork.BonusSchemeRepository.GetByTypicalGoalId(goalId);
+        var typicalGoalsDtos = await _unitOfWork.TypicalGoalInBonusSchemeRepository.GetByTypicalGoalId(goalId);
 
-        return _mapper.Map<IEnumerable<BonusSchemeView>>(goal);
+        var typicalGoalsViews = _mapper.Map<List<TypicalGoalInBonusSchemeView>>(typicalGoalsDtos);
+
+        var typicalGoalIds = typicalGoalsViews.Select(x => x.Id).ToList(); 
+
+        var linksFilter = new BonusSchemeObjectLinkFilterDto
+        {
+            LinkedObjectsIds = typicalGoalIds,
+            LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal
+        };
+
+        var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(linksFilter);
+
+        var bonusSchemeIds = links.Select(x => x.BonusSchemeId).Distinct().ToList();
+
+        var schemes = await _unitOfWork.BonusSchemeRepository.GetByIds(bonusSchemeIds);
+
+        var schemeViews = _mapper.Map<List<BonusSchemeView>>(schemes);
+
+        foreach (var scheme in schemeViews)
+        {
+            typicalGoalIds = links.Where(x => x.BonusSchemeId == scheme.Id)
+                .Select(x => x.LinkedObjectId)
+                .ToList();
+
+            scheme.TypicalGoalInBonusSchemes = typicalGoalsViews.Where(x => typicalGoalIds.Contains(x.Id)).ToList();
+        }
+        
+        return schemeViews;
     }
 
     public async Task<BonusSchemeView> Create(BonusSchemeView schemeView)

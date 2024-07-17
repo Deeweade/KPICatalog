@@ -1,4 +1,5 @@
 ﻿using KPICatalog.Domain.Models.Entities.KPICatalog;
+using KPICatalog.Domain.Models.Entities.KPICatalog.DbViews;
 using Microsoft.EntityFrameworkCore;
 
 namespace KPICatalog.Infrastructure.Data.Contexts;
@@ -20,7 +21,8 @@ public class KPICatalogDbContext : DbContext
     public DbSet<PlanningCycle> PlanningCycles { get; set; }
     public DbSet<WeightType> WeightTypes { get; set; }
     public DbSet<BonusSchemeLinkMethod> BonusSchemeLinkMethod { get; set; }
-
+    public DbSet<EvaluationMethod> EvaluationMethods { get; set; }
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);

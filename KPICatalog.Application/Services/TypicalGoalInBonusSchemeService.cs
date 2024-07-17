@@ -31,21 +31,15 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
         return _mapper.Map<IEnumerable<TypicalGoalInBonusSchemeView>>(goals);
     }
 
-    public async Task<GoalsForEmployeesRequestView> GetGoalsToSync(int bonusSchemeId)
+    public async Task<GoalsForEmployeesRequestView> GetByBonusSchemeId(int bonusSchemeId, bool includeEmployees)
     {
         if (bonusSchemeId <= 0) throw new ArgumentOutOfRangeException(nameof(bonusSchemeId));
 
         var filter = new BonusSchemeObjectLinkFilterDto
         {
             BonusSchemeId = bonusSchemeId,
-            LinkedObjectTypeId = (int)LinkedObjectTypes.Employee
+            LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal
         };
-
-        var employeesIds = (await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter))
-            .Select(x => x.LinkedObjectId)
-            .ToList();
-
-        filter.LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal;
 
         var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter);
 
@@ -67,11 +61,23 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
             view.PlanningCycleId = typicalGoal.PlanningCycleId;
         }
 
-        return new GoalsForEmployeesRequestView
+        var result = new GoalsForEmployeesRequestView
         {
-            Goals = goalsViews,
-            EmployeesIds = employeesIds
+            Goals = goalsViews
         };
+
+        if  (includeEmployees)
+        {
+            filter.LinkedObjectTypeId = (int)LinkedObjectTypes.Employee;
+
+            var employeesIds = (await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter))
+                .Select(x => x.LinkedObjectId)
+                .ToList();
+
+            result.EmployeesIds = employeesIds;
+        }
+
+        return result;
     }
 
     public async Task BulkCreate(ICollection<int> bonusSchemesIds, ICollection<TypicalGoalView> typicalGoals)
