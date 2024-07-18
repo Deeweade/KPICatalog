@@ -49,18 +49,6 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
 
         var goalsViews = _mapper.Map<List<TypicalGoalInBonusSchemeView>>(goalsDtos);
 
-        var typicalGoalIds = goalsDtos.Select(x => x.TypicalGoalId).Distinct().ToList();
-
-        var typicalGoals = await _unitOfWork.TypicalGoalRepository.GetByIds(typicalGoalIds);
-
-        foreach (var view in goalsViews)
-        {
-            var typicalGoal = typicalGoals.FirstOrDefault(x => x.Id == view.TypicalGoalId);
-
-            view.Title = typicalGoal.Title;
-            view.PlanningCycleId = typicalGoal.PlanningCycleId;
-        }
-
         var result = new GoalsForEmployeesRequestView
         {
             Goals = goalsViews

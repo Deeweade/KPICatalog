@@ -1,17 +1,17 @@
+using KPICatalog.Infrastructure.Data.Repositories;
 using KPICatalog.Application.Interfaces.Services;
 using KPICatalog.Domain.Interfaces.Repositories;
 using KPICatalog.Infrastructure.Models.Mappings;
 using KPICatalog.Infrastructure.Data.Contexts;
 using KPICatalog.Application.Models.Mappings;
 using KPICatalog.Application.Services;
+using KPICatalog.API.Models.Mappings;
 using KPICatalog.API.Middlewares;
 using KPICatalog.Infrastructure;
+using KPICatalog.API.Utilities;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
-using KPICatalog.API.Utilities;
-using KPICatalog.Infrastructure.Data.Repositories;
-using KPICatalog.API.Models.Mappings;
 
 #region EnvironmentConfiguring
 

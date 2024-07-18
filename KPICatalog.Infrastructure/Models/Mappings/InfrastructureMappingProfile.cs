@@ -29,8 +29,8 @@ public class InfrastructureMappingProfile : Profile
 
     private void CreateEvaluationMethodMappings()
     {
-        //CreateMap<EvaluationMethod, EvaluationMethodDto>();
-        //CreateMap<EvaluationMethodDto, EvaluationMethod>();
+        CreateMap<EvaluationMethod, EvaluationMethodDto>();
+        CreateMap<EvaluationMethodDto, EvaluationMethod>();
     }
 
     private void CreateRatingScaleValueMappings()

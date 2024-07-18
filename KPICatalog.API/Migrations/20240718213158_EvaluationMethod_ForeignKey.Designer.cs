@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KPICatalog.API.Migrations
 {
     [DbContext(typeof(KPICatalogDbContext))]
-    [Migration("20240717191045_EvaluationMethodEntity")]
-    partial class EvaluationMethodEntity
+    [Migration("20240718213158_EvaluationMethod_ForeignKey")]
+    partial class EvaluationMethod_ForeignKey
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

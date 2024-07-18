@@ -26,10 +26,10 @@ public class TypicalGoalController : ControllerBase
     {
         var goal = await _serviceTG.GetById(id);
         var currentBS = await _serviceBS.GetByTypicalGoalId(id);
-        var goalsInBS = await _serviceTGBS.GetByTypicalGoalId(id);
+        //var goalsInBS = await _serviceTGBS.GetByTypicalGoalId(id);
 
         goal.BonusSchemes = currentBS;
-        goal.TypicalGoalsInBonusSchemes = goalsInBS;
+        //goal.TypicalGoalsInBonusSchemes = goalsInBS;
 
        return Ok(goal);
     }

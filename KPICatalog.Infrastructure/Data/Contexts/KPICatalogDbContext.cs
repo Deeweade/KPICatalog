@@ -1,5 +1,4 @@
 ﻿using KPICatalog.Domain.Models.Entities.KPICatalog;
-using KPICatalog.Domain.Models.Entities.KPICatalog.DbViews;
 using Microsoft.EntityFrameworkCore;
 
 namespace KPICatalog.Infrastructure.Data.Contexts;
