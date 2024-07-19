@@ -10,6 +10,8 @@ services:
       - 1433:1433
     volumes:
       - sqlvolume:/var/opt/mssql
+    networks:
+      - mynetwork
 
   kpicatalog:
     image: kpicatalog_api
@@ -23,6 +25,12 @@ services:
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=KPICatalog;User=sa;Password=QWErty_12345678;MultipleActiveResultSets=True;TrustServerCertificate=True
     ports:
       - "5001:80"
+    networks:
+      - mynetwork
 
 volumes:
   sqlvolume:
+
+networks:
+  mynetwork:
+    driver: bridge
