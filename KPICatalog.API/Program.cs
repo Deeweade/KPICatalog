@@ -11,6 +11,7 @@ using KPICatalog.Infrastructure;
 using KPICatalog.API.Utilities;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 
 #region EnvironmentConfiguring
@@ -111,7 +112,10 @@ builder.Services.AddAutoMapper(typeof(InfrastructureMappingProfile), typeof(Appl
 #endregion
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "KPICatalog API", Version = "v1" });
+});
 
 var app = builder.Build();
 
@@ -122,6 +126,13 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.UseMiddleware<DevAuthMiddleware>();
+
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+        c.RoutePrefix = string.Empty;
+    });
 }
 
 if (!app.Environment.IsProduction())
@@ -139,12 +150,6 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.UseSwagger();
-app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-});
 
 app.MapControllers();
 

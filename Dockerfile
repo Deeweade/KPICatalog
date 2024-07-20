@@ -34,9 +34,6 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 COPY wait-for-it.sh /wait-for-it.sh
 COPY entrypoint.sh /entrypoint.sh
-COPY init-db.sql /init-db.sql
-RUN apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql17 mssql-tools
-RUN echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
 RUN chmod +x /wait-for-it.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT [ "/bin/bash", "/entrypoint.sh" ]
