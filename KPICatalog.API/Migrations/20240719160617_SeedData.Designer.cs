@@ -4,6 +4,7 @@ using KPICatalog.Infrastructure.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,13 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KPICatalog.API.Migrations
 {
     [DbContext(typeof(KPICatalogDbContext))]
-    partial class KPICatalogDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240719160617_SeedData")]
+    partial class SeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.7")
+                .HasAnnotation("ProductVersion", "8.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -33,10 +36,10 @@ namespace KPICatalog.API.Migrations
                     b.Property<string>("CostCenter")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DateEnd")
+                    b.Property<DateTime?>("DateEnd")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DateStart")
+                    b.Property<DateTime?>("DateStart")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ExternalId")
@@ -105,17 +108,14 @@ namespace KPICatalog.API.Migrations
                     b.Property<int>("BonusSchemeId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("DateEnd")
+                    b.Property<DateTime>("LinkEndDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateStart")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
 
                     b.Property<int?>("LinkPercent")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("LinkStartDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("LinkedObjectId")
                         .HasColumnType("int");

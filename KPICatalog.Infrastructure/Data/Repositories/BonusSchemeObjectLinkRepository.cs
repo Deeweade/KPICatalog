@@ -6,6 +6,7 @@ using KPICatalog.Domain.Dtos.Filters;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper.QueryableExtensions;
 using AutoMapper;
+using System.Security.Cryptography.X509Certificates;
 
 namespace KPICatalog.Infrastructure.Data.Repositories;
 
@@ -26,7 +27,8 @@ public class BonusSchemeObjectLinkRepository : IBonusSchemeObjectLinkRepository
 
         var query = _context.BonusSchemeObjectLinks
             .AsNoTracking()
-            .ProjectTo<BonusSchemeObjectLinkDto>(_mapper.ConfigurationProvider);
+            .ProjectTo<BonusSchemeObjectLinkDto>(_mapper.ConfigurationProvider)
+            .Where(x => x.IsActive);
 
         if (filter.LinkedObjectsIds != null && filter.LinkedObjectsIds.Any())
         {
@@ -46,17 +48,16 @@ public class BonusSchemeObjectLinkRepository : IBonusSchemeObjectLinkRepository
         return await query.ToListAsync();
     }
 
-    /// <summary>
-    /// Создает одну запись в БД для значения в BonusSchemeObjectLinkDto.LinkedObjectsId
-    /// </summary>
-    /// <param name="linkDto"Принимает сущность BonusSchemeObjectLinkDto></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
     public async Task<BonusSchemeObjectLinkDto> Create(BonusSchemeObjectLinkDto linkDto)
     {
         if (linkDto is null) throw new ArgumentNullException(nameof(linkDto));
 
+        if (linkDto.DateStart is null) linkDto.DateStart = DateTime.Now;
+        if (linkDto.DateEnd is null) linkDto.DateEnd = DateTime.MaxValue;
+
         var link = _mapper.Map<BonusSchemeObjectLink>(linkDto);
+
+        link.IsActive = true;
 
         _context.BonusSchemeObjectLinks.Add(link);
 
@@ -68,21 +69,19 @@ public class BonusSchemeObjectLinkRepository : IBonusSchemeObjectLinkRepository
             .FirstOrDefaultAsync(x => x.Id == link.Id);
     }
 
-    /// <summary>
-    /// Создает записи в БД для каждого значения в BonusSchemeObjectLinkDto.LinkedObjectsIds
-    /// </summary>
-    /// <param name="linkDto"Принимает сущность BonusSchemeObjectLinkDto></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
     public async Task BulkCreate(BonusSchemeObjectLinkDto linkDto)
     {
         if (linkDto is null) throw new ArgumentNullException(nameof(linkDto));
+
+        if (linkDto.DateStart is null) linkDto.DateStart = DateTime.Now;
+        if (linkDto.DateEnd is null) linkDto.DateEnd = DateTime.MaxValue;
 
         foreach (var objectId in linkDto.LinkedObjectsIds)
         {
             var link = _mapper.Map<BonusSchemeObjectLink>(linkDto);
 
             link.LinkedObjectId = objectId;
+            link.IsActive = true;
 
             _context.BonusSchemeObjectLinks.Add(link);
         }
@@ -96,7 +95,8 @@ public class BonusSchemeObjectLinkRepository : IBonusSchemeObjectLinkRepository
 
         var link = await _context.BonusSchemeObjectLinks.FirstOrDefaultAsync(x => x.Id == linkDto.Id);
 
-        _context.BonusSchemeObjectLinks.Remove(link);
+        link.DateEnd = linkDto.DateEnd ?? DateTime.Now;
+        link.IsActive = false;
 
         await _context.SaveChangesAsync();
     }

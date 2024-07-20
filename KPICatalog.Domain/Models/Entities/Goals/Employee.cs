@@ -1,10 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace KPICatalog.Domain.Models.Entities.Goals;
 
 [Table("Employee")]
-public class Employee : BaseEntity
+public class Employee
 {
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
+    public int Id { get; set; }
     public string TabNumber { get; set; }
     public string Fio { get; set; }
     public string PositionNum { get; set; }
