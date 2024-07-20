@@ -72,7 +72,12 @@ public class BonusSchemeRepository : IBonusSchemeRepository
     {
         if (bonusSchemeDto is null) throw new ArgumentNullException(nameof(bonusSchemeDto));
 
+        if (bonusSchemeDto.DateStart is null) bonusSchemeDto.DateStart = DateTime.Now;
+        if (bonusSchemeDto.DateEnd is null) bonusSchemeDto.DateEnd = DateTime.MaxValue;
+
         var scheme = _mapper.Map<BonusScheme>(bonusSchemeDto);
+
+        scheme.IsActive = true;
 
         _context.Add(scheme);
 
@@ -92,9 +97,10 @@ public class BonusSchemeRepository : IBonusSchemeRepository
         scheme.ExternalId = schemeDto.ExternalId;
         scheme.IsDefaulBonusScheme = schemeDto.IsDefaulBonusScheme;
         scheme.PlanningCycleId = schemeDto.PlanningCycleId;
-        scheme.DateStart = schemeDto.DateStart;
-        scheme.DateEnd = schemeDto.DateEnd;
-        scheme.IsActive = schemeDto.IsActive;
+        
+        scheme.DateStart = schemeDto.DateStart ?? scheme.DateStart;
+        scheme.DateEnd = schemeDto.DateEnd ?? scheme.DateEnd;
+        scheme.IsActive = true;
 
         await _context.SaveChangesAsync();
 

@@ -45,6 +45,44 @@ public class KPICatalogDbContext : DbContext
             .Property(p => p.Weight)
             .HasPrecision(18, 3);
 
+        Seed(modelBuilder);
+
         base.OnModelCreating(modelBuilder);
+    }
+
+    private void Seed(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<EvaluationMethod>().HasData(
+            new EvaluationMethod { Id = 1, Name = "Прямой" },
+            new EvaluationMethod { Id = 2, Name = "Обратно-пропорциональный" },
+            new EvaluationMethod { Id = 3, Name = "Шкала SLA" }
+        );
+
+        modelBuilder.Entity<LinkedObjectType>().HasData(
+            new LinkedObjectType { Id = 1, Name = "BS-Employee" },
+            new LinkedObjectType { Id = 2, Name = "BS-Goal" },
+            new LinkedObjectType { Id = 3, Name = "BS-Request" },
+            new LinkedObjectType { Id = 4, Name = "BS-Group" }
+        );
+
+        modelBuilder.Entity<BonusSchemeLinkMethod>().HasData(
+            new BonusSchemeLinkMethod { Id = 1, Name = "На сотрудника" },
+            new BonusSchemeLinkMethod { Id = 2, Name = "На бонусную схему" },
+            new BonusSchemeLinkMethod { Id = 3, Name = "На всех" }
+        );
+
+        modelBuilder.Entity<PlanningCycle>().HasData(
+            new PlanningCycle { Id = 1, Name = "Годовая цель" },
+            new PlanningCycle { Id = 2, Name = "ЛОКР" },
+            new PlanningCycle { Id = 3, Name = "Критерий достижения" },
+            new PlanningCycle { Id = 4, Name = "Квартальная цель" },
+            new PlanningCycle { Id = 5, Name = "Месячная цель" }
+        );
+
+        modelBuilder.Entity<WeightType>().HasData(
+            new WeightType { Id = 1, Name = "Процент" },
+            new WeightType { Id = 2, Name = "Тариф" },
+            new WeightType { Id = 3, Name = "Комиссия" }
+        );
     }
 }

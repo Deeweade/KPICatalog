@@ -17,7 +17,7 @@ IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Employee')
     BEGIN
 
     CREATE TABLE Employee(
-        [Id] [int] NULL,
+        [Id] [int] NOT NULL,
         [TabNumber] [nvarchar](10) NULL,
         [Fio] [nvarchar](max) NULL,
         [PositionNum] [nvarchar](10) NULL,
@@ -46,9 +46,11 @@ IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Employee')
         [BlockNum] [int] NULL,
         [PhotoUrl] [nvarchar](500) NULL,
         [BonusType] [nvarchar](250) NULL,
+    CONSTRAINT [PK_Employee] PRIMARY KEY CLUSTERED 
+    (
+        [Id] ASC
+    )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
     ) ON [PRIMARY]
-
-    GO
 
     CREATE TABLE [dbo].[Quarter](
         [Id] [int] IDENTITY(1,1) NOT NULL,
@@ -64,8 +66,6 @@ IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Employee')
     )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
     ) ON [PRIMARY]
 
-    GO
-
     CREATE TABLE [dbo].[RatingScaleValue](
 	[Id] [int] NOT NULL,
 	[RatingScaleId] [int] NULL,
@@ -78,17 +78,13 @@ IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Employee')
     )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
     ) ON [PRIMARY]
 
-    GO
-
     INSERT INTO Employee (Id, TabNumber, Fio, PositionNum, Position, UnitNum, UnitParentNum, Unit, Gender, City, FuncManager, AdmManager, UnitManager, IsManager, State, IsStaffMember, HeadOffice, IsActive, Birthday, HireDate, AmountSubordinate, Login, SpId, Parent, Parents, Levels, BlockNum, PhotoUrl, BonusType)
     VALUES 
     (9725,'00118463', N'Петров Олег Владимирович', '20000229', N'Старший разработчик', '40005506', '40005505', N'Отдел развития внутренних сервисов', 1, N'Краснодар', NULL, NULL, NULL, 0, NULL, 1, NULL, 1, '1985-05-20', '2022-08-26 00:00:00.0000000', 0, 'opetrov2', 18, 2728, N'2,11995,7547,7854,2728', 5, 11995, NULL, N'Ежегодный'),
     (10250,'00119272', N'Сивоплясов Александр Владимирович', '20000245', N'Старший разработчик', '40005335', '40005474', N'Отдел развития внутренних сервисов', 1, N'Москва', NULL, NULL, NULL, 0, NULL, 1, NULL, 1, '1987-10-14', '2022-10-25 00:00:00.0000000', 1, 'asivoplyasov', 25497, 12927, N'2,11995,7547,7854,12927', 5, 11995, NULL, N'Ежегодный'),
     (11208,'00121345', N'Гвоздинская Анна Сергеевна', '20000602', N'Руководитель проекта', '40005335', '40005474', N'Управление компенсаций и льгот', 0, N'Москва', NULL, NULL, NULL, 0, NULL, 1, NULL, 1, '1990-12-12', '2023-04-24 00:00:00.0000000', 0, 'agvozdinskaya', 25513, 12927, N'2,6141,12927', 3, 6141, 'http://srvap869:80/my/User Photos/Profile Pictures/agvozdinskaya.jpg', NULL),
     (11303,'00121042', N'Бычкова Александра Мирославна', '20000602', N'Разработчик', '40005916', '40005917', N'Отдел развития внутренних сервисов', 0, N'Москва', NULL, NULL, NULL, 0, NULL, 1, NULL, 1, '1992-03-15', '2023-03-30 00:00:00.0000000', 0, 'abychkova2', 26703, 9725, N'2,11995,7547,7854,2728', 5, 11995, NULL, NULL),
-    (11581,'00122004', N'Рыковский Андрей Игоревич', '20000602', N'Владелец продукта', '40005857', '40005474', N'Управление развития технологий HR', 1, N'Москва', NULL, NULL, NULL, 1, NULL, 1, NULL, 1, '1982-06-30', '2024-08-31 00:00:00.0000000', 1, 'arykovskiy', 25519, 12927, N'2,6141,12927', 3, 6141, NULL, NULL)
-
-    GO
+    (11581,'00122004', N'Рыковский Андрей Игоревич', '20000602', N'Владелец продукта', '40005857', '40005474', N'Управление развития технологий HR', 1, N'Москва', NULL, NULL, NULL, 1, NULL, 1, NULL, 1, '1982-06-30', '2024-08-31 00:00:00.0000000', 1, 'arykovskiy', 25519, 12927, N'2,6141,12927', 3, 6141, NULL, NULL);
 
     INSERT INTO Quarter (Title, DateStart, DateEnd)
     VALUES 
@@ -109,17 +105,15 @@ IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Employee')
     (N'2024, 2 квартал', '2024-04-01 00:00:00.0000000', '2024-06-30 00:00:00.0000000'),
     (N'2024, 3 квартал', '2024-07-01 00:00:00.0000000', '2024-09-30 00:00:00.0000000'),
     (N'2024, 4 квартал', '2024-10-01 00:00:00.0000000', '2024-12-31 00:00:00.0000000'),
-    (N'2024 год', '2024-01-01 00:00:00.0000000', '2024-12-31 00:00:00.0000000')
-
-    GO
+    (N'2024 год', '2024-01-01 00:00:00.0000000', '2024-12-31 00:00:00.0000000');
 
     INSERT INTO RatingScaleValue (Id, RatingScaleId, MinimumValue, MaximumValue, RatingPercentage)
     VALUES 
     (1, 1, 0, 99, 0),
-    (2, 1, 99, 99,8, 50),
-    (3, 1, 99,8, 99,9, 100),
-    (4, 1, 99,9, 99,95, 105),
-    (5, 1, 99,95, 100, 110)
+    (2, 1, 99, 99.8, 50),
+    (3, 1, 99.8, 99.9, 100),
+    (4, 1, 99.9, 99.95, 105),
+    (5, 1, 99.95, 100, 110);
 
     END
 

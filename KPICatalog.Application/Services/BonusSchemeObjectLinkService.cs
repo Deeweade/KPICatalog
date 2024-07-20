@@ -43,7 +43,8 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
         {
             BonusSchemeId = linkView.BonusSchemeId,
             LinkedObjectTypeId = linkView.LinkedObjectTypeId,
-            LinkedObjectsIds = linkView.LinkedObjectsIds
+            LinkedObjectsIds = linkView.LinkedObjectsIds,
+            LinkPercent = linkView.LinkPercent
         };
 
         await _unitOfWork.BonusSchemeObjectLinkRepository.BulkCreate(dto);
