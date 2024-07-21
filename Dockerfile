@@ -34,7 +34,6 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 COPY wait-for-it.sh /wait-for-it.sh
 COPY entrypoint.sh /entrypoint.sh
-COPY init-db.sql /init-db.sql
 RUN chmod +x /wait-for-it.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT [ "/bin/bash", "/entrypoint.sh" ]

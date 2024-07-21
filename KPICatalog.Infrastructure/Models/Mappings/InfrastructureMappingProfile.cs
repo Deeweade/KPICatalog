@@ -16,6 +16,27 @@ public class InfrastructureMappingProfile : Profile
         CreateBonusSchemeMappings();
         CreateUserAccessControlMappings();
         CreatePeriodMappings();
+        CreateRatingScaleValueMappings();
+        CreateEvaluationMethodMappings();
+        CreateBonusShemeLinkMethodMappings();
+    }
+
+    private void CreateBonusShemeLinkMethodMappings()
+    {
+        CreateMap<BonusSchemeLinkMethod, BonusSchemeLinkMethodDto>();
+        CreateMap<BonusSchemeLinkMethodDto, BonusSchemeLinkMethod>();
+    }
+
+    private void CreateEvaluationMethodMappings()
+    {
+        CreateMap<EvaluationMethod, EvaluationMethodDto>();
+        CreateMap<EvaluationMethodDto, EvaluationMethod>();
+    }
+
+    private void CreateRatingScaleValueMappings()
+    {
+        CreateMap<RatingScaleValue, RatingScaleValueDto>();
+        CreateMap<RatingScaleValueDto, RatingScaleValue>();
     }
 
     private void CreatePeriodMappings()
@@ -26,8 +47,14 @@ public class InfrastructureMappingProfile : Profile
 
     private void CreateTypicalGoalInBonusSchemeMapping()
     {
-        CreateMap<TypicalGoalInBonusScheme, TypicalGoalInBonusSchemeDto>();
-        CreateMap<TypicalGoalInBonusSchemeDto, TypicalGoalInBonusScheme>();
+        CreateMap<TypicalGoalInBonusScheme, TypicalGoalInBonusSchemeDto>()
+            .ForMember(dest => dest.EvaluationMethod, opt => opt.MapFrom(src => src.EvaluationMethod))
+            .ForMember(dest => dest.BonusSchemeLinkMethod, opt => opt.MapFrom(src => src.BonusSchemeLinkMethod))
+            .ForMember(dest => dest.TypicalGoal, opt => opt.MapFrom(src => src.TypicalGoal));
+        CreateMap<TypicalGoalInBonusSchemeDto, TypicalGoalInBonusScheme>()
+            .ForMember(dest => dest.EvaluationMethod, opt => opt.MapFrom(src => src.EvaluationMethod))
+            .ForMember(dest => dest.BonusSchemeLinkMethod, opt => opt.MapFrom(src => src.BonusSchemeLinkMethod))
+            .ForMember(dest => dest.TypicalGoal, opt => opt.MapFrom(src => src.TypicalGoal));;
     }
 
     private void CreateTypicalGoalMappings()

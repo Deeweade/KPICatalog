@@ -6,7 +6,6 @@ using KPICatalog.Domain.Dtos.Filters;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper.QueryableExtensions;
 using AutoMapper;
-using KPICatalog.Domain.Models.Enums;
 
 namespace KPICatalog.Infrastructure;
 
@@ -21,7 +20,7 @@ public class BonusSchemeRepository : IBonusSchemeRepository
         _mapper = mapper;
     }
 
-    public async Task<BonusSchemeDto?> GetById(int schemeId)
+    public async Task<BonusSchemeDto> GetById(int schemeId)
     {
         if (schemeId <= 0) throw new ArgumentOutOfRangeException(nameof(schemeId));
 
@@ -29,6 +28,17 @@ public class BonusSchemeRepository : IBonusSchemeRepository
             .AsNoTracking()
             .ProjectTo<BonusSchemeDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(x => x.Id == schemeId);
+    }
+
+    public async Task<List<BonusSchemeDto>> GetByIds(List<int> bonusSchemeIds)
+    {
+        ArgumentNullException.ThrowIfNull(nameof(bonusSchemeIds));
+
+        return await _context.BonusSchemes
+            .AsNoTracking()
+            .ProjectTo<BonusSchemeDto>(_mapper.ConfigurationProvider)
+            .Where(x => bonusSchemeIds.Contains(x.Id))
+            .ToListAsync();
     }
 
     public async Task<IEnumerable<string>> GetCostCenters()
@@ -58,40 +68,16 @@ public class BonusSchemeRepository : IBonusSchemeRepository
         return res;
     }
 
-    public async Task<IEnumerable<BonusSchemeDto?>> GetByTypicalGoalId(int goalId)
-    {
-        var typicalGoal = await _context.TypicalGoals.FindAsync(goalId);
-
-        var typicalGoalIds = await _context.TypicalGoalInBonusSchemes
-            .AsNoTracking()
-            .ProjectTo<TypicalGoalInBonusSchemeDto>(_mapper.ConfigurationProvider)
-            .Where(x => x.TypicalGoalId == goalId)
-            .Select(x => x.Id)
-            .ToListAsync();
-
-        // Получаем все BonusSchemeObjectLink, у которых LinkedObjectId входит в список typicalGoalIds и LinkedObjectTypeId равен типу связи БС-Типовая цель
-        var bonusSchemeLinkIds = await _context.BonusSchemeObjectLinks
-            .AsNoTracking()
-            .ProjectTo<BonusSchemeObjectLinkDto>(_mapper.ConfigurationProvider)
-            .Where(x => typicalGoalIds.Contains((int)x.LinkedObjectId!) && x.LinkedObjectTypeId == (int)LinkedObjectTypes.TypicalGoal)
-            .Select(x => x.BonusSchemeId)
-            .ToListAsync();
-
-        // Получаем все BonusScheme, у которых Id входит в список bonusSchemeIds
-        var bonusSchemes = await _context.BonusSchemes
-            .AsNoTracking()
-            .ProjectTo<BonusSchemeDto>(_mapper.ConfigurationProvider)
-            .Where(x => bonusSchemeLinkIds.Contains(x.Id))
-            .ToListAsync();
-
-        return bonusSchemes;
-    }
-
-    public async Task<BonusSchemeDto?> Create(BonusSchemeDto bonusSchemeDto)
+    public async Task<BonusSchemeDto> Create(BonusSchemeDto bonusSchemeDto)
     {
         if (bonusSchemeDto is null) throw new ArgumentNullException(nameof(bonusSchemeDto));
 
+        if (bonusSchemeDto.DateStart is null) bonusSchemeDto.DateStart = DateTime.Now;
+        if (bonusSchemeDto.DateEnd is null) bonusSchemeDto.DateEnd = DateTime.MaxValue;
+
         var scheme = _mapper.Map<BonusScheme>(bonusSchemeDto);
+
+        scheme.IsActive = true;
 
         _context.Add(scheme);
 
@@ -111,9 +97,10 @@ public class BonusSchemeRepository : IBonusSchemeRepository
         scheme.ExternalId = schemeDto.ExternalId;
         scheme.IsDefaulBonusScheme = schemeDto.IsDefaulBonusScheme;
         scheme.PlanningCycleId = schemeDto.PlanningCycleId;
-        scheme.DateStart = schemeDto.DateStart;
-        scheme.DateEnd = schemeDto.DateEnd;
-        scheme.IsActive = schemeDto.IsActive;
+        
+        scheme.DateStart = schemeDto.DateStart ?? scheme.DateStart;
+        scheme.DateEnd = schemeDto.DateEnd ?? scheme.DateEnd;
+        scheme.IsActive = true;
 
         await _context.SaveChangesAsync();
 

@@ -8,7 +8,7 @@ public class PlanningCycle : BaseEntity
         TypicalGoals = new HashSet<TypicalGoal>();
     }
 
-    public string? Name { get; set; }
+    public string Name { get; set; }
 
     public virtual ICollection<TypicalGoal> TypicalGoals { get; set; }
     public virtual ICollection<BonusScheme> BonusSchemes { get; set; }

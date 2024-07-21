@@ -1,9 +1,10 @@
 ﻿using KPICatalog.Application.Interfaces.Services;
 using KPICatalog.Domain.Interfaces.Repositories;
 using KPICatalog.Application.Models.Views;
-using AutoMapper;
 using KPICatalog.Domain.Dtos.Entities;
 using KPICatalog.Domain.Models.Enums;
+using KPICatalog.Domain.Dtos.Filters;
+using AutoMapper;
 
 namespace KPICatalog.Application.Services;
 
@@ -11,20 +12,60 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly IEvaluationCalculator _evaluationCalculator;
 
-    public TypicalGoalInBonusSchemeService(IUnitOfWork unitOfWork, IMapper mapper)
+    public TypicalGoalInBonusSchemeService(IUnitOfWork unitOfWork, IMapper mapper, 
+        IEvaluationCalculator evaluationCalculator)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _evaluationCalculator = evaluationCalculator;
     }
 
-    public async Task<IEnumerable<TypicalGoalInBonusSchemeView?>> GetByTypicalGoalId(int id)
+    public async Task<IEnumerable<TypicalGoalInBonusSchemeView>> GetByTypicalGoalId(int id)
     {
         var goals = await _unitOfWork.TypicalGoalInBonusSchemeRepository.GetByTypicalGoalId(id);
 
         if(goals is null) return null;
 
         return _mapper.Map<IEnumerable<TypicalGoalInBonusSchemeView>>(goals);
+    }
+
+    public async Task<GoalsForEmployeesRequestView> GetByBonusSchemeId(int bonusSchemeId, bool includeEmployees)
+    {
+        if (bonusSchemeId <= 0) throw new ArgumentOutOfRangeException(nameof(bonusSchemeId));
+
+        var filter = new BonusSchemeObjectLinkFilterDto
+        {
+            BonusSchemeId = bonusSchemeId,
+            LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal
+        };
+
+        var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter);
+
+        var goalsIds = links.Select(x => x.LinkedObjectId).ToList();
+
+        var goalsDtos = await _unitOfWork.TypicalGoalInBonusSchemeRepository.GetByIds(goalsIds);
+
+        var goalsViews = _mapper.Map<List<TypicalGoalInBonusSchemeView>>(goalsDtos);
+
+        var result = new GoalsForEmployeesRequestView
+        {
+            Goals = goalsViews
+        };
+
+        if  (includeEmployees)
+        {
+            filter.LinkedObjectTypeId = (int)LinkedObjectTypes.Employee;
+
+            var employeesIds = (await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter))
+                .Select(x => x.LinkedObjectId)
+                .ToList();
+
+            result.EmployeesIds = employeesIds;
+        }
+
+        return result;
     }
 
     public async Task BulkCreate(ICollection<int> bonusSchemesIds, ICollection<TypicalGoalView> typicalGoals)
@@ -49,6 +90,39 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
             
             await _unitOfWork.BonusSchemeObjectLinkRepository.BulkCreate(dto);
         }
+    }
+
+    public async Task BulkUpdate(ICollection<int> entitiesIds, TypicalGoalInBonusSchemeView typicalGoalInBS)
+    {
+        if (entitiesIds is null) throw new ArgumentNullException(nameof(entitiesIds));
+        if (typicalGoalInBS is null) throw new ArgumentNullException(nameof(typicalGoalInBS));
+
+        var goals = await _unitOfWork.TypicalGoalInBonusSchemeRepository.GetByIds(entitiesIds.ToList());
+
+        var periodIds = goals.Select(x => x.PeriodId).Distinct().ToList();
+
+        if (periodIds.Count() > 1) throw new Exception("Forbidden to change the period for goals which periods aren't the same!");
+
+        foreach(var goal in goals)
+        {
+            if (goal.Fact.HasValue && goal.Evaluation.HasValue) continue;
+
+            goal.Weight = typicalGoalInBS.Weight;
+            goal.Plan = typicalGoalInBS.Plan;
+            goal.TypeKeyResultId = typicalGoalInBS.TypeKeyResultId;
+            goal.EvaluationProvider = typicalGoalInBS.EvaluationProvider;
+            goal.EvaluationMethodId = typicalGoalInBS.EvaluationMethodId;
+            goal.RatingScaleId = typicalGoalInBS.RatingScaleId;
+            goal.PeriodId = typicalGoalInBS.PeriodId;
+
+            if (goal.BonusSchemeLinkMethodId != (int)BonusSchemeObjectLinkMethods.ForAll 
+                && typicalGoalInBS.BonusSchemeLinkMethodId != (int)BonusSchemeObjectLinkMethods.ForAll)
+            {
+                goal.BonusSchemeLinkMethodId = typicalGoalInBS.BonusSchemeLinkMethodId;
+            }
+        }
+
+        await _unitOfWork.TypicalGoalInBonusSchemeRepository.BulkUpdate(goals.ToList());
     }
 
     private async Task<List<int>> Create(List<TypicalGoalView> typicalGoals)
@@ -103,5 +177,23 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
         }
 
         return goalsInSchemeIds;
+    }
+
+    public async Task BulkEvaluate(List<BulkEvaluateGoalsView> views)
+    {
+        ArgumentNullException.ThrowIfNull(nameof(views));
+
+        foreach (var view in views)
+        {
+            var goals = await _unitOfWork.TypicalGoalInBonusSchemeRepository.GetByIds(view.TypicalGoalsInBSIds.ToList());
+
+            foreach (var goal in goals)
+            {
+                goal.Fact = view.Fact;
+                goal.Evaluation = await _evaluationCalculator.Calculate(goal.Plan, view.Fact, (EvaluationMethods)goal.EvaluationMethodId, goal.RatingScaleId);
+            }
+
+            await _unitOfWork.TypicalGoalInBonusSchemeRepository.BulkUpdate(goals);
+        }
     }
 }

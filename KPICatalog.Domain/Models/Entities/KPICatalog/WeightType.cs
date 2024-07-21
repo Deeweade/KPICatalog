@@ -7,7 +7,7 @@ public class WeightType : BaseEntity
         TypicalGoals = new HashSet<TypicalGoal>();
     }
 
-    public string? Name { get; set; }
+    public string Name { get; set; }
 
     public virtual ICollection<TypicalGoal> TypicalGoals { get; set; }
 }

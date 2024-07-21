@@ -18,7 +18,7 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<BonusSchemeObjectLinkView>> CreateMany(BonusSchemeObjectLinkView linkView)
+    public async Task<IEnumerable<BonusSchemeObjectLinkView>> BulkCreate(BonusSchemeObjectLinkView linkView)
     {
         if (linkView is null) throw new ArgumentNullException(nameof(linkView));
 
@@ -43,7 +43,8 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
         {
             BonusSchemeId = linkView.BonusSchemeId,
             LinkedObjectTypeId = linkView.LinkedObjectTypeId,
-            LinkedObjectsIds = linkView.LinkedObjectsIds
+            LinkedObjectsIds = linkView.LinkedObjectsIds,
+            LinkPercent = linkView.LinkPercent
         };
 
         await _unitOfWork.BonusSchemeObjectLinkRepository.BulkCreate(dto);

@@ -1,11 +1,13 @@
 ﻿
 using KPICatalog.Application.Models.Views;
-using KPICatalog.Domain.Dtos.Entities;
 
 namespace KPICatalog.Application.Interfaces.Services;
 
 public interface ITypicalGoalInBonusSchemeService
 {
-    Task<IEnumerable<TypicalGoalInBonusSchemeView?>> GetByTypicalGoalId(int goalId);
+    Task<IEnumerable<TypicalGoalInBonusSchemeView>> GetByTypicalGoalId(int goalId);
+    Task<GoalsForEmployeesRequestView> GetByBonusSchemeId(int bonusSchemeId, bool includeEmployees);
     Task BulkCreate(ICollection<int> bonusSchemesIds, ICollection<TypicalGoalView> typicalGoals);
+    Task BulkUpdate(ICollection<int> entitiesIds, TypicalGoalInBonusSchemeView typicalGoalInBS);
+    Task BulkEvaluate(List<BulkEvaluateGoalsView> view);
 }

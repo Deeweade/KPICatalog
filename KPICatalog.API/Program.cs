@@ -1,13 +1,17 @@
+using KPICatalog.Infrastructure.Data.Repositories;
 using KPICatalog.Application.Interfaces.Services;
 using KPICatalog.Domain.Interfaces.Repositories;
 using KPICatalog.Infrastructure.Models.Mappings;
 using KPICatalog.Infrastructure.Data.Contexts;
 using KPICatalog.Application.Models.Mappings;
 using KPICatalog.Application.Services;
+using KPICatalog.API.Models.Mappings;
 using KPICatalog.API.Middlewares;
 using KPICatalog.Infrastructure;
+using KPICatalog.API.Utilities;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 
 #region EnvironmentConfiguring
@@ -17,7 +21,6 @@ var settingsPath = Path.Combine(Directory.GetCurrentDirectory(), "Settings");
 var config = new ConfigurationBuilder()
     .SetBasePath(settingsPath)
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-    //.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
     .Build();
 
 string machineName = Environment.MachineName.ToLower();
@@ -25,6 +28,7 @@ string machineName = Environment.MachineName.ToLower();
 var machineNames = config.GetSection("EnvironmentMachines").Get<Dictionary<string, string>>();
 
 string environment = machineNames.FirstOrDefault(x => x.Value.ToLower() == machineName).Key ?? "Development";
+
 
 #endregion
 
@@ -39,6 +43,10 @@ builder.Configuration
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddJsonFile($"appsettings.{environment}.json", optional: true)
     .AddEnvironmentVariables();
+
+// Регистрация ApiSettings в контейнере DI
+builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
+
 
 #region AuthenticationConfiguring
 
@@ -89,16 +97,25 @@ builder.Services.AddScoped<IBonusSchemeService, BonusSchemeService>();
 builder.Services.AddScoped<IBonusSchemeObjectLinkService, BonusSchemeObjectLinkService>();
 builder.Services.AddScoped<ITypicalGoalService, TypicalGoalService>();
 builder.Services.AddScoped<ITypicalGoalInBonusSchemeService, TypicalGoalInBonusSchemeService>();
+builder.Services.AddScoped<IEvaluationCalculator, EvaluationCalculator>();
+
+//repositories
+builder.Services.AddScoped<IRatingScaleValuesRepository, RatingScaleValuesRepository>();
+
+builder.Services.AddHttpClient<ApiClient>();
 
 //data
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-builder.Services.AddAutoMapper(typeof(InfrastructureMappingProfile), typeof(ApplicationMappingProfile));
+builder.Services.AddAutoMapper(typeof(InfrastructureMappingProfile), typeof(ApplicationMappingProfile), typeof(APIMappings));
 
 #endregion
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "KPICatalog API", Version = "v1" });
+});
 
 var app = builder.Build();
 
@@ -122,16 +139,17 @@ else
     app.UseHsts();
 }
 
-app.UseStaticFiles();
-app.UseRouting();
-app.UseAuthentication();
-app.UseAuthorization();
-
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+    c.RoutePrefix = string.Empty;
 });
+
+app.UseStaticFiles();
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
