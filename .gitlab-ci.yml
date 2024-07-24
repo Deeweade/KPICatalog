@@ -80,6 +80,6 @@ deploy_prod:
   script: |
     echo "Deploying to ${env} server"
     sshpass -p "$REMOTE_PASS" ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} "powershell.exe -Command \"if (Test-Path '${REMOTE_PATH}\\KPICatalog_backup') { Remove-Item -Recurse -Force '${REMOTE_PATH}\\KPICatalog_backup' }\"" || true
-    sshpass -p "$REMOTE_PASS" ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} "powershell.exe -Command \"Copy-Item -Recurse -Force '${REMOTE_PATH}\\KPICatalog' '${REMOTE_PATH}\\KPICatalog_backup'""
+    sshpass -p "$REMOTE_PASS" ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} "powershell.exe -Command \"Copy-Item -Recurse -Force '${REMOTE_PATH}\\KPICatalog' '${REMOTE_PATH}\\KPICatalog_backup'\""
     sshpass -p "$REMOTE_PASS" scp -o StrictHostKeyChecking=no -r KPICatalog ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH}\\
 
