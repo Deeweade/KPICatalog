@@ -1,76 +1,82 @@
-# stages:
-#   - build
-#   - deploy
+default:
+  tags: [Sharepoint_docker_srvap5868_group]
 
-# variables:
-#   DOTNET_VERSION: "8.0"
+stages:
+  - build
+  - deploy
 
-# workflow:
-#   rules:
-#     - if: $CI_COMMIT_REF_NAME == "main"
+variables:
+  DOTNET_VERSION: "8.0"
 
-# # Сборка для тестового окружения
-# build_test:
-#   stage: build
-#   variables:
-#     config: Debug
-#     out_dir: #?
-#   extends: .build
+workflow:
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "main"
 
-# # Сборка для продакшн окружения
-# # build_prod:
-# #   stage: build
-# #   variables:
-# #     config: Release
-# #     out_dir: #?
-# #   extends: .build
+# Сборка для тестового окружения
+build_test:
+  stage: build
+  variables:
+    config: Debug
+  extends: .build
 
-# .build
-#   stage: build
-#   image: mcr.microsoft.com/dotnet/sdk:$DOTNET_VERSION
-#   script:
-#     - dotnet restore
-#     - dotnet build --configuration ${config}
-#     - dotnet publish --configuration ${config} --output ${out_dir}
-#   artifacts:
-#     paths:
-#       - ${out_dir}/
-#   only:
-#     - main
+# Сборка для продакшн окружения
+build_prod:
+  stage: build
+  variables:
+    config: Release
+  extends: .build
+
+.build:
+  stage: build
+  image: 
+    name: seis.rccf.ru:8015/sharepoint/dotnet/sdk:$DOTNET_VERSION
+    entrypoint: [ '/bin/bash', '-c', 'ln -snf /bin/bash /bin/sh && /bin/bash -c $0' ]
+  variables:
+    http_proxy: "http://rccf.ru\\${HTTP_PROXY_USER}:${HTTP_PROXY_PASSWORD}@proxy.gslb.rccf.ru:8080"
+    https_proxy: "http://rccf.ru\\${HTTP_PROXY_USER}:${HTTP_PROXY_PASSWORD}@proxy.gslb.rccf.ru:8080"
+    no_proxy: "localhost,docker,127.0.0.1,0.0.0.0,rccf.ru,rencredit.ru"
+    DOTNET_NUGET_SIGNATURE_VERIFICATION: "false"
+    NUGET_CERT_REVOCATION_MODE: "offline"
+    DOCKER_SECURITY_OPT: "seccomp=unconfined"
+  script: |
+    dotnet restore --no-cache
+    dotnet build --configuration ${config}
+    dotnet publish --configuration ${config} --output RKICatalog_test
+  artifacts:
+    paths:
+      - RKICatalog_test/
       
-# # Деплой на тестовый сервер
-# deploy_test:
-#   stage: deploy
-#   extends: .deploy
-#   dependencies:
-#     - build_test
-#   variables:
-#     username: ${SP_TEST_USERNAME}
-#     password: ${SP_TEST_PASSWORD}
-#     env: test
-#     host: http://srvap869.rccf.ru
-#   when: manual
+# Деплой на тестовый сервер
+deploy_test:
+  stage: deploy
+  extends: .deploy
+  dependencies:
+    - build_test
+  variables:
+    REMOTE_USER: ${TEST_USERNAME}
+    REMOTE_PASS: ${TEST_PASSWORD}
+    REMOTE_HOST: SRVWE670
+    REMOTE_PATH: "C:\\inetpub"
+    env: test
+  when: manual
 
-# # Деплой на продакшн сервер
-# # deploy_prod:
-# #   stage: deploy
-# #   extends: .deploy
-# #   dependencies:
-# #     - build_test
-# #   variables:
-# #     username: ${SP_TEST_USERNAME}
-# #     password: ${SP_TEST_PASSWORD}
-# #     env: production
-# #     host: http://intranet.rencredit.ru
-# #   when: manual
+# Деплой на продакшн сервер
+deploy_prod:
+  stage: deploy
+  extends: .deploy
+  dependencies:
+    - build_prod
+  variables:
+    REMOTE_USER: ${PROD_USERNAME}
+    REMOTE_PASS: ${PROD_PASSWORD}
+    REMOTE_HOST: SRVWE669
+    REMOTE_PATH: "C:\\inetpub"
+    env: production
+  when: manual
 
-# .deploy:
-#   stage: deploy
-#   script:
-#     - echo "Deploying to ${env} server"
-#     - powershell.exe -File deploy.ps1
-#   environment:
-#     name: ${env}
-#     url: ${host}
-#   only:
-#     - main
+.deploy:
+  stage: deploy
+  image: seis.rccf.ru:8015/sharepoint/deploy:latest
+  script: |
+    echo "Deploying to ${env} server"
+    sshpass -p "$REMOTE_PASS" scp -o StrictHostKeyChecking=no -r RKICatalog_test ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH}\\
