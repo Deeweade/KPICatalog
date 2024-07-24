@@ -41,7 +41,7 @@ build_prod:
   script: |
     dotnet restore --no-cache
     dotnet build --configuration ${config}
-    dotnet publish --configuration ${config} --output RKICatalog_
+    dotnet publish --configuration ${config} --output RKICatalog
   artifacts:
     paths:
       - RKICatalog/
