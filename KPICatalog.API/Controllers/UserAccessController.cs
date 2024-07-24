@@ -21,4 +21,10 @@ public class UserAccessController : ControllerBase
     {
         return await _service.HasAccess(login);        
     }
+
+    [HttpGet("test")]
+    public string Test()
+    {
+        return "Ok";     
+    }
 }

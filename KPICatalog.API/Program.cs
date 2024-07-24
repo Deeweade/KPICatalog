@@ -79,10 +79,16 @@ builder.Services.AddControllers(options =>
 
 string kpiCatalogConnectionString = builder.Configuration.GetConnectionString("KPICatalog");
 
+var perfManagementConnectionString = builder.Configuration.GetConnectionString("PerfManagement1");
+
+if (environment.ToLower().Equals("development"))
+{
+    kpiCatalogConnectionString = kpiCatalogConnectionString.Replace("sqlserver", "localhost");
+    perfManagementConnectionString = perfManagementConnectionString.Replace("sqlserver", "localhost");
+}
+
 builder.Services.AddDbContext<KPICatalogDbContext>(options =>
     options.UseSqlServer(kpiCatalogConnectionString, b => b.MigrationsAssembly("KPICatalog.API")));
-
-var perfManagementConnectionString = builder.Configuration.GetConnectionString("PerfManagement1");
 
 builder.Services.AddDbContext<PerfManagementDbContext>(options =>
     options.UseSqlServer(perfManagementConnectionString));
