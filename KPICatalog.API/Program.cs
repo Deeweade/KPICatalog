@@ -132,8 +132,6 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.UseMiddleware<DevAuthMiddleware>();
-
-
 }
 
 if (!app.Environment.IsProduction())
