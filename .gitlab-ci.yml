@@ -41,10 +41,10 @@ build_prod:
   script: |
     dotnet restore --no-cache
     dotnet build --configuration ${config}
-    dotnet publish --configuration ${config} --output RKICatalog_test
+    dotnet publish --configuration ${config} --output RKICatalog_
   artifacts:
     paths:
-      - RKICatalog_test/
+      - RKICatalog/
       
 # Деплой на тестовый сервер
 deploy_test:
@@ -79,4 +79,4 @@ deploy_prod:
   image: seis.rccf.ru:8015/sharepoint/deploy:latest
   script: |
     echo "Deploying to ${env} server"
-    sshpass -p "$REMOTE_PASS" scp -o StrictHostKeyChecking=no -r RKICatalog_test ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH}\\
+    sshpass -p "$REMOTE_PASS" scp -o StrictHostKeyChecking=no -r RKICatalog ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH}\\
