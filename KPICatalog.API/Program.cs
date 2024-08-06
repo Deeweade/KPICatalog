@@ -97,6 +97,10 @@ builder.Services.AddScoped<IBonusSchemeObjectLinkService, BonusSchemeObjectLinkS
 builder.Services.AddScoped<ITypicalGoalService, TypicalGoalService>();
 builder.Services.AddScoped<ITypicalGoalInBonusSchemeService, TypicalGoalInBonusSchemeService>();
 builder.Services.AddScoped<IEvaluationCalculator, EvaluationCalculator>();
+builder.Services.AddScoped<IBonusSchemeLinkMethodService, BonusSchemeLinkMethodService>();
+builder.Services.AddScoped<IEvaluationMethodsService, EvaluationMethodsService>();
+builder.Services.AddScoped<IPlanningCyclesService, PlanningCyclesService>();
+builder.Services.AddScoped<IWeightTypesService, WeightTypesService>();
 
 //repositories
 builder.Services.AddScoped<IRatingScaleValuesRepository, RatingScaleValuesRepository>();

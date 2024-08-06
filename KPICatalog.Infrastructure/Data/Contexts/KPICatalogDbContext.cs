@@ -19,7 +19,7 @@ public class KPICatalogDbContext : DbContext
     public DbSet<LinkedObjectType> LinkedObjectTypes { get; set; }
     public DbSet<PlanningCycle> PlanningCycles { get; set; }
     public DbSet<WeightType> WeightTypes { get; set; }
-    public DbSet<BonusSchemeLinkMethod> BonusSchemeLinkMethod { get; set; }
+    public DbSet<BonusSchemeLinkMethod> BonusSchemeLinkMethods { get; set; }
     public DbSet<EvaluationMethod> EvaluationMethods { get; set; }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -17,6 +17,27 @@ public class ApplicationMappingProfile : Profile
         CreateBonusSchemeObjectLinkMappings();
         CreateBonusShemeLinkMethodMappings();
         CreateEvaluationMethodMappings();
+        CreateBonusSchemeLinkMethodMappings();
+        CreatePlanningCycleMappings();
+        CreateWeightTypeMappings();
+    }
+
+    private void CreateBonusSchemeLinkMethodMappings()
+    {
+        CreateMap<BonusSchemeLinkMethodView, BonusSchemeLinkMethodDto>();
+        CreateMap<BonusSchemeLinkMethodDto, BonusSchemeLinkMethodView>();
+    }
+
+    private void CreatePlanningCycleMappings()
+    {
+        CreateMap<PlanningCycleView, PlanningCycleDto>();
+        CreateMap<PlanningCycleDto, PlanningCycleView>();
+    }
+
+    private void CreateWeightTypeMappings()
+    {
+        CreateMap<WeightTypeView, WeightTypeDto>();
+        CreateMap<WeightTypeDto, WeightTypeView>();
     }
 
     private void CreateBonusShemeLinkMethodMappings()

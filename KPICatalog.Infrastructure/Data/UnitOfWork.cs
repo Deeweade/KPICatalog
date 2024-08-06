@@ -20,6 +20,10 @@ public class UnitOfWork : IUnitOfWork
         PeriodsRepository = new PeriodsRepository(perfManagementContext, mapper);
         TypicalGoalRepository = new TypicalGoalRepository(_kpiCatalogContext, mapper);
         TypicalGoalInBonusSchemeRepository = new TypicalGoalInBonusSchemeRepository(_kpiCatalogContext, mapper);
+        WeightTypesRepository = new WeightTypesRepository(_kpiCatalogContext, mapper);
+        BonusSchemeLinkMethodRepository = new BonusSchemeLinkMethodRepository(_kpiCatalogContext, mapper);
+        PlanningCyclesRepository = new PlanningCyclesRepository(_kpiCatalogContext, mapper);
+        EvaluationMethodsRepository = new EvaluationMethodsRepository(_kpiCatalogContext, mapper);
     }
 
     public IUserAccessControlRepository UserAccessControlRepository { get; }
@@ -27,6 +31,10 @@ public class UnitOfWork : IUnitOfWork
     public IBonusSchemeObjectLinkRepository BonusSchemeObjectLinkRepository { get; }
     public ITypicalGoalRepository TypicalGoalRepository { get; }
     public ITypicalGoalInBonusSchemeRepository TypicalGoalInBonusSchemeRepository { get; }
+    public IWeightTypesRepository WeightTypesRepository { get; }
+    public IBonusSchemeLinkMethodRepository BonusSchemeLinkMethodRepository { get; }
+    public IPlanningCyclesRepository PlanningCyclesRepository { get; }
+    public IEvaluationMethodsRepository EvaluationMethodsRepository { get; }
 
     public IEmployeeRepository EmployeeRepository { get; }
     public IPeriodsRepository PeriodsRepository { get; }
