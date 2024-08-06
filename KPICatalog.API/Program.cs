@@ -18,35 +18,31 @@ using System.Text.Json.Serialization;
 
 var settingsPath = Path.Combine(Directory.GetCurrentDirectory(), "Settings");
 
-var config = new ConfigurationBuilder()
-    .SetBasePath(settingsPath)
-    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-    .Build();
+var builder = WebApplication.CreateBuilder();
 
-string machineName = Environment.MachineName.ToLower();
+var environmentName = builder.Environment.EnvironmentName;
 
-var machineNames = config.GetSection("EnvironmentMachines").Get<Dictionary<string, string>>();
-
-string environment = machineNames.FirstOrDefault(x => x.Value.ToLower() == machineName).Key ?? "Development";
-
-
-#endregion
-
-var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+if (!environmentName.ToLower().Equals("development") && !environmentName.ToLower().Equals("docker"))
 {
-    EnvironmentName = environment,
-    ContentRootPath = settingsPath
-});
+    var config = new ConfigurationBuilder()
+        .SetBasePath(settingsPath)
+        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+        .Build();
+
+    string machineName = Environment.MachineName.ToLower();
+
+    var machineNames = config.GetSection("EnvironmentMachines").Get<Dictionary<string, string>>();
+
+    environmentName = machineNames.FirstOrDefault(x => x.Value.ToLower() == machineName).Key ?? "Development";
+}
 
 builder.Configuration
     .SetBasePath(settingsPath)
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-    .AddJsonFile($"appsettings.{environment}.json", optional: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
     .AddEnvironmentVariables();
 
-// Регистрация ApiSettings в контейнере DI
-builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
-
+#endregion
 
 #region AuthenticationConfiguring
 
@@ -81,12 +77,6 @@ string kpiCatalogConnectionString = builder.Configuration.GetConnectionString("K
 
 var perfManagementConnectionString = builder.Configuration.GetConnectionString("PerfManagement1");
 
-if (environment.ToLower().Equals("development"))
-{
-    kpiCatalogConnectionString = kpiCatalogConnectionString.Replace("sqlserver", "localhost");
-    perfManagementConnectionString = perfManagementConnectionString.Replace("sqlserver", "localhost");
-}
-
 builder.Services.AddDbContext<KPICatalogDbContext>(options =>
     options.UseSqlServer(kpiCatalogConnectionString, b => b.MigrationsAssembly("KPICatalog.API")));
 
@@ -96,6 +86,9 @@ builder.Services.AddDbContext<PerfManagementDbContext>(options =>
 #endregion
 
 #region DependenciesInjection
+
+// Регистрация ApiSettings в контейнере DI
+builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 
 //services
 builder.Services.AddScoped<IUserAccessControlService, UserAccessControlService>();
@@ -129,7 +122,8 @@ var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.EnvironmentName.ToLower().Equals("development") 
+    || app.Environment.EnvironmentName.ToLower().Equals("docker"))
 {
     app.UseMiddleware<DevAuthMiddleware>();
 }
