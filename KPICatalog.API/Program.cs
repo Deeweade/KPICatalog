@@ -33,7 +33,7 @@ if (!environmentName.ToLower().Equals("development") && !environmentName.ToLower
 
     var machineNames = config.GetSection("EnvironmentMachines").Get<Dictionary<string, string>>();
 
-    environmentName = machineNames.FirstOrDefault(x => x.Value.ToLower() == machineName).Key ?? "Development";
+    builder.Environment.EnvironmentName = machineNames.FirstOrDefault(x => x.Value.ToLower() == machineName).Key ?? "Development";
 }
 
 builder.Configuration
