@@ -21,7 +21,7 @@ services:
     depends_on:
       - sqlserver
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Docker
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=KPICatalog;User=sa;Password=QWErty_12345678;MultipleActiveResultSets=True;TrustServerCertificate=True
     ports:
       - "5001:8080"
