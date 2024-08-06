@@ -19,6 +19,27 @@ public class InfrastructureMappingProfile : Profile
         CreateRatingScaleValueMappings();
         CreateEvaluationMethodMappings();
         CreateBonusShemeLinkMethodMappings();
+        CreateWeightTypeMappings();
+        CreatePlanningCycleMappings();
+        CreateBonusSchemeLinkMethodMappings();
+    }
+
+    private void CreateBonusSchemeLinkMethodMappings()
+    {
+        CreateMap<BonusSchemeLinkMethod, BonusSchemeLinkMethodDto>();
+        CreateMap<BonusSchemeLinkMethodDto, BonusSchemeLinkMethod>();
+    }
+
+    private void CreatePlanningCycleMappings()
+    {
+        CreateMap<PlanningCycle, PlanningCycleDto>();
+        CreateMap<PlanningCycleDto, PlanningCycle>();
+    }
+
+    private void CreateWeightTypeMappings()
+    {
+        CreateMap<WeightType, WeightTypeDto>();
+        CreateMap<WeightTypeDto, WeightType>();
     }
 
     private void CreateBonusShemeLinkMethodMappings()
