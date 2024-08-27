@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper.QueryableExtensions;
 using AutoMapper;
 
-namespace KPICatalog.Infrastructure;
+namespace KPICatalog.Infrastructure.Data.Repositories;
 
 public class BonusSchemeRepository : IBonusSchemeRepository
 {
@@ -97,7 +97,7 @@ public class BonusSchemeRepository : IBonusSchemeRepository
         scheme.ExternalId = schemeDto.ExternalId;
         scheme.IsDefaulBonusScheme = schemeDto.IsDefaulBonusScheme;
         scheme.PlanningCycleId = schemeDto.PlanningCycleId;
-        
+
         scheme.DateStart = schemeDto.DateStart ?? scheme.DateStart;
         scheme.DateEnd = schemeDto.DateEnd ?? scheme.DateEnd;
         scheme.IsActive = true;
