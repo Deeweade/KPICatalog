@@ -8,4 +8,5 @@ public class BonusSchemeObjectLinkDto : HistoryEntityDto
     public int? LinkPercent { get; set; }
 
     public List<int> LinkedObjectsIds { get; set; }
+    public BonusSchemeDto BonusScheme { get; set; }
 }

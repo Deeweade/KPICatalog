@@ -105,6 +105,7 @@ builder.Services.AddScoped<IEvaluationMethodsService, EvaluationMethodsService>(
 builder.Services.AddScoped<IPlanningCyclesService, PlanningCyclesService>();
 builder.Services.AddScoped<IWeightTypesService, WeightTypesService>();
 builder.Services.AddScoped<IGoalsService, GoalsService>();
+builder.Services.AddScoped<ExternalAPIConfiguration>();
 
 //repositories
 builder.Services.AddScoped<IRatingScaleValuesRepository, RatingScaleValuesRepository>();

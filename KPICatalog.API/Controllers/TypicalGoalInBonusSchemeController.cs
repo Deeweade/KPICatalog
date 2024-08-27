@@ -29,6 +29,18 @@ public class TypicalGoalInBonusSchemeController : ControllerBase
         _mapper = mapper;
     }
 
+    [HttpGet("byTypicalGoalId/{typicalGoalId}")]
+    public async Task<IActionResult> GetByTypicalGoalId(int typicalGoalId)
+    {
+        var goals = (await _service.GetByTypicalGoalId(typicalGoalId))
+            .OrderBy(x => x.PlanningCycleId)
+            .ThenBy(x => x.ParentBSTypicalGoalId)
+            .ThenBy(x => x.PeriodId)
+            .ToList();
+
+        return Ok(goals);
+    }
+
     [HttpGet("byBonusSchemeId/{bonusSchemeId}")]
     public async Task<IActionResult> GetByBonusSchemeId(int bonusSchemeId)
     {

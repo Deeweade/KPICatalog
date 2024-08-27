@@ -6,7 +6,7 @@ using KPICatalog.Domain.Dtos.Filters;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper.QueryableExtensions;
 using AutoMapper;
-using System.Security.Cryptography.X509Certificates;
+using System.Linq.Expressions;
 
 namespace KPICatalog.Infrastructure.Data.Repositories;
 
@@ -21,7 +21,7 @@ public class BonusSchemeObjectLinkRepository : IBonusSchemeObjectLinkRepository
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<BonusSchemeObjectLinkDto>> GetByFilter(BonusSchemeObjectLinkFilterDto filter)
+    public async Task<List<TResult>> GetByFilter<TResult>(BonusSchemeObjectLinkFilterDto filter, Expression<Func<BonusSchemeObjectLinkDto, TResult>> select = null)
     {
         if (filter is null) throw new ArgumentNullException(nameof(filter));
 
@@ -45,7 +45,14 @@ public class BonusSchemeObjectLinkRepository : IBonusSchemeObjectLinkRepository
             query = query.Where(x => x.LinkedObjectTypeId == filter.LinkedObjectTypeId);    
         }
 
-        return await query.ToListAsync();
+        if (select is not null)
+        {
+            return await query.Select(select).ToListAsync();
+        }
+        else
+        {
+            return await query.Cast<TResult>().ToListAsync();
+        }
     }
 
     public async Task<BonusSchemeObjectLinkDto> Create(BonusSchemeObjectLinkDto linkDto)

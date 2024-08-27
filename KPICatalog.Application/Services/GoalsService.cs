@@ -32,7 +32,7 @@ public class GoalsService : IGoalsService
                 LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal
             };
 
-            var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter);
+            var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter, x => x);
 
             var goalsIds = links.Select(x => x.LinkedObjectId).Distinct().ToList();
         }
@@ -45,7 +45,7 @@ public class GoalsService : IGoalsService
                 LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal
             };
 
-            var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter);
+            var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter, x => x);
 
             bonusSchemeIds = links.Select(x => x.BonusSchemeId).Distinct().ToList();
         }
@@ -58,7 +58,7 @@ public class GoalsService : IGoalsService
                 LinkedObjectTypeId = (int)LinkedObjectTypes.Employee
             };
 
-            var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter);
+            var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter, x => x);
 
             employeeIds = links.Select(x => x.LinkedObjectId).Distinct().ToList();
         }
