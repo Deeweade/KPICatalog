@@ -1,8 +1,5 @@
-﻿using System.Runtime.CompilerServices;
-using System.Xml.Schema;
-using KPICatalog.Domain.Models.Entities.Goals;
+﻿using KPICatalog.Domain.Models.Entities.Goals;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 
 namespace KPICatalog.Infrastructure.Data.Contexts;
 
