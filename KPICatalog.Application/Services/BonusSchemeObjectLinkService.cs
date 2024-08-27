@@ -28,7 +28,7 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
         };
 
         //Удаляем существующие связи для объектов, если они есть
-        var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter);
+        var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter, x => x);
 
         if (links is not null && links.Any())
         {
@@ -52,7 +52,7 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
         await _unitOfWork.SaveChangesAsync();
 
         //Возвращаем созданные объекты
-        links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter);
+        links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter, x => x);
 
         return _mapper.Map<IEnumerable<BonusSchemeObjectLinkView>>(links);
     }
@@ -64,7 +64,8 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
             {
                 LinkedObjectsIds = linkView.LinkedObjectsIds,
                 LinkedObjectTypeId = linkView.LinkedObjectTypeId
-            });
+            },
+            x => x);
 
         foreach(var link in links.DefaultIfEmpty())
         {

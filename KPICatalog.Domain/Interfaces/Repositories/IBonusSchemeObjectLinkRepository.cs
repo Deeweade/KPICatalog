@@ -1,12 +1,13 @@
 ﻿
 using KPICatalog.Domain.Dtos.Entities;
 using KPICatalog.Domain.Dtos.Filters;
+using System.Linq.Expressions;
 
 namespace KPICatalog.Domain.Interfaces.Repositories;
 
 public interface IBonusSchemeObjectLinkRepository
 {
-    Task<IEnumerable<BonusSchemeObjectLinkDto>> GetByFilter(BonusSchemeObjectLinkFilterDto filter);
+    Task<List<TResult>> GetByFilter<TResult>(BonusSchemeObjectLinkFilterDto filter, Expression<Func<BonusSchemeObjectLinkDto, TResult>> select = null);
     
     /// <summary>
     /// Создает одну запись в БД для значения в BonusSchemeObjectLinkDto.LinkedObjectsId

@@ -5,6 +5,7 @@ using KPICatalog.Domain.Dtos.Entities;
 using KPICatalog.Domain.Models.Enums;
 using KPICatalog.Domain.Dtos.Filters;
 using AutoMapper;
+using System.Security.Cryptography.X509Certificates;
 
 namespace KPICatalog.Application.Services;
 
@@ -28,7 +29,29 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
 
         if(goals is null) return null;
 
-        return _mapper.Map<IEnumerable<TypicalGoalInBonusSchemeView>>(goals);
+        var filter = new BonusSchemeObjectLinkFilterDto
+        {
+            LinkedObjectsIds = goals.Select(x => x.Id).ToList(),
+            LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal
+        };
+
+        var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter, x => x);
+
+        var dict = links.GroupBy(x => x.LinkedObjectId)
+            .ToDictionary(x => x.Key, x => x.Select(x => x.BonusScheme).ToList());
+
+        var goalsViews = _mapper.Map<IEnumerable<TypicalGoalInBonusSchemeView>>(goals);
+
+        foreach(var goal in goalsViews)
+        {
+            var schemes = dict.Where(x => x.Key == goal.Id)
+                .Select(x => x.Value)
+                .FirstOrDefault();
+
+            goal.BonusSchemes = _mapper.Map<List<BonusSchemeView>>(schemes);
+        }
+
+        return goalsViews;
     }
 
     public async Task<GoalsForEmployeesRequestView> GetByBonusSchemeId(int bonusSchemeId, bool includeEmployees)
@@ -41,7 +64,7 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
             LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal
         };
 
-        var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter);
+        var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter, x => x);
 
         var goalsIds = links.Select(x => x.LinkedObjectId).ToList();
 
@@ -54,13 +77,11 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
             Goals = goalsViews
         };
 
-        if  (includeEmployees)
+        if (includeEmployees)
         {
             filter.LinkedObjectTypeId = (int)LinkedObjectTypes.Employee;
 
-            var employeesIds = (await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter))
-                .Select(x => x.LinkedObjectId)
-                .ToList();
+            var employeesIds = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter, x => x.LinkedObjectId);
 
             result.EmployeesIds = employeesIds;
         }

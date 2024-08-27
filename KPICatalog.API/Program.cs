@@ -1,9 +1,11 @@
+using KPICatalog.Infrastructure.Data.Repositories.ExternalSources;
 using KPICatalog.Infrastructure.Data.Repositories;
 using KPICatalog.Application.Interfaces.Services;
 using KPICatalog.Domain.Interfaces.Repositories;
 using KPICatalog.Infrastructure.Models.Mappings;
 using KPICatalog.Infrastructure.Data.Contexts;
 using KPICatalog.Application.Models.Mappings;
+using KPICatalog.Infrastructure.Utilities;
 using KPICatalog.Application.Services;
 using KPICatalog.API.Models.Mappings;
 using KPICatalog.API.Middlewares;
@@ -89,6 +91,7 @@ builder.Services.AddDbContext<PerfManagementDbContext>(options =>
 
 // Регистрация ApiSettings в контейнере DI
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
+builder.Services.Configure<ExternalAPIConfiguration>(builder.Configuration.GetSection("ApiSettings"));
 
 //services
 builder.Services.AddScoped<IUserAccessControlService, UserAccessControlService>();
@@ -101,11 +104,15 @@ builder.Services.AddScoped<IBonusSchemeLinkMethodService, BonusSchemeLinkMethodS
 builder.Services.AddScoped<IEvaluationMethodsService, EvaluationMethodsService>();
 builder.Services.AddScoped<IPlanningCyclesService, PlanningCyclesService>();
 builder.Services.AddScoped<IWeightTypesService, WeightTypesService>();
+builder.Services.AddScoped<IGoalsService, GoalsService>();
+builder.Services.AddScoped<ExternalAPIConfiguration>();
 
 //repositories
 builder.Services.AddScoped<IRatingScaleValuesRepository, RatingScaleValuesRepository>();
+builder.Services.AddScoped<IGoalsRepository, GoalsRepository>();
 
 builder.Services.AddHttpClient<ApiClient>();
+builder.Services.AddHttpClient<ExternalAPIClient>();
 
 //data
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -118,6 +125,19 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "KPICatalog API", Version = "v1" });
+});
+
+var corsPolicyName = "AllowCors";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(corsPolicyName, policy =>
+    {
+        policy.AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials()
+            .SetIsOriginAllowed(_ => true);
+    });
 });
 
 var app = builder.Build();
@@ -150,8 +170,10 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = string.Empty;
 });
 
-app.UseStaticFiles();
 app.UseRouting();
+
+app.UseCors(corsPolicyName);
+
 app.UseAuthentication();
 app.UseAuthorization();
 

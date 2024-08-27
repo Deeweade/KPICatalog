@@ -35,7 +35,8 @@ public class BonusSchemeService : IBonusSchemeService
             {
                 BonusSchemeId = schemeId,
                 LinkedObjectTypeId = (int)LinkedObjectTypes.Employee
-            });
+            }, 
+            x => x);
 
         var employeeIds = links.Select(x => x.LinkedObjectId).ToList();
 
@@ -82,7 +83,7 @@ public class BonusSchemeService : IBonusSchemeService
             LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal
         };
 
-        var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(linksFilter);
+        var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(linksFilter, x => x);
 
         var bonusSchemeIds = links.Select(x => x.BonusSchemeId).Distinct().ToList();
 
@@ -136,7 +137,8 @@ public class BonusSchemeService : IBonusSchemeService
             new BonusSchemeObjectLinkFilterDto
             {
                 BonusSchemeId = bonusSchemeId
-            });
+            }, 
+            x => x);
 
         foreach (var link in links)
         {

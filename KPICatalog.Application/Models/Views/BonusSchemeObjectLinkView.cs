@@ -13,4 +13,6 @@ public class BonusSchemeObjectLinkView : HistoryEntityView
     public int? LinkPercent { get; set; }
 
     public List<int> LinkedObjectsIds { get; set; }
+
+    public BonusSchemeView BonusScheme { get; set; }
 }
