@@ -80,10 +80,12 @@ string kpiCatalogConnectionString = builder.Configuration.GetConnectionString("K
 var perfManagementConnectionString = builder.Configuration.GetConnectionString("PerfManagement1");
 
 builder.Services.AddDbContext<KPICatalogDbContext>(options =>
-    options.UseSqlServer(kpiCatalogConnectionString, b => b.MigrationsAssembly("KPICatalog.API")));
+    options.UseSqlServer(kpiCatalogConnectionString, 
+        b => b.MigrationsAssembly("KPICatalog.API").UseCompatibilityLevel(120)));
 
 builder.Services.AddDbContext<PerfManagementDbContext>(options =>
-    options.UseSqlServer(perfManagementConnectionString));
+    options.UseSqlServer(perfManagementConnectionString, 
+        b => b.UseCompatibilityLevel(120)));
 
 #endregion
 
