@@ -6,7 +6,7 @@ namespace KPICatalog.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Policy = "RequireAuthenticatedUser")]
+//[Authorize(Policy = "RequireAuthenticatedUser")]
 public class UserAccessController : ControllerBase
 {
     private readonly IUserAccessControlService _service;
@@ -25,6 +25,6 @@ public class UserAccessController : ControllerBase
     [HttpGet("test")]
     public string Test()
     {
-        return "Ok";     
+        return User.Identity.Name;
     }
 }
