@@ -1,4 +1,6 @@
-﻿namespace KPICatalog.Domain.Dtos.Entities;
+﻿using AutoMapper.Configuration.Annotations;
+
+namespace KPICatalog.Domain.Dtos.Entities;
 
 public class EmployeeDto : BaseEntityDto
 {
@@ -30,6 +32,20 @@ public class EmployeeDto : BaseEntityDto
     public int BlockNum { get; set; }
     public string PhotoUrl { get; set; }
     public string BonusType { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
+    [Ignore]
+    public string FirstName 
+    {
+        get
+        {
+            return Fio.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)[1];
+        }
+    }
+    [Ignore]
+    public string LastName
+    {
+        get
+        {
+            return Fio.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)[0];
+        }
+    }
 }

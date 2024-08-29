@@ -37,20 +37,4 @@ public class Employee
     public int? BlockNum { get; set; }
     public string PhotoUrl { get; set; }
     public string BonusType { get; set; }
-    [NotMapped]
-    public string FirstName 
-    {
-        get
-        {
-            return Fio.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)[1];
-        }
-    }
-    [NotMapped]
-    public string LastName
-    {
-        get
-        {
-            return Fio.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)[0];
-        }
-    }
 }
