@@ -8,7 +8,7 @@ namespace KPICatalog.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Policy = "RequireAuthenticatedUser")]
+//[Authorize(Policy = "RequireAuthenticatedUser")]
 public class BonusSchemeController : ControllerBase
 {
     private readonly IBonusSchemeService _service;
