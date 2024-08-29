@@ -133,7 +133,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(corsPolicyName, policy =>
     {
-        policy.WithOrigins("http://srvwe670", "http://srvap869")
+        policy//.WithOrigins("http://srvwe670", "http://srvap869")
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials()
