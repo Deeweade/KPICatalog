@@ -27,7 +27,7 @@ public class EmployeeRepository : IEmployeeRepository
         return await _context.Employees
             .AsNoTracking()
             .ProjectTo<EmployeeDto>(_mapper.ConfigurationProvider)
-            .Where(x => ids.Contains(x.Id))
+            .Where(x => ids.Any(id => id == x.Id))
             .ToListAsync();
     }
 }
