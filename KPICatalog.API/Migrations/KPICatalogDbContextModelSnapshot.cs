@@ -58,7 +58,7 @@ namespace KPICatalog.API.Migrations
 
                     b.HasIndex("PlanningCycleId");
 
-                    b.ToTable("BonusSchemes");
+                    b.ToTable("BonusSchemes", (string)null);
                 });
 
             modelBuilder.Entity("KPICatalog.Domain.Models.Entities.KPICatalog.BonusSchemeLinkMethod", b =>
@@ -74,7 +74,7 @@ namespace KPICatalog.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BonusSchemeLinkMethods");
+                    b.ToTable("BonusSchemeLinkMethods", (string)null);
 
                     b.HasData(
                         new
@@ -129,7 +129,7 @@ namespace KPICatalog.API.Migrations
 
                     b.HasIndex("LinkedObjectTypeId");
 
-                    b.ToTable("BonusSchemeObjectLinks");
+                    b.ToTable("BonusSchemeObjectLinks", (string)null);
                 });
 
             modelBuilder.Entity("KPICatalog.Domain.Models.Entities.KPICatalog.EvaluationMethod", b =>
@@ -145,7 +145,7 @@ namespace KPICatalog.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EvaluationMethods");
+                    b.ToTable("EvaluationMethods", (string)null);
 
                     b.HasData(
                         new
@@ -178,7 +178,7 @@ namespace KPICatalog.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LinkedObjectTypes");
+                    b.ToTable("LinkedObjectTypes", (string)null);
 
                     b.HasData(
                         new
@@ -216,7 +216,7 @@ namespace KPICatalog.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PlanningCycles");
+                    b.ToTable("PlanningCycles", (string)null);
 
                     b.HasData(
                         new
@@ -275,7 +275,7 @@ namespace KPICatalog.API.Migrations
 
                     b.HasIndex("WeightTypeId");
 
-                    b.ToTable("TypicalGoals");
+                    b.ToTable("TypicalGoals", (string)null);
                 });
 
             modelBuilder.Entity("KPICatalog.Domain.Models.Entities.KPICatalog.TypicalGoalInBonusScheme", b =>
@@ -334,7 +334,7 @@ namespace KPICatalog.API.Migrations
 
                     b.HasIndex("TypicalGoalId");
 
-                    b.ToTable("TypicalGoalInBonusSchemes");
+                    b.ToTable("TypicalGoalInBonusSchemes", (string)null);
                 });
 
             modelBuilder.Entity("KPICatalog.Domain.Models.Entities.KPICatalog.UserAccessControl", b =>
@@ -353,7 +353,7 @@ namespace KPICatalog.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserAccessControls");
+                    b.ToTable("UserAccessControls", (string)null);
                 });
 
             modelBuilder.Entity("KPICatalog.Domain.Models.Entities.KPICatalog.WeightType", b =>
@@ -369,7 +369,7 @@ namespace KPICatalog.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WeightTypes");
+                    b.ToTable("WeightTypes", (string)null);
 
                     b.HasData(
                         new
