@@ -4,7 +4,6 @@ using KPICatalog.Domain.Dtos.Entities;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper.QueryableExtensions;
 using AutoMapper;
-using System.Text;
 
 namespace KPICatalog.Infrastructure.Data.Repositories;
 
@@ -25,12 +24,10 @@ public class EmployeeRepository : IEmployeeRepository
 
         ids = ids.Distinct().ToList();
 
-        var query = _context.Employees
+        return await _context.Employees
             .AsNoTracking()
             .ProjectTo<EmployeeDto>(_mapper.ConfigurationProvider)
-            .Where(x => ids.Contains(x.Id));
-            //.ToListAsync();
-
-        return await query.ToListAsync();
+            .Where(x => ids.Contains(x.Id))
+            .ToListAsync();
     }
 }
