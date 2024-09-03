@@ -34,6 +34,7 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
         {
             foreach(var link in links)
             {
+                link.DateEnd = linkView.DateStart ?? DateTime.Now;
                 await _unitOfWork.BonusSchemeObjectLinkRepository.Delete(link);
             }
         }
@@ -44,7 +45,9 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
             BonusSchemeId = linkView.BonusSchemeId,
             LinkedObjectTypeId = linkView.LinkedObjectTypeId,
             LinkedObjectsIds = linkView.LinkedObjectsIds,
-            LinkPercent = linkView.LinkPercent
+            LinkPercent = linkView.LinkPercent,
+            DateStart = linkView.DateStart,
+            DateEnd = linkView.DateEnd
         };
 
         await _unitOfWork.BonusSchemeObjectLinkRepository.BulkCreate(dto);
@@ -66,12 +69,16 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
                 LinkedObjectTypeId = linkView.LinkedObjectTypeId
             },
             x => x);
+        
+        var deletedLinks = new List<BonusSchemeObjectLinkDto>();
 
-        foreach(var link in links.DefaultIfEmpty())
+        foreach(var link in links)
         {
-            await _unitOfWork.BonusSchemeObjectLinkRepository.Delete(link!);
+            var deletedLink = await _unitOfWork.BonusSchemeObjectLinkRepository.Delete(link!);
+
+            deletedLinks.Add(deletedLink);
         }
 
-        return _mapper.Map<IEnumerable<BonusSchemeObjectLinkView>>(links);
+        return _mapper.Map<IEnumerable<BonusSchemeObjectLinkView>>(deletedLinks);
     }
 }

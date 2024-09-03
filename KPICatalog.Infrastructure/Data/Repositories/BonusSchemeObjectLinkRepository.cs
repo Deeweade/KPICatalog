@@ -96,7 +96,7 @@ public class BonusSchemeObjectLinkRepository : IBonusSchemeObjectLinkRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task Delete(BonusSchemeObjectLinkDto linkDto)
+    public async Task<BonusSchemeObjectLinkDto> Delete(BonusSchemeObjectLinkDto linkDto)
     {
         if (linkDto is null) throw new ArgumentNullException(nameof(linkDto));
 
@@ -106,5 +106,7 @@ public class BonusSchemeObjectLinkRepository : IBonusSchemeObjectLinkRepository
         link.IsActive = false;
 
         await _context.SaveChangesAsync();
+
+        return _mapper.Map<BonusSchemeObjectLinkDto>(link);
     }
 }

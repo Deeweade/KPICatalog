@@ -22,5 +22,5 @@ public interface IBonusSchemeObjectLinkRepository
     /// <param name="linkDto"Принимает сущность BonusSchemeObjectLinkDto></param>
     /// <exception cref="ArgumentNullException"></exception>
     Task BulkCreate(BonusSchemeObjectLinkDto linkDto);
-    Task Delete(BonusSchemeObjectLinkDto link);
+    Task<BonusSchemeObjectLinkDto> Delete(BonusSchemeObjectLinkDto link);
 }

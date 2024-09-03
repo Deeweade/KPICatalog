@@ -8,7 +8,7 @@ public class TypicalGoalInBonusSchemeDto : BaseEntityDto
     public decimal Weight { get; set; }
     public decimal Plan { get; set; }
     public int TypeKeyResultId { get; set; }
-    public int EvaluationProvider { get; set; }
+    public int? EvaluationProvider { get; set; }
     public int BonusSchemeLinkMethodId { get; set; }
     public int EvaluationMethodId { get; set; }
     public int RatingScaleId { get; set; }
