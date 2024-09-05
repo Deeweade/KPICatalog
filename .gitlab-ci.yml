@@ -86,5 +86,5 @@ deploy_prod:
     sshpass -p "$REMOTE_PASS" ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} "powershell.exe -Command \"Copy-Item -Recurse -Force '${REMOTE_PATH}\\KPICatalog' '${REMOTE_PATH}\\KPICatalog_backup'\""
     echo "Backup was created successfully"
     echo "Copy current project"
-    sshpass -p "$REMOTE_PASS" scp -o StrictHostKeyChecking=no -r KPICatalog ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH}\\
+    sshpass -p "$REMOTE_PASS" scp -C -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -r KPICatalog ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH}\\
     echo "Project was copied successfully"
