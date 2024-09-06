@@ -81,7 +81,10 @@ deploy_prod:
   script: |
     echo "Deploying to ${env} server"
     echo "Delete backup directory"
+    echo "Delete backup directory"
     sshpass -p "$REMOTE_PASS" ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} "powershell.exe -Command \"if (Test-Path '${REMOTE_PATH}\\KPICatalog_backup') { Remove-Item -Recurse -Force '${REMOTE_PATH}\\KPICatalog_backup' }\"" || true
+    echo "Backup directory was deleted successfully"
+    echo "Make backup"
     echo "Backup directory was deleted successfully"
     echo "Make backup"
     sshpass -p "$REMOTE_PASS" ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} "powershell.exe -Command \"Copy-Item -Recurse -Force '${REMOTE_PATH}\\KPICatalog' '${REMOTE_PATH}\\KPICatalog_backup'\""
