@@ -106,11 +106,13 @@ builder.Services.AddScoped<IBonusSchemeLinkMethodService, BonusSchemeLinkMethodS
 builder.Services.AddScoped<IEvaluationMethodsService, EvaluationMethodsService>();
 builder.Services.AddScoped<IPlanningCyclesService, PlanningCyclesService>();
 builder.Services.AddScoped<IWeightTypesService, WeightTypesService>();
+builder.Services.AddScoped<IRatingScalesService, RatingScalesService>();
 builder.Services.AddScoped<IGoalsService, GoalsService>();
 builder.Services.AddScoped<ExternalAPIConfiguration>();
 
 //repositories
 builder.Services.AddScoped<IRatingScaleValuesRepository, RatingScaleValuesRepository>();
+builder.Services.AddScoped<IRatingScalesRepository, RatingScalesRepository>();
 builder.Services.AddScoped<IGoalsRepository, GoalsRepository>();
 
 builder.Services.AddHttpClient<ApiClient>();
@@ -135,8 +137,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(corsPolicyName, policy =>
     {
-        policy//.WithOrigins("http://srvwe670", "http://srvap869")
-            .AllowAnyMethod()
+        policy.AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials()
             .SetIsOriginAllowed(_ => true);
