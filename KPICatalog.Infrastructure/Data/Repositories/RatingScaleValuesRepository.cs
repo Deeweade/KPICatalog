@@ -9,10 +9,10 @@ namespace KPICatalog.Infrastructure.Data.Repositories;
 
 public class RatingScaleValuesRepository : IRatingScaleValuesRepository
 {
-    private readonly PerfManagementDbContext _context;
+    private readonly KPICatalogDbContext _context;
     private readonly IMapper _mapper;
 
-    public RatingScaleValuesRepository(PerfManagementDbContext context, IMapper mapper)
+    public RatingScaleValuesRepository(KPICatalogDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;

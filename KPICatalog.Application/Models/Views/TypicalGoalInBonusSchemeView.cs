@@ -2,7 +2,7 @@ using AutoMapper.Configuration.Annotations;
 
 namespace KPICatalog.Application.Models.Views;
 
-public class TypicalGoalInBonusSchemeView : BaseEntityView
+public class TypicalGoalInBonusSchemeView : BaseView
 {
     public TypicalGoalInBonusSchemeView()
     {
@@ -29,9 +29,10 @@ public class TypicalGoalInBonusSchemeView : BaseEntityView
 
     public IEnumerable<int> PeriodIds { get; set; }
     public IEnumerable<BonusSchemeObjectLinkView> BonusSchemeObjectLinks { get; set; }
+    public List<BonusSchemeView> BonusSchemes { get; set; }
 
     public TypicalGoalView TypicalGoal { get; set; }
+    public RatingScaleView RatingScale { get; set; }
     public EvaluationMethodView EvaluationMethod { get; set; }
     public BonusSchemeLinkMethodView BonusSchemeLinkMethod { get; set; }
-    public List<BonusSchemeView> BonusSchemes { get; set; }
 }

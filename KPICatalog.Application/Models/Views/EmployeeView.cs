@@ -1,6 +1,6 @@
 ﻿namespace KPICatalog.Application.Models.Views;
 
-public class EmployeeView : BaseEntityView
+public class EmployeeView : BaseView
 {
     public string TabNumber { get; set; }
     public string Fio { get; set; }

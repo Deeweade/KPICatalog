@@ -1,6 +1,6 @@
 namespace KPICatalog.Application.Models.Views;
 
-public abstract class BaseEntityView
+public abstract class BaseView
 {
     public int Id { get; set; }
 }

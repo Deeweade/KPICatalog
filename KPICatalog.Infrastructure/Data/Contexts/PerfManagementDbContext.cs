@@ -14,7 +14,7 @@ public class PerfManagementDbContext : DbContext
 
     public DbSet<Employee> Employees { get; set; }
     public DbSet<Period> Periods { get; set; }
-    public DbSet<RatingScaleValue> RatingScaleValues { get; set; }
+    //public DbSet<RatingScaleValue> RatingScaleValues { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -181,20 +181,6 @@ public class PerfManagementDbContext : DbContext
             };
 
             Periods.AddRange(periods);
-        }
-
-        if (!RatingScaleValues.Any())
-        {
-            var values = new List<RatingScaleValue>
-            {
-                new RatingScaleValue { Id = 1, RatingScaleId = 1, MinimumValue = 0, MaximumValue = 99, RatingPercentage = 0 },
-                new RatingScaleValue { Id = 2, RatingScaleId = 1, MinimumValue = 99, MaximumValue = (decimal)99.8, RatingPercentage = 50 },
-                new RatingScaleValue { Id = 3, RatingScaleId = 1, MinimumValue = (decimal)99.8, MaximumValue = (decimal)99.9, RatingPercentage = 100 },
-                new RatingScaleValue { Id = 4, RatingScaleId = 1, MinimumValue = (decimal)99.9, MaximumValue = (decimal)99.95, RatingPercentage = 105 },
-                new RatingScaleValue { Id = 5, RatingScaleId = 1, MinimumValue = (decimal)99.95, MaximumValue = 100, RatingPercentage = 110 }
-            };
-
-            RatingScaleValues.AddRange(values);
         }
 
         SaveChanges();

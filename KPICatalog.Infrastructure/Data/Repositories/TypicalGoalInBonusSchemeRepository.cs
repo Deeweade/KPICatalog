@@ -34,6 +34,7 @@ public class TypicalGoalInBonusSchemeRepository : ITypicalGoalInBonusSchemeRepos
     {
         return await _context.TypicalGoalInBonusSchemes
             .AsNoTracking()
+            .Include(x => x.RatingScale.Values)
             .ProjectTo<TypicalGoalInBonusSchemeDto>(_mapper.ConfigurationProvider)
             .Where(x => x.TypicalGoalId == goalId)
             .ToListAsync();

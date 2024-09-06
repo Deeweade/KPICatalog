@@ -2,7 +2,7 @@
 
 namespace KPICatalog.Domain.Dtos.Entities;
 
-public class EmployeeDto : BaseEntityDto
+public class EmployeeDto : BaseDto
 {
     public string TabNumber { get; set; }
     public string Fio { get; set; }

@@ -1,6 +1,6 @@
 namespace KPICatalog.Application.Models.Views;
 
-public abstract class HistoryEntityView : BaseEntityView
+public abstract class HistoryEntityView : BaseView
 {
     public DateTime? DateStart { get; set; }
     public DateTime? DateEnd { get; set; }

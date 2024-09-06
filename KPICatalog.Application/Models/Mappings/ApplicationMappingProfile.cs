@@ -10,87 +10,27 @@ public class ApplicationMappingProfile : Profile
 {
     public ApplicationMappingProfile()
     {
-        CreateTypicalGoalInBonusSchemeMappings();
-        CreateTypicalGoalMappings();
-        CreateEmployeeMappings();
-        CreateBonusSchemeMappings();
-        CreateBonusSchemeObjectLinkMappings();
-        CreateBonusShemeLinkMethodMappings();
-        CreateEvaluationMethodMappings();
-        CreateBonusSchemeLinkMethodMappings();
-        CreatePlanningCycleMappings();
-        CreateWeightTypeMappings();
-    }
-
-    private void CreateBonusSchemeLinkMethodMappings()
-    {
-        CreateMap<BonusSchemeLinkMethodView, BonusSchemeLinkMethodDto>();
-        CreateMap<BonusSchemeLinkMethodDto, BonusSchemeLinkMethodView>();
-    }
-
-    private void CreatePlanningCycleMappings()
-    {
-        CreateMap<PlanningCycleView, PlanningCycleDto>();
-        CreateMap<PlanningCycleDto, PlanningCycleView>();
-    }
-
-    private void CreateWeightTypeMappings()
-    {
-        CreateMap<WeightTypeView, WeightTypeDto>();
-        CreateMap<WeightTypeDto, WeightTypeView>();
-    }
-
-    private void CreateBonusShemeLinkMethodMappings()
-    {
-        CreateMap<BonusSchemeLinkMethodView, BonusSchemeLinkMethodDto>();
-        CreateMap<BonusSchemeLinkMethodDto, BonusSchemeLinkMethodView>();
-    }
-
-    private void CreateEvaluationMethodMappings()
-    {
-        CreateMap<EvaluationMethodView, EvaluationMethodDto>();
-        CreateMap<EvaluationMethodDto, EvaluationMethodView>();
-    }
-
-    private void CreateTypicalGoalInBonusSchemeMappings()
-    {
+        CreateMap<BonusSchemeLinkMethodView, BonusSchemeLinkMethodDto>().ReverseMap();
+        CreateMap<BonusSchemeObjectLinkView, BonusSchemeObjectLinkDto>().ReverseMap();
+        CreateMap<BonusSchemeLinkMethodView, BonusSchemeLinkMethodDto>().ReverseMap();
+        CreateMap<BonusSchemeFilterView, BonusSchemeFilterDto>().ReverseMap();
+        CreateMap<EvaluationMethodView, EvaluationMethodDto>().ReverseMap();
+        CreateMap<RatingScaleValueView, RatingScaleValueDto>().ReverseMap();
+        CreateMap<PlanningCycleView, PlanningCycleDto>().ReverseMap();
+        CreateMap<BonusSchemeView, BonusSchemeDto>().ReverseMap();
+        CreateMap<TypicalGoalView, TypicalGoalDto>().ReverseMap();
+        CreateMap<WeightTypeView, WeightTypeDto>().ReverseMap();
+        CreateMap<EmployeeView, EmployeeDto>().ReverseMap();
+        
+        CreateMap<RatingScaleView, RatingScaleDto>()
+            .ForMember(dest => dest.Values, opt => opt.MapFrom(src => src.Values))
+            .ReverseMap();
+        
         CreateMap<TypicalGoalInBonusSchemeView, TypicalGoalInBonusSchemeDto>()
             .ForMember(dest => dest.EvaluationMethod, opt => opt.MapFrom(src => src.EvaluationMethod))
             .ForMember(dest => dest.BonusSchemeLinkMethod, opt => opt.MapFrom(src => src.BonusSchemeLinkMethod))
-            .ForMember(dest => dest.TypicalGoal, opt => opt.MapFrom(src => src.TypicalGoal));
-        CreateMap<TypicalGoalInBonusSchemeDto, TypicalGoalInBonusSchemeView>()
-            .ForMember(dest => dest.EvaluationMethod, opt => opt.MapFrom(src => src.EvaluationMethod))
-            .ForMember(dest => dest.BonusSchemeLinkMethod, opt => opt.MapFrom(src => src.BonusSchemeLinkMethod))
-            .ForMember(dest => dest.TypicalGoal, opt => opt.MapFrom(src => src.TypicalGoal));
-    }
-
-    private void CreateTypicalGoalMappings()
-    {
-        CreateMap<TypicalGoalView, TypicalGoalDto>();
-        CreateMap<TypicalGoalDto, TypicalGoalView>();
-    }
-
-    private void CreateEmployeeMappings()
-    {
-        CreateMap<EmployeeView, EmployeeDto>();
-        CreateMap<EmployeeDto, EmployeeView>();
-    }
-
-    private void CreateBonusSchemeObjectLinkMappings()
-    {
-        //entities
-        CreateMap<BonusSchemeObjectLinkView, BonusSchemeObjectLinkDto>();
-        CreateMap<BonusSchemeObjectLinkDto, BonusSchemeObjectLinkView>();
-    }
-
-    private void CreateBonusSchemeMappings()
-    {
-        //filters
-        CreateMap<BonusSchemeFilterView, BonusSchemeFilterDto>();
-        CreateMap<BonusSchemeFilterDto, BonusSchemeFilterView>();
-
-        //entities
-        CreateMap<BonusSchemeView, BonusSchemeDto>();
-        CreateMap<BonusSchemeDto, BonusSchemeView>();
+            .ForMember(dest => dest.TypicalGoal, opt => opt.MapFrom(src => src.TypicalGoal))
+            .ForMember(dest => dest.RatingScale, opt => opt.MapFrom(src => src.RatingScale))
+            .ReverseMap();
     }
 }
