@@ -20,12 +20,27 @@ public class EvaluationCalculator : IEvaluationCalculator
         switch (evaluationMethod)
         {
             case EvaluationMethods.Direct:
-                result = fact / plan * 100;
+                if (plan > 0)
+                {
+                    result = fact / plan * 100;
+                }
+                else
+                {
+                    result = (1 + (plan - fact) / plan) * 100;
+                }
                 break;
             case EvaluationMethods.Inverse:
-                var evaluation = (1 + (plan - fact) / plan) * 100;
+                // var evaluation = (1 + (plan - fact) / plan) * 100;
 
-                result = evaluation >= 0 ? evaluation : 0;
+                // result = evaluation >= 0 ? evaluation : 0;
+                if (plan > 0)
+                {
+                    result = (1 + (plan - fact) / plan) * 100;
+                }
+                else
+                {
+                    result = fact / plan * 100;
+                }
                 break;
             case EvaluationMethods.RatingScale:
                 var dto = await _repository.Get((int)ratingScaleId, fact);
