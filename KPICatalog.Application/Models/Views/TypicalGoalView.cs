@@ -1,6 +1,6 @@
 namespace KPICatalog.Application.Models.Views;
 
-public class TypicalGoalView : BaseEntityView
+public class TypicalGoalView : BaseView
 {
     public TypicalGoalView()
     {

@@ -15,6 +15,7 @@ public class TypicalGoalInBonusScheme : BaseEntity
     public decimal? Fact { get; set; }
     public decimal? Evaluation { get; set; }
 
+    public virtual RatingScale RatingScale { get; set; }
     public virtual TypicalGoal TypicalGoal { get; set; }
     public virtual EvaluationMethod EvaluationMethod { get; set; }
     public virtual BonusSchemeLinkMethod BonusSchemeLinkMethod { get; set; }

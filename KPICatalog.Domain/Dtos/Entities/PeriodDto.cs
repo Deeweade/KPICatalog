@@ -1,6 +1,6 @@
 ﻿namespace KPICatalog.Domain.Dtos.Entities;
 
-public class PeriodDto : BaseEntityDto
+public class PeriodDto : BaseDto
 {
     public string Title { get; set; }
     public DateTime? DateStart { get; set; }

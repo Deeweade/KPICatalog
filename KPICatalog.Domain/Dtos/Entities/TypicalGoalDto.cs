@@ -1,6 +1,6 @@
 namespace KPICatalog.Domain.Dtos.Entities;
 
-public class TypicalGoalDto : BaseEntityDto
+public class TypicalGoalDto : BaseDto
 {
     public string Title { get; set; }
     public int PlanningCycleId { get; set; }

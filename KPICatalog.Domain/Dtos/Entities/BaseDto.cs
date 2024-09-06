@@ -1,6 +1,6 @@
 namespace KPICatalog.Domain.Dtos.Entities;
 
-public abstract class BaseEntityDto
+public abstract class BaseDto
 {
     public int Id { get; set; }
 }

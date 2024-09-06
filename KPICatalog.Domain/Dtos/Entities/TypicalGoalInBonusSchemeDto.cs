@@ -1,6 +1,6 @@
 namespace KPICatalog.Domain.Dtos.Entities;
 
-public class TypicalGoalInBonusSchemeDto : BaseEntityDto
+public class TypicalGoalInBonusSchemeDto : BaseDto
 {
     public int TypicalGoalId { get; set; }
     public int ParentBSTypicalGoalId { get; set; }
@@ -16,7 +16,8 @@ public class TypicalGoalInBonusSchemeDto : BaseEntityDto
     public decimal? Evaluation { get; set; }
 
     public PeriodDto Period { get; set; }
+    public RatingScaleDto RatingScale { get; set; }
+    public TypicalGoalDto TypicalGoal { get; set; }
     public EvaluationMethodDto EvaluationMethod { get; set; }
     public BonusSchemeLinkMethodDto BonusSchemeLinkMethod { get; set; }
-    public TypicalGoalDto TypicalGoal { get; set; }
 }

@@ -21,6 +21,8 @@ public class KPICatalogDbContext : DbContext
     public DbSet<WeightType> WeightTypes { get; set; }
     public DbSet<BonusSchemeLinkMethod> BonusSchemeLinkMethods { get; set; }
     public DbSet<EvaluationMethod> EvaluationMethods { get; set; }
+    public DbSet<RatingScale> RatingScales { get; set; }
+    public DbSet<RatingScaleValue> RatingScaleValues { get; set; }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -43,6 +45,14 @@ public class KPICatalogDbContext : DbContext
 
         modelBuilder.Entity<TypicalGoalInBonusScheme>()
             .Property(p => p.Weight)
+            .HasPrecision(18, 3);
+
+        modelBuilder.Entity<RatingScaleValue>()
+            .Property(p => p.MinimumValue)
+            .HasPrecision(18, 3);
+
+        modelBuilder.Entity<RatingScaleValue>()
+            .Property(p => p.MaximumValue)
             .HasPrecision(18, 3);
 
         Seed(modelBuilder);
