@@ -18,7 +18,7 @@ public class TypicalGoalInBonusSchemeView : BaseView
     public int? EvaluationProvider { get; set; }
     public int BonusSchemeLinkMethodId { get; set; }
     public int EvaluationMethodId { get; set; }
-    public int RatingScaleId { get; set; }
+    public int? RatingScaleId { get; set; }
     public decimal? Fact { get; set; }
     public decimal? Evaluation { get; set; }
 
