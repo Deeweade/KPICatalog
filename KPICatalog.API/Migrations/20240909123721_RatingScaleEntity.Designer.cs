@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KPICatalog.API.Migrations
 {
     [DbContext(typeof(KPICatalogDbContext))]
-    [Migration("20240909081204_RatingScaleId_NullableValue")]
-    partial class RatingScaleId_NullableValue
+    [Migration("20240909123721_RatingScaleEntity")]
+    partial class RatingScaleEntity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -474,7 +474,7 @@ namespace KPICatalog.API.Migrations
                     b.HasOne("KPICatalog.Domain.Models.Entities.KPICatalog.RatingScale", "RatingScale")
                         .WithMany("Values")
                         .HasForeignKey("RatingScaleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("RatingScale");
@@ -515,7 +515,8 @@ namespace KPICatalog.API.Migrations
 
                     b.HasOne("KPICatalog.Domain.Models.Entities.KPICatalog.RatingScale", "RatingScale")
                         .WithMany("Goals")
-                        .HasForeignKey("RatingScaleId");
+                        .HasForeignKey("RatingScaleId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KPICatalog.Domain.Models.Entities.KPICatalog.TypicalGoal", "TypicalGoal")
                         .WithMany("TypicalGoalInBonusSchemes")

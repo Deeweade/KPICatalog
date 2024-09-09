@@ -10,6 +10,14 @@ namespace KPICatalog.API.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterColumn<int>(
+                name: "RatingScaleId",
+                table: "TypicalGoalInBonusSchemes",
+                type: "int",
+                nullable: true,
+                oldClrType: typeof(int),
+                oldType: "int");
+
             migrationBuilder.CreateTable(
                 name: "RatingScales",
                 columns: table => new
@@ -42,7 +50,7 @@ namespace KPICatalog.API.Migrations
                         column: x => x.RatingScaleId,
                         principalTable: "RatingScales",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -61,7 +69,7 @@ namespace KPICatalog.API.Migrations
                 column: "RatingScaleId",
                 principalTable: "RatingScales",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
         }
 
         /// <inheritdoc />
@@ -80,6 +88,16 @@ namespace KPICatalog.API.Migrations
             migrationBuilder.DropIndex(
                 name: "IX_TypicalGoalInBonusSchemes_RatingScaleId",
                 table: "TypicalGoalInBonusSchemes");
+
+            migrationBuilder.AlterColumn<int>(
+                name: "RatingScaleId",
+                table: "TypicalGoalInBonusSchemes",
+                type: "int",
+                nullable: false,
+                defaultValue: 0,
+                oldClrType: typeof(int),
+                oldType: "int",
+                oldNullable: true);
         }
     }
 }

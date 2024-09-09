@@ -471,7 +471,7 @@ namespace KPICatalog.API.Migrations
                     b.HasOne("KPICatalog.Domain.Models.Entities.KPICatalog.RatingScale", "RatingScale")
                         .WithMany("Values")
                         .HasForeignKey("RatingScaleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("RatingScale");
@@ -512,7 +512,8 @@ namespace KPICatalog.API.Migrations
 
                     b.HasOne("KPICatalog.Domain.Models.Entities.KPICatalog.RatingScale", "RatingScale")
                         .WithMany("Goals")
-                        .HasForeignKey("RatingScaleId");
+                        .HasForeignKey("RatingScaleId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KPICatalog.Domain.Models.Entities.KPICatalog.TypicalGoal", "TypicalGoal")
                         .WithMany("TypicalGoalInBonusSchemes")

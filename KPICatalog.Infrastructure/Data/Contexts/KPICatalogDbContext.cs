@@ -55,6 +55,18 @@ public class KPICatalogDbContext : DbContext
             .Property(p => p.MaximumValue)
             .HasPrecision(18, 3);
 
+        modelBuilder.Entity<RatingScaleValue>()
+            .HasOne(t => t.RatingScale)
+            .WithMany(r => r.Values)
+            .HasForeignKey(t => t.RatingScaleId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<TypicalGoalInBonusScheme>()
+            .HasOne(t => t.RatingScale)
+            .WithMany(r => r.Goals)
+            .HasForeignKey(t => t.RatingScaleId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         Seed(modelBuilder);
 
         base.OnModelCreating(modelBuilder);
