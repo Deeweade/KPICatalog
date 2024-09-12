@@ -1,4 +1,5 @@
 ﻿using KPICatalog.Application.Interfaces.Services;
+using KPICatalog.Application.Models.Views;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,9 +23,9 @@ public class UserAccessController : ControllerBase
         return await _service.HasAccess(login);        
     }
 
-    [HttpGet("test")]
-    public string Test()
+    [HttpGet("allowedAccesses/{login}")]
+    public async Task<AllowedAccessesView> GetAllowedAccesses(string login)
     {
-        return User.Identity.Name;
+        return await _service.GetAllowedAccesses(login);        
     }
 }

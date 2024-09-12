@@ -37,4 +37,6 @@ public class Employee
     public int? BlockNum { get; set; }
     public string PhotoUrl { get; set; }
     public string BonusType { get; set; }
+
+    public virtual ICollection<EmployeeRole> Roles { get; set; }
 }

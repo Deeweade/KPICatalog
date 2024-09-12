@@ -16,14 +16,17 @@ public class UnitOfWork : IUnitOfWork
         UserAccessControlRepository = new UserAccessControlRepository(_kpiCatalogContext, mapper);
         BonusSchemeRepository = new BonusSchemeRepository(_kpiCatalogContext, mapper);
         BonusSchemeObjectLinkRepository = new BonusSchemeObjectLinkRepository(_kpiCatalogContext, mapper);
-        EmployeeRepository = new EmployeeRepository(perfManagementContext, mapper);
-        PeriodsRepository = new PeriodsRepository(perfManagementContext, mapper);
         TypicalGoalRepository = new TypicalGoalRepository(_kpiCatalogContext, mapper);
         TypicalGoalInBonusSchemeRepository = new TypicalGoalInBonusSchemeRepository(_kpiCatalogContext, mapper);
         WeightTypesRepository = new WeightTypesRepository(_kpiCatalogContext, mapper);
         BonusSchemeLinkMethodRepository = new BonusSchemeLinkMethodRepository(_kpiCatalogContext, mapper);
         PlanningCyclesRepository = new PlanningCyclesRepository(_kpiCatalogContext, mapper);
         EvaluationMethodsRepository = new EvaluationMethodsRepository(_kpiCatalogContext, mapper);
+
+        EmployeeRepository = new EmployeeRepository(perfManagementContext, mapper);
+        PeriodsRepository = new PeriodsRepository(perfManagementContext, mapper);
+        EmployeeRolesRepository = new EmployeeRolesRepository(perfManagementContext, mapper);
+        RoleAllowedActionsRepository = new RoleAllowedActionsRepository(perfManagementContext, mapper);
     }
 
     public IUserAccessControlRepository UserAccessControlRepository { get; }
@@ -38,6 +41,8 @@ public class UnitOfWork : IUnitOfWork
 
     public IEmployeeRepository EmployeeRepository { get; }
     public IPeriodsRepository PeriodsRepository { get; }
+    public IEmployeeRolesRepository EmployeeRolesRepository { get; }
+    public IRoleAllowedActionsRepository RoleAllowedActionsRepository { get; }
 
     public async Task<int> SaveChangesAsync()
     {
