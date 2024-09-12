@@ -5,7 +5,6 @@ using KPICatalog.Domain.Dtos.Entities;
 using KPICatalog.Domain.Models.Enums;
 using KPICatalog.Domain.Dtos.Filters;
 using AutoMapper;
-using System.Security.Cryptography.X509Certificates;
 
 namespace KPICatalog.Application.Services;
 
@@ -87,6 +86,26 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
         }
 
         return result;
+    }
+
+    public async Task<TypicalGoalInBonusSchemeView> Create(TypicalGoalInBonusSchemeView view)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+
+        var goal = _mapper.Map<TypicalGoalInBonusSchemeDto>(view);
+
+        goal = await _unitOfWork.TypicalGoalInBonusSchemeRepository.Create(goal);
+
+        var link = new BonusSchemeObjectLinkDto
+        {
+            LinkedObjectId = goal.Id,
+            LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal,
+            BonusSchemeId = view.BonusSchemeId
+        };
+
+        await _unitOfWork.BonusSchemeObjectLinkRepository.Create(link);
+
+        return _mapper.Map<TypicalGoalInBonusSchemeView>(goal);
     }
 
     public async Task BulkCreate(ICollection<int> bonusSchemesIds, ICollection<TypicalGoalView> typicalGoals)

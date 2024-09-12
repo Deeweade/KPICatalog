@@ -53,6 +53,16 @@ public class TypicalGoalInBonusSchemeController : ControllerBase
         return Ok(goals);
     }
 
+    [HttpPost("create")]
+    public async Task<IActionResult> Create(TypicalGoalInBonusSchemeView view)
+    {
+        if (view is null) throw new ArgumentNullException(nameof(view));
+
+        var goal = await _service.Create(view);
+
+        return Ok(goal);
+    }
+
     [HttpPost("create/bulk")]
     public async Task<IActionResult> BulkCreate(TypicalGoalsInBSBulkCreateView view)
     {
