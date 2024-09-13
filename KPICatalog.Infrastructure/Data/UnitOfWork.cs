@@ -2,6 +2,7 @@ using KPICatalog.Infrastructure.Data.Repositories;
 using KPICatalog.Domain.Interfaces.Repositories;
 using KPICatalog.Infrastructure.Data.Contexts;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace KPICatalog.Infrastructure;
 
@@ -38,6 +39,11 @@ public class UnitOfWork : IUnitOfWork
 
     public IEmployeeRepository EmployeeRepository { get; }
     public IPeriodsRepository PeriodsRepository { get; }
+
+    public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
+    {
+        return _kpiCatalogContext.Database.BeginTransactionAsync();
+    }
 
     public async Task<int> SaveChangesAsync()
     {

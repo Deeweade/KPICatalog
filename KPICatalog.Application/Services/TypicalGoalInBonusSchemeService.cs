@@ -92,20 +92,32 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
     {
         ArgumentNullException.ThrowIfNull(view);
 
-        var goal = _mapper.Map<TypicalGoalInBonusSchemeDto>(view);
-
-        goal = await _unitOfWork.TypicalGoalInBonusSchemeRepository.Create(goal);
-
-        var link = new BonusSchemeObjectLinkDto
+        using (var transaction = await _unitOfWork.BeginTransactionAsync())
         {
-            LinkedObjectId = goal.Id,
-            LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal,
-            BonusSchemeId = view.BonusSchemeId
-        };
+            try
+            {
+                var goal = _mapper.Map<TypicalGoalInBonusSchemeDto>(view);
+                goal = await _unitOfWork.TypicalGoalInBonusSchemeRepository.Create(goal);
 
-        await _unitOfWork.BonusSchemeObjectLinkRepository.Create(link);
+                var link = new BonusSchemeObjectLinkDto
+                {
+                    LinkedObjectId = goal.Id,
+                    LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal,
+                    BonusSchemeId = view.BonusSchemeId
+                };
+                await _unitOfWork.BonusSchemeObjectLinkRepository.Create(link);
 
-        return _mapper.Map<TypicalGoalInBonusSchemeView>(goal);
+                await transaction.CommitAsync();
+
+                
+                return _mapper.Map<TypicalGoalInBonusSchemeView>(goal);
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
     }
 
     public async Task BulkCreate(ICollection<int> bonusSchemesIds, ICollection<TypicalGoalView> typicalGoals)

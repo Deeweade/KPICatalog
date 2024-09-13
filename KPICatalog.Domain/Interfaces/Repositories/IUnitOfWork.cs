@@ -1,4 +1,6 @@
-﻿namespace KPICatalog.Domain.Interfaces.Repositories;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+
+namespace KPICatalog.Domain.Interfaces.Repositories;
 
 public interface IUnitOfWork
 {
@@ -17,5 +19,6 @@ public interface IUnitOfWork
     IEmployeeRepository EmployeeRepository { get; }
     IPeriodsRepository PeriodsRepository { get; }
 
+    Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default);
     Task<int> SaveChangesAsync();
 }
