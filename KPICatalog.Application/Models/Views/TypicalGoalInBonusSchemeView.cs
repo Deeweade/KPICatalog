@@ -21,6 +21,7 @@ public class TypicalGoalInBonusSchemeView : BaseView
     public int? RatingScaleId { get; set; }
     public decimal? Fact { get; set; }
     public decimal? Evaluation { get; set; }
+    public int BonusSchemeId { get; set; }
 
     [Ignore]
     public string Title { get; set; }
