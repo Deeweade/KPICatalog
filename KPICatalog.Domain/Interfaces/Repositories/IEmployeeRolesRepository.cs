@@ -7,5 +7,5 @@ namespace KPICatalog.Domain.Interfaces.Repositories;
 
 public interface IEmployeeRolesRepository
 {
-    Task<List<TResult>> GetByQuery<TResult>(EmployeeRolesQueryDto employeeRolesQueryDto, Expression<Func<EmployeeRolesDto, TResult>> select = null);
+    Task<List<TResult>> GetByQuery<TResult>(EmployeeRolesQueryDto employeeRolesQueryDto, Expression<Func<EmployeeRoleDto, TResult>> select = null);
 }

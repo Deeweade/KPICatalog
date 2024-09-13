@@ -35,6 +35,8 @@ public class UserAccessControlService : IUserAccessControlService
 
         var employee = await _unitOfWork.EmployeeRepository.GetByLogin(login);
 
+        if (employee is null) throw new NotFoundException($"Employee with login '{login}' was not found!");
+
         var roles = await _unitOfWork.EmployeeRolesRepository.GetByQuery(new EmployeeRolesQueryDto
         {
              EmployeeIds = new List<int> { employee.Id },

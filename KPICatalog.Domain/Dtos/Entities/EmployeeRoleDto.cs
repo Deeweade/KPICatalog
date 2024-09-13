@@ -1,6 +1,6 @@
 namespace KPICatalog.Domain.Dtos.Entities;
 
-public class EmployeeRolesDto
+public class EmployeeRoleDto
 {
     public int Id { get; set; }
     public int RoleId { get; set; }

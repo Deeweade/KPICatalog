@@ -21,6 +21,8 @@ public class ApplicationMappingProfile : Profile
         CreateMap<TypicalGoalView, TypicalGoalDto>().ReverseMap();
         CreateMap<WeightTypeView, WeightTypeDto>().ReverseMap();
         CreateMap<EmployeeView, EmployeeDto>().ReverseMap();
+        CreateMap<ActionView, ActionDto>().ReverseMap();
+        CreateMap<RoleView, RoleDto>().ReverseMap();
         
         CreateMap<RatingScaleView, RatingScaleDto>()
             .ForMember(dest => dest.Values, opt => opt.MapFrom(src => src.Values))

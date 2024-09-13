@@ -21,13 +21,13 @@ public class EmployeeRolesRepository : IEmployeeRolesRepository
     }
 
     public async Task<List<TResult>> GetByQuery<TResult>(EmployeeRolesQueryDto queryDto, 
-        Expression<Func<EmployeeRolesDto, TResult>> select = null)
+        Expression<Func<EmployeeRoleDto, TResult>> select = null)
     {
         ArgumentNullException.ThrowIfNull(queryDto);
 
         var query = _context.EmployeeRoles
             .AsNoTracking()
-            .ProjectTo<EmployeeRolesDto>(_mapper.ConfigurationProvider);
+            .ProjectTo<EmployeeRoleDto>(_mapper.ConfigurationProvider);
 
         if (queryDto.RoleIds is not null)
         {
