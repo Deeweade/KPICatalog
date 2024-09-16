@@ -18,6 +18,16 @@ public class EmployeeRepository : IEmployeeRepository
         _mapper = mapper;
     }
 
+    public async Task<EmployeeDto> GetByLogin(string login)
+    {
+        ArgumentNullException.ThrowIfNull(login);
+
+        return await _context.Employees
+            .AsNoTracking()
+            .ProjectTo<EmployeeDto>(_mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync(x => x.Login.Equals(login));
+    }
+
     public async Task<IEnumerable<EmployeeDto>> GetByIds(List<int> ids)
     {
         if (ids is null) throw new ArgumentNullException(nameof(ids));

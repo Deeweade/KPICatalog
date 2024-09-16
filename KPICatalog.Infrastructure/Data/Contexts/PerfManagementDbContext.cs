@@ -12,9 +12,11 @@ public class PerfManagementDbContext : DbContext
         Initialize();
     }
 
-    public DbSet<Employee> Employees { get; set; }
     public DbSet<Period> Periods { get; set; }
-    //public DbSet<RatingScaleValue> RatingScaleValues { get; set; }
+    public DbSet<Employee> Employees { get; set; }
+    public DbSet<EmployeeRole> EmployeeRoles { get; set; }
+    public DbSet<RoleAllowedAction> RoleAllowedActions { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

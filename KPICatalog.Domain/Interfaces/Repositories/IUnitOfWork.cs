@@ -14,6 +14,8 @@ public interface IUnitOfWork
     IBonusSchemeLinkMethodRepository BonusSchemeLinkMethodRepository { get; }
     IPlanningCyclesRepository PlanningCyclesRepository { get; }
     IEvaluationMethodsRepository EvaluationMethodsRepository { get; }
+    IEmployeeRolesRepository EmployeeRolesRepository { get; }
+    IRoleAllowedActionsRepository RoleAllowedActionsRepository { get; }
 
     //PerfManagement
     IEmployeeRepository EmployeeRepository { get; }
