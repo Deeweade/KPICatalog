@@ -7,7 +7,7 @@ namespace KPICatalog.Domain.Interfaces.Repositories;
 
 public interface IBonusSchemeObjectLinkRepository
 {
-    Task<List<TResult>> GetByFilter<TResult>(BonusSchemeObjectLinkFilterDto filter, Expression<Func<BonusSchemeObjectLinkDto, TResult>> select = null);
+    Task<List<TResult>> GetByFilter<TResult>(BonusSchemeObjectLinkQueryDto query, Expression<Func<BonusSchemeObjectLinkDto, TResult>> select = null);
     
     /// <summary>
     /// Создает одну запись в БД для значения в BonusSchemeObjectLinkDto.LinkedObjectsId

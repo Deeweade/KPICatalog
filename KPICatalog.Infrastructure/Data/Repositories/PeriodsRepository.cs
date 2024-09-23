@@ -25,4 +25,12 @@ public class PeriodsRepository : IPeriodsRepository
             .ProjectTo<PeriodDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
     }
+
+    public async Task<PeriodDto> GetById(int periodId)
+    {
+        return await _context.Periods
+            .AsNoTracking()
+            .ProjectTo<PeriodDto>(_mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync(x => x.Id == periodId);
+    }
 }

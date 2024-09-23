@@ -1,8 +1,8 @@
-﻿using KPICatalog.Domain.Models.Entities.KPICatalog;
+﻿using Action = KPICatalog.Domain.Models.Entities.Goals.Action;
+using KPICatalog.Domain.Models.Entities.KPICatalog;
 using KPICatalog.Domain.Models.Entities.Goals;
 using KPICatalog.Domain.Dtos.Entities;
 using AutoMapper;
-using Action = KPICatalog.Domain.Models.Entities.Goals.Action;
 
 namespace KPICatalog.Infrastructure.Models.Mappings;
 
@@ -10,7 +10,6 @@ public class InfrastructureMappingProfile : Profile
 {
     public InfrastructureMappingProfile()
     {
-        CreateMap<BonusSchemeObjectLink, BonusSchemeObjectLinkDto>().ReverseMap();
         CreateMap<BonusSchemeLinkMethod, BonusSchemeLinkMethodDto>().ReverseMap();
         CreateMap<UserAccessControl, UserAccessControlDto>().ReverseMap();
         CreateMap<RoleAllowedAction, RoleAllowedActionDto>().ReverseMap();
@@ -28,6 +27,11 @@ public class InfrastructureMappingProfile : Profile
         
         CreateMap<RatingScale, RatingScaleDto>()
             .ForMember(dest => dest.Values, opt => opt.MapFrom(src => src.Values))
+            .ReverseMap();
+
+        CreateMap<BonusSchemeObjectLinkDto, BonusSchemeObjectLink>()
+            .ForMember(dest => dest.BonusScheme, opt => opt.MapFrom(src => src.BonusScheme))
+            .ForMember(dest => dest.LinkedObjectType, opt => opt.Ignore())
             .ReverseMap();
 
         CreateMap<TypicalGoalInBonusScheme, TypicalGoalInBonusSchemeDto>()

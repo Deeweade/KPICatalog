@@ -21,28 +21,42 @@ public class BonusSchemeObjectLinkRepository : IBonusSchemeObjectLinkRepository
         _mapper = mapper;
     }
 
-    public async Task<List<TResult>> GetByFilter<TResult>(BonusSchemeObjectLinkFilterDto filter, Expression<Func<BonusSchemeObjectLinkDto, TResult>> select = null)
+    public async Task<List<TResult>> GetByFilter<TResult>(BonusSchemeObjectLinkQueryDto queryDto, Expression<Func<BonusSchemeObjectLinkDto, TResult>> select = null)
     {
-        if (filter is null) throw new ArgumentNullException(nameof(filter));
+        if (queryDto is null) throw new ArgumentNullException(nameof(queryDto));
 
         var query = _context.BonusSchemeObjectLinks
             .AsNoTracking()
-            .ProjectTo<BonusSchemeObjectLinkDto>(_mapper.ConfigurationProvider)
-            .Where(x => x.IsActive);
+            .ProjectTo<BonusSchemeObjectLinkDto>(_mapper.ConfigurationProvider);
 
-        if (filter.LinkedObjectsIds != null && filter.LinkedObjectsIds.Any())
+        if (queryDto.IsActive is not null)
         {
-            query = query.Where(x => filter.LinkedObjectsIds.Any(id => id == x.LinkedObjectId));
+            query = query.Where(x => x.IsActive == queryDto.IsActive);
         }
 
-        if (filter.BonusSchemeId is not null)
+        if (queryDto.LinkedObjectsIds != null && queryDto.LinkedObjectsIds.Any())
         {
-            query = query.Where(x => x.BonusSchemeId == filter.BonusSchemeId);
+            query = query.Where(x => queryDto.LinkedObjectsIds.Any(id => id == x.LinkedObjectId));
         }
 
-        if (filter.LinkedObjectTypeId is not null)
+        if (queryDto.BonusSchemeId is not null)
         {
-            query = query.Where(x => x.LinkedObjectTypeId == filter.LinkedObjectTypeId);    
+            query = query.Where(x => x.BonusSchemeId == queryDto.BonusSchemeId);
+        }
+
+        if (queryDto.LinkedObjectTypeId is not null)
+        {
+            query = query.Where(x => x.LinkedObjectTypeId == queryDto.LinkedObjectTypeId);    
+        }
+
+        if (queryDto.EffectiveDate is not null)
+        {
+            query = query.Where(x => x.DateStart <= queryDto.EffectiveDate && x.DateEnd > queryDto.EffectiveDate);
+        }
+
+        if (queryDto.PeriodDateStart is not null && queryDto.PeriodDateEnd is not null)
+        {
+            query = query.Where(x => x.DateEnd >= queryDto.PeriodDateStart && x.DateStart <= queryDto.PeriodDateEnd);
         }
 
         if (select is not null)

@@ -35,9 +35,9 @@ public class BonusSchemeController : ControllerBase
     }
 
     [HttpPost("getFiltered")]
-    public async Task<IActionResult> GetFiltered(BonusSchemeFilterView filter)
+    public async Task<IActionResult> GetFiltered(BonusSchemeQueryView filter)
     {
-        if (filter is null) filter = new BonusSchemeFilterView();
+        if (filter is null) filter = new BonusSchemeQueryView();
 
         var schemes = await _service.GetByFilter(filter);
 

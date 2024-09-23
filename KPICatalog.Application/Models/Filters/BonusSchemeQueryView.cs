@@ -4,7 +4,7 @@
 /// Фильтр для метода GetByFilter в сервисе BonusSchemeService
 /// Содержит свойства, задающие фильтрацию для выборки элементов на уровне Application и Infrastructure
 /// </summary>
-public class BonusSchemeFilterView
+public class BonusSchemeQueryView
 {
     /// <summary>
     /// Указывает, что должны быть выбраны только активные записи

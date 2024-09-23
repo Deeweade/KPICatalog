@@ -1,4 +1,5 @@
 ﻿using KPICatalog.Application.Interfaces.Services;
+using KPICatalog.Application.Models.Filters;
 using KPICatalog.Application.Models.Views;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,15 @@ public class BonusSchemeObjectLinkController : ControllerBase
     {
         _service = service;
     }
+
+    [HttpPost("filtered")]
+    public async Task<List<BonusSchemeObjectLinkView>> GetFiltered(BonusSchemeObjectLinkQueryView view)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+
+        return await _service.GetByQuery(view);
+    }
+
 
     [HttpPost("create/bulk")]
     public async Task<IActionResult> BulkPost(BonusSchemeObjectLinkView linkView)
