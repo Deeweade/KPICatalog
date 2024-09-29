@@ -28,7 +28,7 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
 
         if(goals is null) return null;
 
-        var filter = new BonusSchemeObjectLinkFilterDto
+        var filter = new BonusSchemeObjectLinkQueryDto
         {
             LinkedObjectsIds = goals.Select(x => x.Id).ToList(),
             LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal
@@ -57,7 +57,7 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
     {
         if (bonusSchemeId <= 0) throw new ArgumentOutOfRangeException(nameof(bonusSchemeId));
 
-        var filter = new BonusSchemeObjectLinkFilterDto
+        var filter = new BonusSchemeObjectLinkQueryDto
         {
             BonusSchemeId = bonusSchemeId,
             LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal

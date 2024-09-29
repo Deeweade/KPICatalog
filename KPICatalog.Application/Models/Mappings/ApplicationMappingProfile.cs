@@ -11,9 +11,8 @@ public class ApplicationMappingProfile : Profile
     public ApplicationMappingProfile()
     {
         CreateMap<BonusSchemeLinkMethodView, BonusSchemeLinkMethodDto>().ReverseMap();
-        CreateMap<BonusSchemeObjectLinkView, BonusSchemeObjectLinkDto>().ReverseMap();
         CreateMap<BonusSchemeLinkMethodView, BonusSchemeLinkMethodDto>().ReverseMap();
-        CreateMap<BonusSchemeFilterView, BonusSchemeFilterDto>().ReverseMap();
+        CreateMap<BonusSchemeQueryView, BonusSchemeFilterDto>().ReverseMap();
         CreateMap<EvaluationMethodView, EvaluationMethodDto>().ReverseMap();
         CreateMap<RatingScaleValueView, RatingScaleValueDto>().ReverseMap();
         CreateMap<PlanningCycleView, PlanningCycleDto>().ReverseMap();
@@ -26,6 +25,10 @@ public class ApplicationMappingProfile : Profile
         
         CreateMap<RatingScaleView, RatingScaleDto>()
             .ForMember(dest => dest.Values, opt => opt.MapFrom(src => src.Values))
+            .ReverseMap();
+
+        CreateMap<BonusSchemeObjectLinkDto, BonusSchemeObjectLinkView>()
+            .ForMember(dest => dest.BonusScheme, opt => opt.MapFrom(src => src.BonusScheme))
             .ReverseMap();
         
         CreateMap<TypicalGoalInBonusSchemeView, TypicalGoalInBonusSchemeDto>()

@@ -92,21 +92,21 @@ builder.Services.AddDbContext<PerfManagementDbContext>(options =>
 #region DependenciesInjection
 
 // Регистрация ApiSettings в контейнере DI
-builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 builder.Services.Configure<ExternalAPIConfiguration>(builder.Configuration.GetSection("ApiSettings"));
+builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 
 //services
-builder.Services.AddScoped<IUserAccessControlService, UserAccessControlService>();
-builder.Services.AddScoped<IBonusSchemeService, BonusSchemeService>();
-builder.Services.AddScoped<IBonusSchemeObjectLinkService, BonusSchemeObjectLinkService>();
-builder.Services.AddScoped<ITypicalGoalService, TypicalGoalService>();
 builder.Services.AddScoped<ITypicalGoalInBonusSchemeService, TypicalGoalInBonusSchemeService>();
-builder.Services.AddScoped<IEvaluationCalculator, EvaluationCalculator>();
+builder.Services.AddScoped<IBonusSchemeObjectLinkService, BonusSchemeObjectLinkService>();
 builder.Services.AddScoped<IBonusSchemeLinkMethodService, BonusSchemeLinkMethodService>();
+builder.Services.AddScoped<IUserAccessControlService, UserAccessControlService>();
 builder.Services.AddScoped<IEvaluationMethodsService, EvaluationMethodsService>();
 builder.Services.AddScoped<IPlanningCyclesService, PlanningCyclesService>();
-builder.Services.AddScoped<IWeightTypesService, WeightTypesService>();
+builder.Services.AddScoped<IEvaluationCalculator, EvaluationCalculator>();
 builder.Services.AddScoped<IRatingScalesService, RatingScalesService>();
+builder.Services.AddScoped<IWeightTypesService, WeightTypesService>();
+builder.Services.AddScoped<IBonusSchemeService, BonusSchemeService>();
+builder.Services.AddScoped<ITypicalGoalService, TypicalGoalService>();
 builder.Services.AddScoped<IGoalsService, GoalsService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<ExternalAPIConfiguration>();

@@ -14,6 +14,7 @@ public class BonusSchemeView : HistoryEntityView
     public bool IsDefaulBonusScheme { get; set; }
     public string ExternalId { get; set; }
     public int? PlanningCycleId { get; set; }
+    public bool IsCurrentBSforEffectiveDate { get; set; }
 
     [Ignore]
     public IEnumerable<EmployeeView> Employees { get; set; }

@@ -5,5 +5,6 @@ namespace KPICatalog.Domain.Interfaces.Repositories;
 
 public interface IPeriodsRepository
 {
+    Task<PeriodDto> GetById(int periodId);
     Task<IEnumerable<PeriodDto>> GetAll();
 }

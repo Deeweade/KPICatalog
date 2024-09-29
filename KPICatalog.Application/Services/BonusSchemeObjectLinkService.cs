@@ -1,9 +1,11 @@
 ﻿using KPICatalog.Application.Interfaces.Services;
 using KPICatalog.Domain.Interfaces.Repositories;
+using KPICatalog.Application.Models.Filters;
 using KPICatalog.Application.Models.Views;
 using KPICatalog.Domain.Dtos.Entities;
 using KPICatalog.Domain.Dtos.Filters;
 using AutoMapper;
+using KPICatalog.Domain.Models.Enums;
 
 namespace KPICatalog.Application.Services;
 
@@ -17,14 +19,70 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
+    
+    public async Task<List<BonusSchemeObjectLinkView>> GetByQuery(BonusSchemeObjectLinkQueryView queryView)
+    {
+        ArgumentNullException.ThrowIfNull(queryView);
+
+        var employee = await _unitOfWork.EmployeeRepository.GetByLogin(queryView.Login);
+
+        var queryDto = new BonusSchemeObjectLinkQueryDto();
+
+        queryDto.LinkedObjectsIds = new List<int> { employee.Id };
+        queryDto.LinkedObjectTypeId = (int)LinkedObjectTypes.Employee;
+
+
+        if (queryView.PeriodId is null)
+        {
+            queryDto.EffectiveDate = queryView.EffectiveDate;
+
+            var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(queryDto, x => x);
+
+            var views = _mapper.Map<List<BonusSchemeObjectLinkView>>(links);
+
+            views.ForEach(x => x.BonusScheme.IsCurrentBSforEffectiveDate = true);
+
+            return views;
+        }
+        else
+        {
+            var period = await _unitOfWork.PeriodsRepository.GetById(queryView.PeriodId.Value);
+
+            queryDto.PeriodDateStart = period.DateStart;
+            queryDto.PeriodDateEnd = period.DateEnd;
+            queryDto.EffectiveDate = null;
+            
+            var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(queryDto, x => x);
+
+            var views = _mapper.Map<List<BonusSchemeObjectLinkView>>(links);
+
+            foreach(var link in views)
+            {
+                if (link.BonusScheme.DateStart <= queryView.EffectiveDate
+                    && link.BonusScheme.DateEnd > queryView.EffectiveDate)
+                {
+                    link.BonusScheme.IsCurrentBSforEffectiveDate = true;
+                }
+                else
+                {
+                    link.BonusScheme.IsCurrentBSforEffectiveDate = false;
+                }
+            }
+
+            return views;
+        }
+    }
 
     public async Task<IEnumerable<BonusSchemeObjectLinkView>> BulkCreate(BonusSchemeObjectLinkView linkView)
     {
         if (linkView is null) throw new ArgumentNullException(nameof(linkView));
 
-        var filter = new BonusSchemeObjectLinkFilterDto
+        var filter = new BonusSchemeObjectLinkQueryDto
         {
-            LinkedObjectsIds = linkView.LinkedObjectsIds
+            IsActive = true,
+            BonusSchemeId = linkView.BonusSchemeId,
+            LinkedObjectsIds = linkView.LinkedObjectsIds,
+            LinkedObjectTypeId = linkView.LinkedObjectTypeId
         };
 
         //Удаляем существующие связи для объектов, если они есть
@@ -46,8 +104,8 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
             LinkedObjectTypeId = linkView.LinkedObjectTypeId,
             LinkedObjectsIds = linkView.LinkedObjectsIds,
             LinkPercent = linkView.LinkPercent,
-            DateStart = linkView.DateStart,
-            DateEnd = linkView.DateEnd
+            DateStart = linkView.DateStart ?? DateTime.Now,
+            DateEnd = linkView.DateEnd ?? DateTime.MaxValue
         };
 
         await _unitOfWork.BonusSchemeObjectLinkRepository.BulkCreate(dto);
@@ -63,8 +121,10 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
     public async Task<IEnumerable<BonusSchemeObjectLinkView>> Delete(BonusSchemeObjectLinkView linkView)
     {
         var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(
-            new BonusSchemeObjectLinkFilterDto
+            new BonusSchemeObjectLinkQueryDto
             {
+                IsActive = true,
+                BonusSchemeId = linkView.BonusSchemeId,
                 LinkedObjectsIds = linkView.LinkedObjectsIds,
                 LinkedObjectTypeId = linkView.LinkedObjectTypeId
             },
@@ -72,8 +132,12 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
         
         var deletedLinks = new List<BonusSchemeObjectLinkDto>();
 
+        var dateEnd = DateTime.Now;
+
         foreach(var link in links)
         {
+            link.DateEnd = dateEnd;
+
             var deletedLink = await _unitOfWork.BonusSchemeObjectLinkRepository.Delete(link!);
 
             deletedLinks.Add(deletedLink);

@@ -32,4 +32,6 @@ public class EmployeeView : BaseView
     public string BonusType { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
+
+    public EmployeeView ParentEmployee { get; set; }
 }

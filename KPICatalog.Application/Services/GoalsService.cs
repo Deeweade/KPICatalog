@@ -26,7 +26,7 @@ public class GoalsService : IGoalsService
 
         if (bonusSchemeIds is not null && bonusSchemeIds.Any())
         {
-            var filter = new BonusSchemeObjectLinkFilterDto
+            var filter = new BonusSchemeObjectLinkQueryDto
             {
                 BonusSchemeIds = bonusSchemeIds.Distinct().ToList(),
                 LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal
@@ -39,7 +39,7 @@ public class GoalsService : IGoalsService
 
         if (goalIds is not null && goalIds.Any())
         {
-            var filter = new BonusSchemeObjectLinkFilterDto
+            var filter = new BonusSchemeObjectLinkQueryDto
             {
                 LinkedObjectsIds = goalIds.Distinct().ToList(),
                 LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal
@@ -52,7 +52,7 @@ public class GoalsService : IGoalsService
 
         if (employeeIds is null || !employeeIds.Any())
         {
-            var filter = new BonusSchemeObjectLinkFilterDto
+            var filter = new BonusSchemeObjectLinkQueryDto
             {
                 BonusSchemeIds = bonusSchemeIds.Distinct().ToList(),
                 LinkedObjectTypeId = (int)LinkedObjectTypes.Employee

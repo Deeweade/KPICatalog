@@ -31,7 +31,7 @@ public class BonusSchemeService : IBonusSchemeService
         var result = _mapper.Map<BonusSchemeView>(scheme);
 
         var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(
-            new BonusSchemeObjectLinkFilterDto
+            new BonusSchemeObjectLinkQueryDto
             {
                 BonusSchemeId = schemeId,
                 LinkedObjectTypeId = (int)LinkedObjectTypes.Employee
@@ -41,6 +41,16 @@ public class BonusSchemeService : IBonusSchemeService
         var employeeIds = links.Select(x => x.LinkedObjectId).ToList();
 
         var employees = await _unitOfWork.EmployeeRepository.GetByIds(employeeIds);
+
+        //add parents
+        var parentsIds = employees.Select(x => x.Parent).Distinct().ToList();
+
+        var parents = await _unitOfWork.EmployeeRepository.GetByIds(parentsIds);
+
+        foreach (var employee in employees)
+        {
+            employee.ParentEmployee = parents.FirstOrDefault(x => x.Id == employee.Parent);
+        }
 
         result.Employees = _mapper.Map<IEnumerable<EmployeeView>>(employees);
 
@@ -52,7 +62,7 @@ public class BonusSchemeService : IBonusSchemeService
         return await _unitOfWork.BonusSchemeRepository.GetCostCenters();
     }
 
-    public async Task<IEnumerable<BonusSchemeView>> GetByFilter(BonusSchemeFilterView filterView)
+    public async Task<IEnumerable<BonusSchemeView>> GetByFilter(BonusSchemeQueryView filterView)
     {
         if (filterView is null) throw new ArgumentNullException(nameof(filterView));
 
@@ -77,7 +87,7 @@ public class BonusSchemeService : IBonusSchemeService
 
         var typicalGoalIds = typicalGoalsViews.Select(x => x.Id).ToList(); 
 
-        var linksFilter = new BonusSchemeObjectLinkFilterDto
+        var linksFilter = new BonusSchemeObjectLinkQueryDto
         {
             LinkedObjectsIds = typicalGoalIds,
             LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal
@@ -134,7 +144,7 @@ public class BonusSchemeService : IBonusSchemeService
         await _unitOfWork.BonusSchemeRepository.Update(scheme);
 
         var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(
-            new BonusSchemeObjectLinkFilterDto
+            new BonusSchemeObjectLinkQueryDto
             {
                 BonusSchemeId = bonusSchemeId
             }, 

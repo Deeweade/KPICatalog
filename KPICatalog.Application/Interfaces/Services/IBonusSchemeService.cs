@@ -7,7 +7,7 @@ public interface IBonusSchemeService
 {
     Task<BonusSchemeView> GetById(int schemeId);
     Task<IEnumerable<string>> GetCostCenters();
-    Task<IEnumerable<BonusSchemeView>> GetByFilter(BonusSchemeFilterView filterView);
+    Task<IEnumerable<BonusSchemeView>> GetByFilter(BonusSchemeQueryView filterView);
     Task<IEnumerable<BonusSchemeView>> GetByTypicalGoalId(int goalId);
     Task<BonusSchemeView> Create(BonusSchemeView schemeView);
     Task<BonusSchemeView> Update(BonusSchemeView schemeView);
