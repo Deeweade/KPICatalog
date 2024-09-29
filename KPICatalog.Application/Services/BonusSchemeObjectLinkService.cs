@@ -79,7 +79,10 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
 
         var filter = new BonusSchemeObjectLinkQueryDto
         {
-            LinkedObjectsIds = linkView.LinkedObjectsIds
+            IsActive = true,
+            BonusSchemeId = linkView.BonusSchemeId,
+            LinkedObjectsIds = linkView.LinkedObjectsIds,
+            LinkedObjectTypeId = linkView.LinkedObjectTypeId
         };
 
         //Удаляем существующие связи для объектов, если они есть
@@ -101,8 +104,8 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
             LinkedObjectTypeId = linkView.LinkedObjectTypeId,
             LinkedObjectsIds = linkView.LinkedObjectsIds,
             LinkPercent = linkView.LinkPercent,
-            DateStart = linkView.DateStart,
-            DateEnd = linkView.DateEnd
+            DateStart = linkView.DateStart ?? DateTime.Now,
+            DateEnd = linkView.DateEnd ?? DateTime.MaxValue
         };
 
         await _unitOfWork.BonusSchemeObjectLinkRepository.BulkCreate(dto);
@@ -120,6 +123,8 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
         var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(
             new BonusSchemeObjectLinkQueryDto
             {
+                IsActive = true,
+                BonusSchemeId = linkView.BonusSchemeId,
                 LinkedObjectsIds = linkView.LinkedObjectsIds,
                 LinkedObjectTypeId = linkView.LinkedObjectTypeId
             },
@@ -127,8 +132,12 @@ public class BonusSchemeObjectLinkService : IBonusSchemeObjectLinkService
         
         var deletedLinks = new List<BonusSchemeObjectLinkDto>();
 
+        var dateEnd = DateTime.Now;
+
         foreach(var link in links)
         {
+            link.DateEnd = dateEnd;
+
             var deletedLink = await _unitOfWork.BonusSchemeObjectLinkRepository.Delete(link!);
 
             deletedLinks.Add(deletedLink);

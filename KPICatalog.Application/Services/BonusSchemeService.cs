@@ -42,6 +42,16 @@ public class BonusSchemeService : IBonusSchemeService
 
         var employees = await _unitOfWork.EmployeeRepository.GetByIds(employeeIds);
 
+        //add parents
+        var parentsIds = employees.Select(x => x.Parent).Distinct().ToList();
+
+        var parents = await _unitOfWork.EmployeeRepository.GetByIds(parentsIds);
+
+        foreach (var employee in employees)
+        {
+            employee.ParentEmployee = parents.FirstOrDefault(x => x.Id == employee.Parent);
+        }
+
         result.Employees = _mapper.Map<IEnumerable<EmployeeView>>(employees);
 
         return result;

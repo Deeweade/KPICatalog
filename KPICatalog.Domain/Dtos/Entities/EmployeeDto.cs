@@ -48,4 +48,6 @@ public class EmployeeDto : BaseDto
             return Fio.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)[0];
         }
     }
+
+    public EmployeeDto ParentEmployee { get; set; }
 }
