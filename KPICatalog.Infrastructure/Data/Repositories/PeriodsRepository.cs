@@ -33,4 +33,36 @@ public class PeriodsRepository : IPeriodsRepository
             .ProjectTo<PeriodDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(x => x.Id == periodId);
     }
+
+    public async Task<List<PeriodDto>> GetParents(List<int> childrenPeriodIds)
+    {
+        ArgumentNullException.ThrowIfNull(childrenPeriodIds);
+
+        var childrenPeriods = await _context.Periods
+            .AsNoTracking()
+            .Where(x => childrenPeriodIds.Contains(x.Id))
+            .ToListAsync();
+
+        var parentIds = new List<int>();
+
+        foreach (var childrenPeriod in childrenPeriods)
+        {
+            var periodId = await _context.Periods
+                .AsNoTracking()
+                .Where(x => x.NumberY == childrenPeriod.NumberY 
+                    && x.IsYear == 1)
+                .Select(x => x.Id)
+                .FirstOrDefaultAsync();
+
+            parentIds.Add(periodId);
+        }
+
+        parentIds = parentIds.Distinct().ToList();
+
+        return await _context.Periods
+            .AsNoTracking()
+            .ProjectTo<PeriodDto>(_mapper.ConfigurationProvider)
+            .Where(x => parentIds.Contains(x.Id))
+            .ToListAsync();
+    }
 }

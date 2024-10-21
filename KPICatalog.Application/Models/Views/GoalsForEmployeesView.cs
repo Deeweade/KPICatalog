@@ -1,6 +1,4 @@
-﻿using KPICatalog.Domain.Dtos.Entities;
-
-namespace KPICatalog.Application.Models.Views;
+﻿namespace KPICatalog.Application.Models.Views;
 
 public class GoalsForEmployeesRequestView
 {

@@ -7,4 +7,5 @@ public interface IPeriodsRepository
 {
     Task<PeriodDto> GetById(int periodId);
     Task<IEnumerable<PeriodDto>> GetAll();
+    Task<List<PeriodDto>> GetParents(List<int> periodIds);
 }

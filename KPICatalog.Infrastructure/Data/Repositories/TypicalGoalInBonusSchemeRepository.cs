@@ -2,9 +2,11 @@ using KPICatalog.Domain.Models.Entities.KPICatalog;
 using KPICatalog.Domain.Interfaces.Repositories;
 using KPICatalog.Infrastructure.Data.Contexts;
 using KPICatalog.Domain.Dtos.Entities;
+using KPICatalog.Domain.Dtos.Filters;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper.QueryableExtensions;
 using AutoMapper;
+using System.Linq.Expressions;
 
 namespace KPICatalog.Infrastructure.Data.Repositories;
 
@@ -17,6 +19,39 @@ public class TypicalGoalInBonusSchemeRepository : ITypicalGoalInBonusSchemeRepos
     {
         _context = context;
         _mapper = mapper;
+    }
+
+    public async Task<List<TResult>> GetByQuery<TResult>(TypicalGoalInBSQueryDto queryDto, 
+        Expression<Func<TypicalGoalInBonusSchemeDto, TResult>> select = null)
+    {
+        if (queryDto is null) throw new ArgumentNullException(nameof(queryDto));
+
+        var query = _context.TypicalGoalInBonusSchemes
+            .AsNoTracking()
+            .ProjectTo<TypicalGoalInBonusSchemeDto>(_mapper.ConfigurationProvider);
+
+        if (queryDto.TypicalGoalId is not null)
+        {
+            query = query.Where(x => x.TypicalGoalId == queryDto.TypicalGoalId);
+        }
+
+        if (queryDto.Ids is not null && queryDto.Ids.Any())
+        {
+            query = query.Where(x => queryDto.Ids.Contains(x.Id));
+        }
+        if (queryDto.PeriodIds is not null && queryDto.PeriodIds.Any())
+        {
+            query = query.Where(x => queryDto.PeriodIds.Contains(x.PeriodId));
+        }
+
+        if (select is not null)
+        {
+            return await query.Select(select).ToListAsync();
+        }
+        else
+        {
+            return await query.Cast<TResult>().ToListAsync();
+        }
     }
 
     public async Task<List<TypicalGoalInBonusSchemeDto>> GetByIds(List<int> goalsIds)

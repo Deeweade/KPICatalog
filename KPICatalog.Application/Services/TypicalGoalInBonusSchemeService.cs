@@ -1,5 +1,6 @@
 ﻿using KPICatalog.Application.Interfaces.Services;
 using KPICatalog.Domain.Interfaces.Repositories;
+using KPICatalog.Application.Models.Filters;
 using KPICatalog.Application.Models.Views;
 using KPICatalog.Domain.Dtos.Entities;
 using KPICatalog.Domain.Models.Enums;
@@ -86,6 +87,78 @@ public class TypicalGoalInBonusSchemeService : ITypicalGoalInBonusSchemeService
         }
 
         return result;
+    }
+
+    public async Task<List<TypicalGoalInBonusSchemeView>> GetByQuery(TypicalGoalInBSQueryView queryView)
+    {
+        ArgumentNullException.ThrowIfNull(queryView);
+
+        var goalViews = new List<TypicalGoalInBonusSchemeView>();
+
+        var queryDto = new TypicalGoalInBSQueryDto();
+
+        if (queryView.BonusSchemeId is not null && queryView.BonusSchemeId != 0)
+        {
+            var filter = new BonusSchemeObjectLinkQueryDto
+            {
+                BonusSchemeId = queryView.BonusSchemeId,
+                LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal
+            };
+
+            var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter, x => x);
+
+            var goalsIds = links.Select(x => x.LinkedObjectId).ToList();
+
+            if (queryView.PeriodIds is not null && queryView.PeriodIds.Any())
+            {
+                var parentPeriods = await _unitOfWork.PeriodsRepository.GetParents(queryView.PeriodIds);
+
+                var periodIds = parentPeriods.Select(x => x.Id).Distinct().ToList();
+
+                periodIds.AddRange(queryView.PeriodIds);
+
+                queryDto.PeriodIds = periodIds.Distinct().ToList();
+            }
+
+            queryDto.Ids = goalsIds;
+
+            var goalsDtos = await _unitOfWork.TypicalGoalInBonusSchemeRepository.GetByQuery<TypicalGoalInBonusSchemeDto>(queryDto);
+
+            goalViews = _mapper.Map<List<TypicalGoalInBonusSchemeView>>(goalsDtos);
+        }
+        else if (queryView.TypicalGoalId is not null && queryDto.TypicalGoalId != 0)
+        {
+            queryDto.TypicalGoalId = queryView.TypicalGoalId;
+            queryDto.PeriodIds = queryView.PeriodIds;
+
+            var goals = await _unitOfWork.TypicalGoalInBonusSchemeRepository.GetByQuery<TypicalGoalInBonusSchemeDto>(queryDto);
+
+            if(goals is null) return null;
+
+            var filter = new BonusSchemeObjectLinkQueryDto
+            {
+                LinkedObjectsIds = goals.Select(x => x.Id).ToList(),
+                LinkedObjectTypeId = (int)LinkedObjectTypes.TypicalGoal
+            };
+
+            var links = await _unitOfWork.BonusSchemeObjectLinkRepository.GetByFilter(filter, x => x);
+
+            var dict = links.GroupBy(x => x.LinkedObjectId)
+                .ToDictionary(x => x.Key, x => x.Select(x => x.BonusScheme).ToList());
+
+            goalViews = _mapper.Map<List<TypicalGoalInBonusSchemeView>>(goals);
+
+            foreach(var goal in goalViews)
+            {
+                var schemes = dict.Where(x => x.Key == goal.Id)
+                    .Select(x => x.Value)
+                    .FirstOrDefault();
+
+                goal.BonusSchemes = _mapper.Map<List<BonusSchemeView>>(schemes);
+            }
+        }
+
+        return goalViews;
     }
 
     public async Task<TypicalGoalInBonusSchemeView> Create(TypicalGoalInBonusSchemeView view)

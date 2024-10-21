@@ -1,4 +1,5 @@
 ﻿using KPICatalog.Application.Interfaces.Services;
+using KPICatalog.Application.Models.Filters;
 using KPICatalog.Application.Models.Views;
 using KPICatalog.API.Models.Responses;
 using KPICatalog.API.Models.Other;
@@ -51,6 +52,16 @@ public class TypicalGoalInBonusSchemeController : ControllerBase
             .ToList();
 
         return Ok(goals);
+    }
+
+    [HttpPost("getFiltered")]
+    public async Task<List<TypicalGoalInBonusSchemeView>> GetFiltered(TypicalGoalInBSQueryView view)
+    {
+        return (await _service.GetByQuery(view))
+            .OrderBy(x => x.PlanningCycleId)
+            .ThenBy(x => x.ParentBSTypicalGoalId)
+            .ThenBy(x => x.PeriodId)
+            .ToList();
     }
 
     [HttpPost("create")]

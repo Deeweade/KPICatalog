@@ -1,4 +1,6 @@
+using System.Linq.Expressions;
 using KPICatalog.Domain.Dtos.Entities;
+using KPICatalog.Domain.Dtos.Filters;
 
 namespace KPICatalog.Domain.Interfaces.Repositories;
 
@@ -16,6 +18,14 @@ public interface ITypicalGoalInBonusSchemeRepository
     /// <param name="goalsIds">Список Id типовых целей в БС</param>
     /// <returns>Возвращает коллекцию типовых целей в бонусной схеме</returns>
     Task<List<TypicalGoalInBonusSchemeDto>> GetByIds(List<int> goalsIds);
+    /// <summary>
+    /// Получение коллекции ТЦ в БС по фильтрам
+    /// </summary>
+    /// <typeparam name="TResult">Свойство сущности или вся сущность</typeparam>
+    /// <param name="queryDto">Филтры</param>
+    /// <param name="select">Выражение, определяющее, что возвращать</param>
+    Task<List<TResult>> GetByQuery<TResult>(TypicalGoalInBSQueryDto queryDto, 
+        Expression<Func<TypicalGoalInBonusSchemeDto, TResult>> select = null);
     Task<TypicalGoalInBonusSchemeDto> Create(TypicalGoalInBonusSchemeDto goal);
     /// <summary>
     /// Множественное создание ТЦ в БС

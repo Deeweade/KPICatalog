@@ -21,7 +21,8 @@ public class BonusSchemeObjectLinkRepository : IBonusSchemeObjectLinkRepository
         _mapper = mapper;
     }
 
-    public async Task<List<TResult>> GetByFilter<TResult>(BonusSchemeObjectLinkQueryDto queryDto, Expression<Func<BonusSchemeObjectLinkDto, TResult>> select = null)
+    public async Task<List<TResult>> GetByFilter<TResult>(BonusSchemeObjectLinkQueryDto queryDto,   
+        Expression<Func<BonusSchemeObjectLinkDto, TResult>> select = null)
     {
         if (queryDto is null) throw new ArgumentNullException(nameof(queryDto));
 
